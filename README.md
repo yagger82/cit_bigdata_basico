@@ -2,9 +2,9 @@
 
 **Universidad Nacional de Asunción - Facultad Politécnica** - **Proyecto Centro de Innovación TIC, KOICA-UNA**
 
-Repositorio para las Clases de Laboratorio del Curso Básico de Introducción a Big Data del CIT.
-
 **Prof.:** Ing. Richard D. Jiménez-R.
+
+**Descripción:** Repositorio para las Clases de Laboratorio del Curso Básico de Introducción a Big Data del CIT.
 
 
 ## [GettingStarted] Primeros Pasos
@@ -25,10 +25,10 @@ Instalar y configurar el cliente para Git.
 
 ### PostgreSQL
 
-Instalar y configurar el servidor de base de datos PostgreSQL versión 15.6.
+Instalar y configurar el servidor de base de datos PostgreSQL versión 15.8.
 
 - [PostgreSQL - Downloads](https://www.postgresql.org/download/)
-- [Download PostgreSQL 15.6 Windows x86-64](https://www.enterprisedb.com/downloads/postgres-postgresql-downloads)
+- [Download PostgreSQL 15.8 Windows x86-64](https://www.enterprisedb.com/downloads/postgres-postgresql-downloads)
 
 ### DBeaver Community
 
