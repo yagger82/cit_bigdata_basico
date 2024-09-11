@@ -1,40 +1,143 @@
-##CLASE PRACTICA - Setiembre, 2024
+<center><h1>UNIVERSIDAD NACIONAL DE ASUNCIÓN 
+     FACULTAD POLITECNICA</h1></center>
+<center><h3>PROYECTO CENTRO DE INNOVACIÓN TIC, FPUNA-KOICA</center>
 
-##A continuacion, proceder a instalar y configurar su entorno de trabajo local:
+<center><h4>Curso Básico de Introducción a Big Data</h4></center>
 
+<center>Prof. Ing. Richard D. Jiménez-R.</center>
 
-##1-Instalar y Configurar: Servidor de Base de Datos
-##PostgreSQL (15.x en adelante)
-https://www.postgresql.org/download/
-https://www.enterprisedb.com/downloads/postgres-postgresql-downloads
-
-
-##2-Instalar y Configurar: Cliente de Base de Datos
-##DBeaver Community Edition
-https://dbeaver.io/download/
+### **<u>Guía de Actividad:</u> Diseño de Base de Datos Relacional e Implementación ETL**
 
 
-##3-Instalar y Configurar: Herramienta de Modelado de Datos
-##SQL Power Architect Community Edition (el mas reciente)
-https://bestofbi.com/architect-download/
+
+### Objetivo
+
+El objetivo de esta actividad es que el estudiante analice el diseño de una base de datos relacional para almacenar un conjunto de datos específico, y luego analice la implementación de un proceso ETL para cargar los datos desde un archivo CSV hacia la base de datos diseñada para PostgreSQL.
 
 
-##4-Instalar y Configurar: JDBC Driver en SQL Power Architect
-##PostgreSQL JDBC Driver
-https://jdbc.postgresql.org/download/
+
+### Tarea
+
+1. Análisis de los datos:
+   - Obtener el archivo CSV proporcionado.
+   - Identificar las entidades y atributos presentes en los datos.
+   - Establecer las relaciones entre las entidades.
+   - Definir los tipos de datos apropiados para cada atributo.
+2. Análisis del diseño del modelo relacional:
+   - Analizar el diagrama entidad-relación (DER) que represente la estructura de la base de datos.
+   - Verificar las normalizaciones de las tablas para eliminar redundancias y anomalías.
+   - Identificar en el DER las las claves primarias y foráneas.
+3. Análisis de la implementación de la base de datos:
+   - Crear la base de datos utilizando PostgreSQL como sistema gestor de bases de datos relacional (SGBDR).
+   - Crear las tablas de acuerdo al modelo de datos diseñado.
+   - Crear los índices necesarios para mejorar el rendimiento de las consultas.
+4. Análisis de la implementación del proceso ETL:
+   - Analizar los archivos SQL, Transformation y Job del Proyecto ETL implementado en Pentaho Data Integration:
+     - Extraer los datos del archivo CSV.
+     - Transformar los datos para ajustarlos al esquema de la base de datos.
+     - Cargar los datos en las tablas de la base de datos.
+5. Elaborar una documentación para su entrega:
+   - Elaborar un informe técnico que incluya:
+     - Descripción del problema y los objetivos.
+     - Análisis de los datos y diseño del modelo de datos.
+     - Descripción del proceso ETL implementado.
+     - Código fuente de los scripts utilizados.
+     - Resultados de las pruebas realizadas.
+     - Conclusiones y recomendaciones.
+
+### Herramientas
+
+- **SGBDR:** PostgreSQL.
+- **Herramientas ETL:** Pentaho.
+- **Diagramación:** Draw.io, SQL Power Architect.
+- **Lenguajes de programación:** SQL, PL/PgSQL.
 
 
-##Navicat Data Modeler Express (Opcional)
-https://www.navicat.com/es/products/navicat-data-modeler
 
+### Entorno de Trabajo
+
+Instalación y configuración de herramientas en su entorno de trabajo local.
+
+- ###### <u>Servidor de Base de Datos:</u> PostgreSQL (15.x en adelante)
+
+`https://www.postgresql.org/download/`
+
+`https://www.enterprisedb.com/downloads/postgres-postgresql-downloads`
+
+
+
+- ###### <u>Cliente de Base de Datos:</u> DBeaver Community Edition
+
+`https://dbeaver.io/download/`
+
+
+
+- ###### <u>Modelado de Datos:</u> SQL Power Architect Community Edition (el más reciente)
+
+`https://bestofbi.com/architect-download/`
+
+
+
+- ###### <u>JDBC Driver en SQL Power Architect:</u> PostgreSQL JDBC Driver
+
+`https://jdbc.postgresql.org/download/`
+
+
+
+- ###### <u>Herramienta ETL:</u> Pentaho Data Integration (PDI) v9.4.
+
+`https://www.hitachivantara.com/en-us/products/pentaho-plus-platform/data-integration-analytics/pentaho-community-edition.html`
+
+
+
+- ###### Navicat Data Modeler Express (Opcional)
+
+`https://www.navicat.com/es/products/navicat-data-modeler`
+
+
+
+### DataSet
+
+Datos abiertos publicados por la SFP, correspondiente a las nóminas de funcionarios públicos por periodo.
 
 ##5-Descarga Nómina de Funcionarios del Portal de la SFP- Dataset
 ##Para fines prácticos usar la nómina de funcionarios del periodo julio-2023
 https://datos.sfp.gov.py/data/funcionarios/download
 
-
 ##6-Instalar y Configurar: Pentaho Data Integration
-##PDI 9.4
-https://www.hitachivantara.com/en-us/products/pentaho-plus-platform/data-integration-analytics/pentaho-community-edition.html
+
+------------------------------
 
 
+
+### Criterios de Evaluación (30 puntos)
+
+- Diseño del modelo de datos (10 puntos):
+  - Correcta identificación de entidades y atributos.
+  - Diseño adecuado de las relaciones.
+  - Normalización correcta de las tablas.
+  - Definición clara de claves primarias y foráneas.
+- Implementación de la base de datos (10 puntos):
+  - Creación correcta de las tablas y relaciones.
+  - Creación de índices adecuados.
+  - Optimización del rendimiento de la base de datos.
+- Implementación del proceso ETL (5 puntos):
+  - Extracción correcta de los datos del archivo CSV.
+  - Transformación adecuada de los datos.
+  - Carga exitosa de los datos en la base de datos.
+- Documentación (5 puntos):
+  - Claridad y concisión en la presentación de la información.
+  - Completitud de la documentación.
+  - Uso correcto de la terminología técnica.
+
+- 
+
+### Entrega
+
+El estudiante deberá entregar un informe técnico en formato digital que incluya todos los elementos mencionados anteriormente.
+
+### Consideraciones Adicionales
+
+- Se recomienda que el estudiante investigue sobre las mejores prácticas en el diseño de bases de datos relacionales y en la implementación de procesos ETL.
+- Es importante que el estudiante pruebe exhaustivamente la base de datos y el proceso ETL para garantizar su correcto funcionamiento.
+- Se valorará la capacidad del estudiante para resolver problemas y adaptarse a cambios en los requisitos.
