@@ -810,7 +810,7 @@ switch (true) {
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <schema>${LAB_DWH_SCHEMADB}</schema>
+    <schema>${LAB_DWH_SCHEMADM}</schema>
     <table>dim_edad</table>
     <connection>PostgreSQL-DWH</connection>
     <commit>100</commit>
@@ -876,15 +876,12 @@ switch (true) {
       </field>
       <field>
         <name>grupo_etario_rango</name>
-        <rename/>
       </field>
       <field>
         <name>grupo_etario_etapa</name>
-        <rename/>
       </field>
       <field>
         <name>franja_etaria_activa</name>
-        <rename/>
       </field>
       <select_unspecified>N</select_unspecified>
     </fields>

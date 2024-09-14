@@ -4,50 +4,51 @@
 
 **Prof.:** Ing. Richard D. Jiménez-R.
 
-**Descripción:** Repositorio para las Clases de Laboratorio del Curso Básico de Introducción a Big Data del CIT.
+**Descripción:** Tutorial del repositorio para las Clases de Laboratorio del Curso Básico de Introducción a Big Data.
 
 
-## [GettingStarted] Primeros Pasos
+## [GettingStarted] Clonar el repositorio
+Para descargar a su máquina local el proyecto ejecutar el comando:
 
 ```
-git clone https://gitlab.com/fpuna-iin/cit_bigdata_basico.git
+git clone https://github.com/prof-rjimenez/cit_bigdata_basico.git
 ```
+Para más información ir a [Git Tutorial](https://www.w3schools.com/git/default.asp). 
 
-## [ToolKit] Instalación y configuración del entorno de trabajo
+## [ToolKit] Instalar y configurar el entorno de trabajo local
 
-A continuación, proceder a instalar y configurar su entorno de trabajo local.
+A continuación, se debe proceder a las descargas de las herramientas para las clases de laboratorio, realizar el procedimiento de instalación y configuración para montar el entorno de trabajo local.
 
 ### Git Tool
 
-Instalar y configurar el cliente para Git.
+- Paso 1: Descargar el instalador [Git - Downloads](https://git-scm.com/downloads). 
+- Paso 2: Instalar y configurar el cliente para Git.
 
-- [Git - Downloads](https://git-scm.com/downloads)
+<u>Nota:</u> Opcionalmente, puede descargar e instalar [GitHub Desktop](https://github.com/apps/desktop).
 
-### PostgreSQL
+### PostgreSQL - Database server
 
-Instalar y configurar el servidor de base de datos PostgreSQL versión 15.8.
+- Paso 1: Descargar el instalador [PostgreSQL - Downloads](https://www.postgresql.org/download/).
+- Paso 2: Instalar y configurar el servidor de base de datos PostgreSQL versión 15.8.
 
-- [PostgreSQL - Downloads](https://www.postgresql.org/download/)
-- [Download PostgreSQL 15.8 Windows x86-64](https://www.enterprisedb.com/downloads/postgres-postgresql-downloads)
+### DBeaver Community - Database client
 
-### DBeaver Community
+Paso 1: Descargar el instalador [DBeaver Community - Downloads](https://dbeaver.io/download/).
 
-Instalar y configurar el cliente de base de datos DBeaver en su edición community.
+Paso 2: Instalar y configurar el cliente de base de datos DBeaver en su edición community.
 
-- [DBeaver Community - Downloads](https://dbeaver.io/download/)
+### SQL Power Architect Community Edition - Data models
 
-### SQL Power Architect Community Edition
+Paso 1: Descargar el instalador [SQL Power Architect Community Edition - Downloads](https://bestofbi.com/architect-download/).
 
-Instalar y configurar una herramienta de modelado de datos.
+Paso 2: Instalar y configurar la herramienta SQL Power Architect para el modelado de datos.
 
-- [SQL Power Architect Community Edition - Downloads](https://bestofbi.com/architect-download/)
+Paso 3: Descargar [JDBC PostgreSQL - Downloads](https://jdbc.postgresql.org/download/).
 
-Instalar y configurar JDBC Driver en SQL Power Architect.
-
-- [JDBC - Downloads](https://jdbc.postgresql.org/download/)
+Paso 4: Configurar el JDBC Driver en SQL Power Architect para crear una conexión PostgreSQL.
 
 ### Pentaho Data Integration
 
-Instalar y configurar el Pentaho Data Integration v9.4.
+Paso 1: Descargar [Pentaho Community Edition](https://www.hitachivantara.com/en-us/products/pentaho-plus-platform/data-integration-analytics/pentaho-community-edition.html).
 
-- [Pentaho Community Edition](https://www.hitachivantara.com/en-us/products/pentaho-plus-platform/data-integration-analytics/pentaho-community-edition.html)
+Paso 2: Configurar el Pentaho Data Integration v9.4.

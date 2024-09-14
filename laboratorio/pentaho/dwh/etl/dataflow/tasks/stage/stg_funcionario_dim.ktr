@@ -503,7 +503,7 @@
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Leer dim_persona</from>
+      <from>Leer dim_funcionario</from>
       <to>Buscar datos nuevos</to>
       <enabled>Y</enabled>
     </hop>
@@ -546,7 +546,7 @@
     <error_ignored>N</error_ignored>
     <ignore_flag_field/>
     <lookup>
-      <schema>${LAB_DWH_SCHEMADB}</schema>
+      <schema>${LAB_DWH_SCHEMADM}</schema>
       <table>dim_funcionario</table>
       <key>
         <name>funcionario_sk</name>
@@ -616,7 +616,7 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <from>Leer dim_persona</from>
+    <from>Leer dim_funcionario</from>
     <input_sorted>N</input_sorted>
     <preserve_memory>Y</preserve_memory>
     <sorted_list>N</sorted_list>
@@ -659,7 +659,7 @@
       <schema_name/>
     </partitioning>
     <connection>PostgreSQL-DWH</connection>
-    <schema>${LAB_DWH_SCHEMADB}</schema>
+    <schema>${LAB_DWH_SCHEMADM}</schema>
     <table>dim_funcionario</table>
     <commit>50000</commit>
     <truncate>N</truncate>
@@ -794,7 +794,7 @@
     </GUI>
   </step>
   <step>
-    <name>Leer dim_persona</name>
+    <name>Leer dim_funcionario</name>
     <type>TableInput</type>
     <description/>
     <distribute>Y</distribute>
@@ -822,7 +822,7 @@ order by documento;</sql>
         <name>funcionario_sk</name>
         <length>9</length>
         <precision>0</precision>
-        <origin>Leer persona</origin>
+        <origin>Leer dim_persona</origin>
         <comments>funcionario_sk</comments>
         <conversion_Mask>####0;-####0</conversion_Mask>
         <decimal_symbol>,</decimal_symbol>
@@ -845,7 +845,7 @@ order by documento;</sql>
         <name>documento</name>
         <length>20</length>
         <precision>-1</precision>
-        <origin>Leer persona</origin>
+        <origin>Leer dim_persona</origin>
         <comments>documento</comments>
         <conversion_Mask/>
         <decimal_symbol>,</decimal_symbol>
@@ -1110,39 +1110,30 @@ order by documento;</sql>
     <fields>
       <field>
         <name>documento</name>
-        <rename/>
       </field>
       <field>
         <name>nombres</name>
-        <rename/>
       </field>
       <field>
         <name>apellidos</name>
-        <rename/>
       </field>
       <field>
         <name>fecha_nacimiento</name>
-        <rename/>
       </field>
       <field>
         <name>sexo</name>
-        <rename/>
       </field>
       <field>
         <name>nacionalidad</name>
-        <rename/>
       </field>
       <field>
         <name>tipo_discapacidad</name>
-        <rename/>
       </field>
       <field>
         <name>discapacidad</name>
-        <rename/>
       </field>
       <field>
         <name>fecha_ultima_modificacion</name>
-        <rename/>
       </field>
       <select_unspecified>N</select_unspecified>
       <meta>
@@ -1191,43 +1182,33 @@ order by documento;</sql>
     <fields>
       <field>
         <name>documento</name>
-        <rename/>
       </field>
       <field>
         <name>nombres</name>
-        <rename/>
       </field>
       <field>
         <name>apellidos</name>
-        <rename/>
       </field>
       <field>
         <name>fecha_nacimiento</name>
-        <rename/>
       </field>
       <field>
         <name>sexo</name>
-        <rename/>
       </field>
       <field>
         <name>nacionalidad</name>
-        <rename/>
       </field>
       <field>
         <name>tipo_discapacidad</name>
-        <rename/>
       </field>
       <field>
         <name>discapacidad</name>
-        <rename/>
       </field>
       <field>
         <name>fecha_ultima_modificacion</name>
-        <rename/>
       </field>
       <field>
         <name>funcionario_sk</name>
-        <rename/>
       </field>
       <select_unspecified>N</select_unspecified>
       <meta>

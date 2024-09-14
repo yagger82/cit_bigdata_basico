@@ -497,12 +497,12 @@
     </hop>
     <hop>
       <from>Seleccionar columnas</from>
-      <to>Copiar ODS</to>
+      <to>Copiar RAW</to>
       <enabled>Y</enabled>
     </hop>
   </order>
   <step>
-    <name>Copiar ODS</name>
+    <name>Copiar RAW</name>
     <type>TableOutput</type>
     <description/>
     <distribute>Y</distribute>
@@ -513,8 +513,8 @@
       <schema_name/>
     </partitioning>
     <connection>PostgreSQL-DWH</connection>
-    <schema>ods</schema>
-    <table>ods_nomina_sfp</table>
+    <schema>${LAB_DWH_SCHEMARW}</schema>
+    <table>raw_nomina_sfp</table>
     <commit>0</commit>
     <truncate>Y</truncate>
     <ignore_errors>N</ignore_errors>

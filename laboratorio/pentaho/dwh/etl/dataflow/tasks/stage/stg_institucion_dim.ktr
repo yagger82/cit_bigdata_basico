@@ -510,7 +510,7 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <schema>${LAB_DWH_SCHEMADB}</schema>
+    <schema>${LAB_DWH_SCHEMADM}</schema>
     <table>dim_institucion</table>
     <connection>PostgreSQL-DWH</connection>
     <commit>100</commit>

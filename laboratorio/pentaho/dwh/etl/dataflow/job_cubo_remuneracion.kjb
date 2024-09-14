@@ -313,13 +313,13 @@
       <attributes_kjc/>
     </entry>
     <entry>
-      <name>Copiador ODS</name>
+      <name>Copiador RAW</name>
       <description/>
       <type>TRANS</type>
       <attributes/>
       <specification_method>filename</specification_method>
       <trans_object_id/>
-      <filename>${Internal.Entry.Current.Directory}/tasks/ods/csv_to_ods.ktr</filename>
+      <filename>${Internal.Entry.Current.Directory}/tasks/raw/csv_to_raw.ktr</filename>
       <transname/>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
@@ -456,7 +456,7 @@
   <hops>
     <hop>
       <from>Start</from>
-      <to>Copiador ODS</to>
+      <to>Copiador RAW</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -464,7 +464,7 @@
       <unconditional>Y</unconditional>
     </hop>
     <hop>
-      <from>Copiador ODS</from>
+      <from>Copiador RAW</from>
       <to>Cargar dimensiones</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
@@ -473,7 +473,7 @@
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>Copiador ODS</from>
+      <from>Copiador RAW</from>
       <to>Abort job</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>

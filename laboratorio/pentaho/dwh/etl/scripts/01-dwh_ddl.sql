@@ -14,8 +14,8 @@
 
 -- DROP TABLESPACE dbspace
 
-CREATE TABLESPACE dbspace
-LOCATION 'D:\Storage\Postgresql\data\dbs'; --cambiar ubicacion
+-- CREATE TABLESPACE dbspace
+-- LOCATION 'D:\Storage\Postgresql\data\dbs'; --cambiar ubicacion
 
 
 -- DROP DATABASE dwh;
@@ -32,11 +32,11 @@ CREATE DATABASE dwh
 COMMENT ON DATABASE dwh IS 'Base de datos en PostgreSQL para las clases práctica de data warehousing.';
 
 
--- DROP SCHEMA ods;
+-- DROP SCHEMA raw;
 
-CREATE SCHEMA ods AUTHORIZATION postgres;
+CREATE SCHEMA raw AUTHORIZATION postgres;
 
-COMMENT ON SCHEMA ods IS 'Etapa de extracción de datos.';
+COMMENT ON SCHEMA raw IS 'Etapa de extracción de datos en bruto.';
 
 
 -- DROP SCHEMA stage;

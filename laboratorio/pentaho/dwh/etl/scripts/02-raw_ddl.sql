@@ -1,9 +1,9 @@
 /* UNIVERSIDAD NACIONAL DE ASUNCION
  * Facultad Politécnica - Proyecto Centro de Innovación TIC - Curso Básico de Introducción a Big Data
  * 
- * SCRIPTS: SENTENCIAS DDL PARA CREAR TABLAS EN EL ESQUEMA ODS.
+ * SCRIPTS: SENTENCIAS DDL PARA CREAR TABLAS EN EL ESQUEMA RAW.
  * 
- * Descripción: Etapa de extracción de datos.
+ * Descripción: Etapa de extracción de datos en bruto.
  *
  * @autor: Prof. Richar D. Jiménez-R. <rjimenez@pol.una.py>
  * @creacion: Setiembre 11, 2024
@@ -12,9 +12,9 @@
  */
 
 
--- drop table if exists ods.ods_nomina_sfp;
+-- drop table if exists raw.raw_nomina_sfp;
 
-CREATE TABLE ods.ods_nomina_sfp (
+CREATE TABLE raw.raw_nomina_sfp (
 	anho int2 NULL,
 	mes int2 NULL,
 	nivel int2 NULL,

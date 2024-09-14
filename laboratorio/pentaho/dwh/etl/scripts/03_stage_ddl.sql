@@ -18,14 +18,14 @@
 -- drop view stage.vw_stg_institucion;
 
 create or replace view stage.vw_stg_institucion as
-select distinct
+select
 	nivel::int2 		as nivel_codigo,
 	descripcion_nivel 	as nivel_descripcion,
 	entidad::int2 		as entidad_codigo,
 	descripcion_entidad as entidad_descripcion,
 	oee::int2 			as oee_codigo,
 	descripcion_oee 	as oee_descripcion
-from ods.ods_nomina_sfp
+from raw.raw_nomina_sfp
 order by nivel, entidad, oee;
 
 
@@ -58,7 +58,7 @@ from (
 		fecha_nacimiento::date				as fecha_nacimiento,
 		substring(documento, 1, 1)			as nacionalidad_ctrl
 	from
-		ods.ods_nomina_sfp
+		raw.raw_nomina_sfp
 	where
 		documento is not null
 		and nombres is not null
@@ -85,7 +85,7 @@ from (
 		trim(tipo_discapacidad)	as tipo_discapacidad,
 		trim(discapacidad)		as discapacidad
 	from
-		ods.ods_nomina_sfp
+		raw.raw_nomina_sfp
 	where
 		documento is not null
 		and nombres is not null
@@ -175,7 +175,7 @@ select
 	coalesce(presupuestado, 0)							as monto_presupuestado,
 	coalesce(devengado, 0)								as monto_devengado,
 	coalesce(presupuestado, 0) - coalesce(devengado, 0)	as monto_descuento
-from ods.ods_nomina_sfp;
+from raw.raw_nomina_sfp;
 
 
 -- drop table if exists stage.fact_remuneracion_temporal;
