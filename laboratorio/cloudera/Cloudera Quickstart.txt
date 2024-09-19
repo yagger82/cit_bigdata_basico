@@ -1,0 +1,6 @@
+
+Cómo Instalar Cloudera Quickstart VM para windows 11
+
+Virtual-Box: https://www.virtualbox.org/wiki/Downloads
+
+Cloudera QuickStart 5.13: https://downloads.cloudera.com/demo_vm/virtualbox/cloudera-quickstart-vm-5.13.0-0-virtualbox.zip

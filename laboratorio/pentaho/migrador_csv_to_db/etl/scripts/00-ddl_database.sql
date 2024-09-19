@@ -20,7 +20,7 @@
 
 -- DROP DATABASE laboratorio_bd2;
 
-CREATE DATABASE laboratorio_oltp
+CREATE DATABASE database
 	OWNER postgres
 	ENCODING UTF8
 	TEMPLATE template0
@@ -29,7 +29,7 @@ CREATE DATABASE laboratorio_oltp
     IS_TEMPLATE false
 ;
     
-COMMENT ON DATABASE laboratorio_oltp IS 'Base de datos de laboratorio en PostgreSQL para las clases prácticas.';
+COMMENT ON DATABASE database IS 'Base de datos de laboratorio en PostgreSQL para las clases prácticas.';
 
 
 -- DROP SCHEMA raw;

@@ -14,7 +14,7 @@
 
 /* CONTEO DE FILAS DE RAW
  */
-select count(*) from raw.raw_nomina_sfp; 
+select count(*) from raw.raw_sfp_nomina; 
 
 
 

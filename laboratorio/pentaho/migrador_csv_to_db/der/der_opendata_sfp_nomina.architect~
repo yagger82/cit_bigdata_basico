@@ -4,16 +4,7 @@
  <print-settings numCopies="1" zoom="1.0" pageNumbersPrinted="true" orientation="1" paperWidth="612.0" paperHeight="792.0" leftBorder="50.0" rightBorder="50.0" topBorder="50.0" bottomBorder="50.0" />
  <project-data-sources>
   <data-source id="DS0">
-   <property key="Logical" value="PostgreSQL-Database" />
-   <property key="Connection Type" value="PostgreSQL" />
-   <property key="JDBC URL" value="jdbc:postgresql://localhost:5432/database" />
-   <property key="UID" value="postgres" />
-   <property key="PWD" value="postgres" />
-   <property key="ca.sqlpower.architect.etl.kettle.database" value="" />
-   <property key="ca.sqlpower.architect.etl.kettle.port" value="" />
-   <property key="ca.sqlpower.architect.etl.kettle.hostname" value="" />
-   <property key="ca.sqlpower.architect.etl.kettle.repos.login" value="" />
-   <property key="ca.sqlpower.architect.etl.kettle.repos.password" value="" />
+   <property key="Logical" value="PlayPen Database" />
   </data-source>
  </project-data-sources>
  <source-databases>
@@ -977,7 +968,7 @@
    <relationship id="REL327" populated="true" UUID="522ea94c-df5f-4005-a1f5-964132e75cf4" deferrability="7" deleteRule="3" fk-table-ref="TAB158" fkCardinality="7" identifying="false" name="control_financiero_objeto_gasto_fk" physicalName="control_financiero_objeto_gasto_fk" pk-table-ref="TAB174" pkCardinality="2" updateRule="3" >
     <column-mapping id="CMP328" populated="true" UUID="7bc1c106-896f-412e-8e40-96f89d9716f3" fk-column-ref="COL163" name="Column Mapping" physicalName="Column Mapping" pk-column-ref="COL175" />
    </relationship>
-   <relationship id="REL329" populated="true" UUID="dcae819d-b45f-4a6f-982e-65a8ab651e4c" deferrability="7" deleteRule="3" fk-table-ref="TAB200" fkCardinality="7" identifying="false" name="CARGO_funcionario_cargo_fk" physicalName="cargo_funcionario_cargo_fk" pk-table-ref="TAB187" pkCardinality="2" updateRule="3" >
+   <relationship id="REL329" populated="true" UUID="dcae819d-b45f-4a6f-982e-65a8ab651e4c" deferrability="7" deleteRule="3" fk-table-ref="TAB200" fkCardinality="7" identifying="false" name="CARGO_funcionario_cargo_fk" physicalName="CARGO_funcionario_cargo_fk" pk-table-ref="TAB187" pkCardinality="2" updateRule="3" >
     <column-mapping id="CMP330" populated="true" UUID="53be9135-c6de-4668-80e1-8fd12dc6965e" fk-column-ref="COL203" name="Column Mapping" physicalName="Column Mapping" pk-column-ref="COL188" />
    </relationship>
    <relationship id="REL331" populated="true" UUID="95efd06f-3469-4991-bd9a-20066dfb56d8" deferrability="7" deleteRule="3" fk-table-ref="TAB245" fkCardinality="7" identifying="false" name="funcionario_puesto_remuneracion_cabecera_fk" physicalName="funcionario_puesto_remuneracion_cabecera_fk" pk-table-ref="TAB200" pkCardinality="2" updateRule="3" >
@@ -997,10 +988,10 @@
    </relationship>
   </relationships>
  </target-database>
- <ddl-generator type="ca.sqlpower.architect.ddl.PostgresDDLGenerator" allow-connection="false" target-schema="sfp"> </ddl-generator>
+ <ddl-generator type="ca.sqlpower.architect.ddl.PostgresDDLGenerator" allow-connection="true" target-schema="oltp"> </ddl-generator>
  <liquibase-settings useSeparateChangeSets="false" generateId="false" idStart="1"/>
  <create-kettle-job-settings filePath="" jobName="" schemaName="" kettleJoinType="0" savingToFile="true" />
- <play-pen zoom="0.707106781186547" viewportX="366" viewportY="0" relationship-style="rectilinear" names-displayLogicalNames="true" showPrimaryTag="true" showForeignTag="true" showAlternateTag="true" columnVisibility="ALL" relationshipLabelVisibility="true">
+ <play-pen zoom="1.4142135623730943" viewportX="957" viewportY="373" relationship-style="rectilinear" names-displayLogicalNames="true" showPrimaryTag="true" showForeignTag="true" showAlternateTag="true" columnVisibility="ALL" relationshipLabelVisibility="true">
   <table-pane table-ref="TAB1" x="130" y="156" bgColor="0xc8dccc" fgColor="0x000000" rounded="false" dashed="false"/>
   <table-pane table-ref="TAB14" x="581" y="325" bgColor="0xc8dccc" fgColor="0x000000" rounded="false" dashed="false"/>
   <table-pane table-ref="TAB29" x="1031" y="458" bgColor="0xc8dccc" fgColor="0x000000" rounded="false" dashed="false"/>
