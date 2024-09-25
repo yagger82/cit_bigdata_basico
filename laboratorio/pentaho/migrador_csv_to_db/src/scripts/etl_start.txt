@@ -1,0 +1,3 @@
+
+
+/opt/pentaho-di/data-integration/kitchen.sh -file=$PENTAHO_JOB -level=Basic > $LOG_TMP

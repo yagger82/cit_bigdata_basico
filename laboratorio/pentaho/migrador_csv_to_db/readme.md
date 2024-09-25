@@ -6,13 +6,43 @@
 
 <center>Prof. Ing. Richard D. Jiménez-R.</center>
 
-### **<u>Guía de Actividad:</u> Diseño de Base de Datos Relacional e Implementación ETL**
+### **<u>Guía de Actividad:</u> Diseño de Base de Datos Relacional e Implementación de un Proceso ETL con Pentaho Data Integration (Kettle) y PostgreSQL.**
 
 
 
 ### Objetivo
 
-El objetivo de esta actividad es que el estudiante analice el diseño de una base de datos relacional para almacenar un conjunto de datos específico, y luego analice la implementación de un proceso ETL para cargar los datos desde un archivo CSV hacia la base de datos diseñada para PostgreSQL.
+El objetivo de esta actividad es que el estudiante analice el diseño de una base de datos relacional para almacenar un conjunto de datos específico, y luego analice la implementación de un proceso ETL con **Pentaho Data Integration** (Kettle) para cargar los datos desde un archivo *CSV* hacia la base de datos diseñada para **PostgreSQL**.
+
+
+
+### Estructura de Directorios del Proyecto
+
+A continuación, se detalla los directorios del proyecto con **Pentaho Data Integration** (Kettle):
+
+**/src/**: Este es el directorio raíz que contiene todo el código fuente del proyecto. Dentro de él, puedes dividir las transformaciones y los trabajos en directorios específicos:
+
+- **/transformaciones/**: Almacena las transformaciones en formato `.ktr`.
+- **/trabajos/**: Contiene los archivos `.kjb` de los trabajos.
+- **/sql/**: Para scripts SQL que puedas necesitar ejecutar como parte del proceso.
+- **/config/**: Para almacenar los archivos de configuración, como archivos de propiedades (`.properties`), configuraciones de base de datos o variables de entorno.
+- **/scripts/**: Scripts adicionales, como scripts de shell, Python, etc., que son parte del flujo.
+- **README.md:** Manual de configuración e instalación del proyecto.
+
+**/data/**: Aquí almacenas los datos de entrada y salida. Se recomienda dividirlo en subdirectorios:
+
+- **/input/**: Archivos de datos de entrada.
+- **/output/**: Resultados generados por las transformaciones.
+
+**/logs/**: Carpeta dedicada para almacenar los logs de ejecución de las transformaciones y trabajos, permitiendo el seguimiento y análisis de errores.
+
+**/docs/**: Para documentar el proyecto, instrucciones de uso, configuración y cualquier otra información importante relacionada.
+
+**/libs/**: Aquí puedes poner librerías externas necesarias, como drivers JDBC u otras dependencias que necesita el proyecto.
+
+**/modelo/:** Para almacenar los diagramas y archivos fuentes de los modelos conceptuales, lógicos y físico de la base de datos. 
+
+**/queries/:** Para almacenar las consultas SQL varios.
 
 
 
@@ -44,6 +74,8 @@ El objetivo de esta actividad es que el estudiante analice el diseño de una bas
      - Código fuente de los scripts utilizados.
      - Resultados de las pruebas realizadas.
      - Conclusiones y recomendaciones.
+
+
 
 ### Herramientas
 
