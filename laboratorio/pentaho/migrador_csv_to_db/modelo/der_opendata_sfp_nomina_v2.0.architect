@@ -792,17 +792,17 @@
     <column id="COL251" populated="true" UUID="742e4ed7-a763-4b85-adf4-fbb26ff0c342" autoIncrement="false" autoIncrementSequenceName="remuneracion_cabecera_activo_seq" defaultValue="true" name="activo" nullable="0" physicalName="activo" precision="0" referenceCount="1" scale="0" source-column-ref="COL19" sourceDataTypeName="UserDefinedSQLType" type="16" userDefinedTypeUUID="a26374aa-3026-4bb8-b564-eb2e186dfa5d" >
      <remarks>Estado del registro</remarks>
     </column>
-    <column id="COL252" populated="true" UUID="403e8f32-219b-47fd-b147-d3e17ac8cc28" autoIncrement="false" autoIncrementSequenceName="remuneracion_cabecera_fecha_creacion_seq" defaultValue="now()" name="fecha_creacion" nullable="0" physicalName="fecha_creacion" precision="0" referenceCount="1" scale="0" source-column-ref="COL21" sourceDataTypeName="UserDefinedSQLType" type="93" userDefinedTypeUUID="6497d8de-0e00-40d6-a42e-e2adca83be64" >
-     <remarks>Fecha y hora de creación del registro</remarks>
+    <column id="COL252" populated="true" UUID="bd23b0a9-14d1-4339-a2c0-095cc2f12079" autoIncrement="false" autoIncrementSequenceName="remuneracion_cabecera_usuario_creacion_seq" defaultValue="" name="usuario_creacion" nullable="0" physicalName="usuario_creacion" precision="16" referenceCount="1" scale="0" source-column-ref="COL20" sourceDataTypeName="UserDefinedSQLType" type="12" userDefinedTypeUUID="831ac2d4-0e65-47ec-a0b7-62b7f6b8760a" >
+     <remarks>Nombre de usuario de creación del registro</remarks>
     </column>
-    <column id="COL253" populated="true" UUID="ca7e687e-4ea9-449d-abf6-7e2fc7de8ae7" autoIncrement="false" autoIncrementSequenceName="remuneracion_cabecera_fecha_modificacion_seq" defaultValue="" name="fecha_modificacion" nullable="1" physicalName="fecha_modificacion" precision="0" referenceCount="1" scale="0" source-column-ref="COL23" sourceDataTypeName="UserDefinedSQLType" type="93" userDefinedTypeUUID="6497d8de-0e00-40d6-a42e-e2adca83be64" >
-     <remarks>Fecha y hora de la última modificación del registro</remarks>
+    <column id="COL253" populated="true" UUID="403e8f32-219b-47fd-b147-d3e17ac8cc28" autoIncrement="false" autoIncrementSequenceName="remuneracion_cabecera_fecha_creacion_seq" defaultValue="now()" name="fecha_creacion" nullable="0" physicalName="fecha_creacion" precision="0" referenceCount="1" scale="0" source-column-ref="COL21" sourceDataTypeName="UserDefinedSQLType" type="93" userDefinedTypeUUID="6497d8de-0e00-40d6-a42e-e2adca83be64" >
+     <remarks>Fecha y hora de creación del registro</remarks>
     </column>
     <column id="COL254" populated="true" UUID="3e99bc1e-f0d9-4f5c-9b81-a365f36b838f" autoIncrement="false" autoIncrementSequenceName="remuneracion_cabecera_usuario_modificacion_seq" defaultValue="" name="usuario_modificacion" nullable="1" physicalName="usuario_modificacion" precision="16" referenceCount="1" scale="0" source-column-ref="COL22" sourceDataTypeName="UserDefinedSQLType" type="12" userDefinedTypeUUID="831ac2d4-0e65-47ec-a0b7-62b7f6b8760a" >
      <remarks>Nombre de usuario que realizó la última modificación del registro</remarks>
     </column>
-    <column id="COL255" populated="true" UUID="bd23b0a9-14d1-4339-a2c0-095cc2f12079" autoIncrement="false" autoIncrementSequenceName="remuneracion_cabecera_usuario_creacion_seq" defaultValue="" name="usuario_creacion" nullable="0" physicalName="usuario_creacion" precision="16" referenceCount="1" scale="0" source-column-ref="COL20" sourceDataTypeName="UserDefinedSQLType" type="12" userDefinedTypeUUID="831ac2d4-0e65-47ec-a0b7-62b7f6b8760a" >
-     <remarks>Nombre de usuario de creación del registro</remarks>
+    <column id="COL255" populated="true" UUID="ca7e687e-4ea9-449d-abf6-7e2fc7de8ae7" autoIncrement="false" autoIncrementSequenceName="remuneracion_cabecera_fecha_modificacion_seq" defaultValue="" name="fecha_modificacion" nullable="1" physicalName="fecha_modificacion" precision="0" referenceCount="1" scale="0" source-column-ref="COL23" sourceDataTypeName="UserDefinedSQLType" type="93" userDefinedTypeUUID="6497d8de-0e00-40d6-a42e-e2adca83be64" >
+     <remarks>Fecha y hora de la última modificación del registro</remarks>
     </column>
     </folder>
     <folder id="FOLTAB2443" populated="true" name="Exported Keys" physicalName="Exported Keys" type="3">
@@ -858,11 +858,11 @@
     <column id="COL273" populated="true" UUID="73ce4614-ddfd-440c-aef4-62c0f5f1faf3" autoIncrement="false" autoIncrementSequenceName="remuneracion_detalle_fecha_creacion_seq" defaultValue="now()" name="fecha_creacion" nullable="0" physicalName="fecha_creacion" precision="0" referenceCount="1" scale="0" source-column-ref="COL21" sourceDataTypeName="UserDefinedSQLType" type="93" userDefinedTypeUUID="6497d8de-0e00-40d6-a42e-e2adca83be64" >
      <remarks>Fecha y hora de creación del registro</remarks>
     </column>
-    <column id="COL274" populated="true" UUID="a3367524-900b-4c9f-b421-8166f2b21183" autoIncrement="false" autoIncrementSequenceName="remuneracion_detalle_fecha_modificacion_seq" defaultValue="" name="fecha_modificacion" nullable="1" physicalName="fecha_modificacion" precision="0" referenceCount="1" scale="0" source-column-ref="COL23" sourceDataTypeName="UserDefinedSQLType" type="93" userDefinedTypeUUID="6497d8de-0e00-40d6-a42e-e2adca83be64" >
-     <remarks>Fecha y hora de la última modificación del registro</remarks>
-    </column>
-    <column id="COL275" populated="true" UUID="7664353c-418c-492b-9921-419e800dab21" autoIncrement="false" autoIncrementSequenceName="remuneracion_detalle_usuario_modificacion_seq" defaultValue="" name="usuario_modificacion" nullable="1" physicalName="usuario_modificacion" precision="16" referenceCount="1" scale="0" source-column-ref="COL22" sourceDataTypeName="UserDefinedSQLType" type="12" userDefinedTypeUUID="831ac2d4-0e65-47ec-a0b7-62b7f6b8760a" >
+    <column id="COL274" populated="true" UUID="7664353c-418c-492b-9921-419e800dab21" autoIncrement="false" autoIncrementSequenceName="remuneracion_detalle_usuario_modificacion_seq" defaultValue="" name="usuario_modificacion" nullable="1" physicalName="usuario_modificacion" precision="16" referenceCount="1" scale="0" source-column-ref="COL22" sourceDataTypeName="UserDefinedSQLType" type="12" userDefinedTypeUUID="831ac2d4-0e65-47ec-a0b7-62b7f6b8760a" >
      <remarks>Nombre de usuario que realizó la última modificación del registro</remarks>
+    </column>
+    <column id="COL275" populated="true" UUID="a3367524-900b-4c9f-b421-8166f2b21183" autoIncrement="false" autoIncrementSequenceName="remuneracion_detalle_fecha_modificacion_seq" defaultValue="" name="fecha_modificacion" nullable="1" physicalName="fecha_modificacion" precision="0" referenceCount="1" scale="0" source-column-ref="COL23" sourceDataTypeName="UserDefinedSQLType" type="93" userDefinedTypeUUID="6497d8de-0e00-40d6-a42e-e2adca83be64" >
+     <remarks>Fecha y hora de la última modificación del registro</remarks>
     </column>
     </folder>
     <folder id="FOLTAB2613" populated="true" name="Exported Keys" physicalName="Exported Keys" type="3">
@@ -999,7 +999,7 @@
  <ddl-generator type="ca.sqlpower.architect.ddl.PostgresDDLGenerator" allow-connection="false" target-schema="sfp"> </ddl-generator>
  <liquibase-settings useSeparateChangeSets="false" generateId="false" idStart="1"/>
  <create-kettle-job-settings filePath="" jobName="" schemaName="" kettleJoinType="0" savingToFile="true" />
- <play-pen zoom="1.1892071150027201" viewportX="1945" viewportY="1163" relationship-style="rectilinear" names-displayLogicalNames="true" showPrimaryTag="true" showForeignTag="true" showAlternateTag="true" columnVisibility="ALL" relationshipLabelVisibility="true">
+ <play-pen zoom="1.1892071150027201" viewportX="0" viewportY="0" relationship-style="rectilinear" names-displayLogicalNames="true" showPrimaryTag="true" showForeignTag="true" showAlternateTag="true" columnVisibility="ALL" relationshipLabelVisibility="true">
   <table-pane table-ref="TAB1" x="130" y="156" bgColor="0xc8dccc" fgColor="0x000000" rounded="false" dashed="false"/>
   <table-pane table-ref="TAB14" x="581" y="325" bgColor="0xc8dccc" fgColor="0x000000" rounded="false" dashed="false"/>
   <table-pane table-ref="TAB29" x="1031" y="458" bgColor="0xc8dccc" fgColor="0x000000" rounded="false" dashed="false"/>

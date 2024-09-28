@@ -1,3 +1,5 @@
+
+
 /* UNIVERSIDAD NACIONAL DE ASUNCION
  * Facultad Politécnica - Proyecto Centro de Innovación TIC - Curso Básico de Introducción a Big Data
  * 
@@ -14,18 +16,21 @@
 
 /* CONTEO DE FILAS DE RAW
  */
-select count(*) from raw.raw_sfp_nomina; 
+select count(*) from raw.raw_nomina_sfp;
+select count(*) from raw.raw_nomina_sfp_eliminado;
 
 
 
 /* CONTEO DE FILAS DE CADA VISTA
  */
 
--- drop view stage.rpt_vw_conteo_filas;
+-- drop materialized view stage.vm_rpt_conteo_vistas;
 
--- select * from stage.rpt_vw_conteo_filas;
+-- select * from stage.vm_rpt_conteo_vistas;
 
-create or replace view stage.rpt_vw_conteo_filas as
+-- refresh materialized view stage.vm_rpt_conteo_vistas;
+
+create materialized view stage.vm_rpt_conteo_vistas as
 select
 	tm.id,
 	tm.vista,
@@ -47,9 +52,9 @@ from (
 		union
 	select 8 as id, 'VW_FUNCIONARIO_PUESTO' as vista, count(*) as cantidad from stage.vw_funcionario_puesto
 		union
-	select 9 as id, 'VW_REMUNERACION_CABECERA' as vista, count(*) as cantidad from stage.vw_remuneracion_cabecera
+	select 9 as id, 'VM_REMUNERACION_CABECERA' as vista, count(*) as cantidad from stage.vm_remuneracion_cabecera
 		union
-	select 10 as id, 'VW_REMUNERACION_DETALLE' as vista, count(*) as cantidad from stage.vw_remuneracion_detalle
+	select 10 as id, 'VM_REMUNERACION_DETALLE' as vista, count(*) as cantidad from stage.vm_remuneracion_detalle
 ) tm
 order by tm.id
 ;

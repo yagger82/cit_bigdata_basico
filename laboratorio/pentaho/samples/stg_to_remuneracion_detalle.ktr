@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <transformation>
   <info>
-    <name>stg_to_remuneracion_cabecera</name>
+    <name>stg_to_remuneracion_detalle</name>
     <description/>
     <extended_description/>
     <trans_version/>
     <trans_type>Normal</trans_type>
-    <trans_status>0</trans_status>
     <directory>/</directory>
     <parameters>
     </parameters>
@@ -408,12 +407,12 @@
       <offset>0.0</offset>
       <maxdiff>0.0</maxdiff>
     </maxdate>
-    <size_rowset>100000</size_rowset>
+    <size_rowset>10000</size_rowset>
     <sleep_time_empty>50</sleep_time_empty>
     <sleep_time_full>50</sleep_time_full>
     <unique_connections>N</unique_connections>
     <feedback_shown>Y</feedback_shown>
-    <feedback_size>500000</feedback_size>
+    <feedback_size>50000</feedback_size>
     <using_thread_priorities>Y</using_thread_priorities>
     <shared_objects_file/>
     <capture_step_performance>N</capture_step_performance>
@@ -428,23 +427,23 @@
     <clusterschemas>
     </clusterschemas>
     <created_user>-</created_user>
-    <created_date>2024/03/21 10:20:20.563</created_date>
+    <created_date>2024/03/21 10:23:00.026</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2024/03/21 10:20:20.563</modified_date>
+    <modified_date>2024/03/21 10:23:00.026</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
   <notepads>
   </notepads>
   <connection>
-    <name>PostgreSQL-LAB_BIGDATA</name>
-    <server>${LAB_BIGDATA_HOSTNAME}</server>
+    <name>PostgreSQL-Lab</name>
+    <server>${LAB_BD2_HOSTNAME}</server>
     <type>POSTGRESQL</type>
     <access>Native</access>
-    <database>${LAB_BIGDATA_DATABASE}</database>
-    <port>${LAB_BIGDATA_PORTNUMBER}</port>
-    <username>${LAB_BIGDATA_USERNAME}</username>
-    <password>${LAB_BIGDATA_PASSWORD}</password>
+    <database>${LAB_BD2_DATABASE}</database>
+    <port>${LAB_BD2_PORTNUMBER}</port>
+    <username>${LAB_BD2_USERNAME}</username>
+    <password>${LAB_BD2_PASSWORD}</password>
     <servername/>
     <data_tablespace/>
     <index_tablespace/>
@@ -463,7 +462,7 @@
       </attribute>
       <attribute>
         <code>PORT_NUMBER</code>
-        <attribute>${LAB_BIGDATA_PORTNUMBER}</attribute>
+        <attribute>${LAB_BD2_PORTNUMBER}</attribute>
       </attribute>
       <attribute>
         <code>PRESERVE_RESERVED_WORD_CASE</code>
@@ -489,50 +488,75 @@
   </connection>
   <order>
     <hop>
-      <from>Get fecha</from>
-      <to>Get usuario</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Seleccionar inserts</from>
-      <to>Cargar remuneracion_cabecera</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Leer datos</from>
-      <to>Get fecha</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Get usuario</from>
+      <from>Buscar datos nuevos</from>
       <to>Filtrar datos nuevos</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
       <from>Filtrar datos nuevos</from>
-      <to>Seleccionar inserts</to>
+      <to>Dummy</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
       <from>Filtrar datos nuevos</from>
-      <to>Seleccionar updates</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Seleccionar updates</from>
-      <to>Actualizar remuneracion_cabecera</to>
+      <to>Get fecha</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
       <from>Get periodo</from>
-      <to>Leer datos</to>
+      <to>Get anho</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Get anho</from>
+      <to>Get mes</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Get fecha</from>
+      <to>Get usuario</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Get filename</from>
+      <to>Get periodo</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Get mes</from>
+      <to>Get variables</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Get usuario</from>
+      <to>Seleccionar columnas</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Get variables</from>
+      <to>Leer remuneracion_cab</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Leer datos</from>
+      <to>Buscar datos nuevos</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Leer remuneracion_cab</from>
+      <to>Buscar datos nuevos</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Seleccionar columnas</from>
+      <to>Cargar funcionario_puesto</to>
       <enabled>Y</enabled>
     </hop>
   </order>
   <step>
-    <name>Actualizar remuneracion_cabecera</name>
-    <type>Update</type>
-    <description/>
+    <name>Buscar datos nuevos</name>
+    <type>StreamLookup</type>
+    <description>Paso para buscar datos nuevos a insertar en la tabla funcionario_puesto</description>
     <distribute>Y</distribute>
     <custom_distribution/>
     <copies>1</copies>
@@ -540,40 +564,37 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <connection>PostgreSQL-LAB_BIGDATA</connection>
-    <skip_lookup>N</skip_lookup>
-    <commit>500000</commit>
-    <use_batch>Y</use_batch>
-    <error_ignored>N</error_ignored>
-    <ignore_flag_field/>
+    <from>Leer remuneracion_cab</from>
+    <input_sorted>N</input_sorted>
+    <preserve_memory>Y</preserve_memory>
+    <sorted_list>N</sorted_list>
+    <integer_pair>N</integer_pair>
     <lookup>
-      <schema>${LAB_BIGDATA_SCHEMA_SFP}</schema>
-      <table>remuneracion_cabecera</table>
       <key>
         <name>remuneracion_cabecera_id</name>
         <field>remuneracion_cabecera_id</field>
-        <condition>=</condition>
-        <name2/>
+      </key>
+      <key>
+        <name>fuente_financiamiento_id</name>
+        <field>fuente_financiamiento_id</field>
+      </key>
+      <key>
+        <name>objeto_gasto_id</name>
+        <field>objeto_gasto_id</field>
+      </key>
+      <key>
+        <name>linea</name>
+        <field>linea</field>
+      </key>
+      <key>
+        <name>categoria</name>
+        <field>categoria</field>
       </key>
       <value>
-        <name>total_haberes</name>
-        <rename>total_haberes</rename>
-      </value>
-      <value>
-        <name>total_devengado</name>
-        <rename>total_devengado</rename>
-      </value>
-      <value>
-        <name>total_descuentos</name>
-        <rename>total_descuentos</rename>
-      </value>
-      <value>
-        <name>usuario_modificacion</name>
-        <rename>usuario_modificacion</rename>
-      </value>
-      <value>
-        <name>fecha_modificacion</name>
-        <rename>fecha_modificacion</rename>
+        <name>remuneracion_detalle_id</name>
+        <rename>remuneracion_detalle_id</rename>
+        <default/>
+        <type>Integer</type>
       </value>
     </lookup>
     <attributes/>
@@ -585,13 +606,13 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>688</xloc>
-      <yloc>528</yloc>
+      <xloc>448</xloc>
+      <yloc>400</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Cargar remuneracion_cabecera</name>
+    <name>Cargar funcionario_puesto</name>
     <type>TableOutput</type>
     <description/>
     <distribute>Y</distribute>
@@ -601,9 +622,9 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <connection>PostgreSQL-LAB_BIGDATA</connection>
-    <schema>${LAB_BIGDATA_SCHEMA_SFP}</schema>
-    <table>remuneracion_cabecera</table>
+    <connection>PostgreSQL-Lab</connection>
+    <schema>oltp</schema>
+    <table>remuneracion_detalle</table>
     <commit>500000</commit>
     <truncate>N</truncate>
     <ignore_errors>N</ignore_errors>
@@ -620,24 +641,36 @@
     <return_field/>
     <fields>
       <field>
-        <column_name>periodo_id</column_name>
-        <stream_name>periodo_id</stream_name>
+        <column_name>remuneracion_cabecera_id</column_name>
+        <stream_name>remuneracion_cabecera_id</stream_name>
       </field>
       <field>
-        <column_name>funcionario_puesto_id</column_name>
-        <stream_name>funcionario_puesto_id</stream_name>
+        <column_name>fuente_financiamiento_id</column_name>
+        <stream_name>fuente_financiamiento_id</stream_name>
       </field>
       <field>
-        <column_name>total_haberes</column_name>
-        <stream_name>total_haberes</stream_name>
+        <column_name>objeto_gasto_id</column_name>
+        <stream_name>objeto_gasto_id</stream_name>
       </field>
       <field>
-        <column_name>total_devengado</column_name>
-        <stream_name>total_devengado</stream_name>
+        <column_name>linea</column_name>
+        <stream_name>linea</stream_name>
       </field>
       <field>
-        <column_name>total_descuentos</column_name>
-        <stream_name>total_descuentos</stream_name>
+        <column_name>categoria</column_name>
+        <stream_name>categoria</stream_name>
+      </field>
+      <field>
+        <column_name>monto_haberes</column_name>
+        <stream_name>monto_haberes</stream_name>
+      </field>
+      <field>
+        <column_name>monto_devengado</column_name>
+        <stream_name>monto_devengado</stream_name>
+      </field>
+      <field>
+        <column_name>monto_descuentos</column_name>
+        <stream_name>monto_descuentos</stream_name>
       </field>
       <field>
         <column_name>usuario_creacion</column_name>
@@ -653,8 +686,33 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>1056</xloc>
-      <yloc>288</yloc>
+      <xloc>1184</xloc>
+      <yloc>400</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Dummy</name>
+    <type>Dummy</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>608</xloc>
+      <yloc>528</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -669,12 +727,12 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <send_true_to>Seleccionar inserts</send_true_to>
-    <send_false_to>Seleccionar updates</send_false_to>
+    <send_true_to>Get fecha</send_true_to>
+    <send_false_to>Dummy</send_false_to>
     <compare>
       <condition>
         <negated>N</negated>
-        <leftvalue>remuneracion_cabecera_id</leftvalue>
+        <leftvalue>remuneracion_detalle_id</leftvalue>
         <function>IS NULL</function>
         <rightvalue/>
       </condition>
@@ -688,8 +746,41 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>688</xloc>
-      <yloc>288</yloc>
+      <xloc>608</xloc>
+      <yloc>400</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Get anho</name>
+    <type>StringCut</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <fields>
+      <field>
+        <in_stream_name>aaaamm</in_stream_name>
+        <out_stream_name>anho</out_stream_name>
+        <cut_from>0</cut_from>
+        <cut_to>4</cut_to>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>448</xloc>
+      <yloc>112</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -719,94 +810,13 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>448</xloc>
-      <yloc>288</yloc>
+      <xloc>752</xloc>
+      <yloc>400</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Get periodo</name>
-    <type>TableInput</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <connection>PostgreSQL-LAB_BIGDATA</connection>
-    <sql>select anho, mes from raw.raw_nomina_sfp limit 1;</sql>
-    <limit>0</limit>
-    <lookup/>
-    <execute_each_row>N</execute_each_row>
-    <variables_active>N</variables_active>
-    <lazy_conversion_active>N</lazy_conversion_active>
-    <cached_row_meta_active>N</cached_row_meta_active>
-    <row-meta>
-      <value-meta>
-        <type>Integer</type>
-        <storagetype>normal</storagetype>
-        <name>anho</name>
-        <length>4</length>
-        <precision>0</precision>
-        <origin>Table input</origin>
-        <comments>anho</comments>
-        <conversion_Mask>####0;-####0</conversion_Mask>
-        <decimal_symbol>,</decimal_symbol>
-        <grouping_symbol>.</grouping_symbol>
-        <currency_symbol/>
-        <trim_type>none</trim_type>
-        <case_insensitive>N</case_insensitive>
-        <collator_disabled>Y</collator_disabled>
-        <collator_strength>0</collator_strength>
-        <sort_descending>N</sort_descending>
-        <output_padding>N</output_padding>
-        <date_format_lenient>N</date_format_lenient>
-        <date_format_locale>en_US</date_format_locale>
-        <date_format_timezone>America/Asuncion</date_format_timezone>
-        <lenient_string_to_number>N</lenient_string_to_number>
-      </value-meta>
-      <value-meta>
-        <type>Integer</type>
-        <storagetype>normal</storagetype>
-        <name>mes</name>
-        <length>4</length>
-        <precision>0</precision>
-        <origin>Table input</origin>
-        <comments>mes</comments>
-        <conversion_Mask>####0;-####0</conversion_Mask>
-        <decimal_symbol>,</decimal_symbol>
-        <grouping_symbol>.</grouping_symbol>
-        <currency_symbol/>
-        <trim_type>none</trim_type>
-        <case_insensitive>N</case_insensitive>
-        <collator_disabled>Y</collator_disabled>
-        <collator_strength>0</collator_strength>
-        <sort_descending>N</sort_descending>
-        <output_padding>N</output_padding>
-        <date_format_lenient>N</date_format_lenient>
-        <date_format_locale>en_US</date_format_locale>
-        <date_format_timezone>America/Asuncion</date_format_timezone>
-        <lenient_string_to_number>N</lenient_string_to_number>
-      </value-meta>
-    </row-meta>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>208</xloc>
-      <yloc>288</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Get usuario</name>
+    <name>Get filename</name>
     <type>GetVariable</type>
     <description/>
     <distribute>Y</distribute>
@@ -818,8 +828,8 @@
     </partitioning>
     <fields>
       <field>
-        <name>usuario</name>
-        <variable>${LAB_BIGDATA_ETLUSER}</variable>
+        <name>filename</name>
+        <variable>${LAB_BD2_DATASET}</variable>
         <type>String</type>
         <format/>
         <currency/>
@@ -839,8 +849,154 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>544</xloc>
-      <yloc>288</yloc>
+      <xloc>128</xloc>
+      <yloc>112</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Get mes</name>
+    <type>StringCut</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <fields>
+      <field>
+        <in_stream_name>aaaamm</in_stream_name>
+        <out_stream_name>mes</out_stream_name>
+        <cut_from>4</cut_from>
+        <cut_to>6</cut_to>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>592</xloc>
+      <yloc>112</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Get periodo</name>
+    <type>StringOperations</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <fields>
+      <field>
+        <in_stream_name>filename</in_stream_name>
+        <out_stream_name>aaaamm</out_stream_name>
+        <trim_type/>
+        <lower_upper/>
+        <padding_type/>
+        <pad_char/>
+        <pad_len/>
+        <init_cap/>
+        <mask_xml/>
+        <digits>only</digits>
+        <remove_special_characters/>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>288</xloc>
+      <yloc>112</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Get usuario</name>
+    <type>GetVariable</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <fields>
+      <field>
+        <name>usuario</name>
+        <variable>${LAB_BIGDATA_USERNAME}</variable>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <length>-1</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>864</xloc>
+      <yloc>400</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Get variables</name>
+    <type>SelectValues</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <fields>
+      <field>
+        <name>anho</name>
+      </field>
+      <field>
+        <name>mes</name>
+      </field>
+      <select_unspecified>N</select_unspecified>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>736</xloc>
+      <yloc>112</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -855,175 +1011,37 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <connection>PostgreSQL-LAB_BIGDATA</connection>
-    <sql>with datos_origen as (
-select
-   tm.periodo_id,
-   fp.funcionario_puesto_id,
-   tm.total_haberes,
-   tm.total_devengado,
-   tm.total_descuentos  
-from (
-   select distinct
-	  t.periodo_id,
-      f.funcionario_id,
-      s.profesion_id,
-      c.cargo_id,
-      d.estado_id,
-      vrc.anho_ingreso,
-      vrc.total_haberes,
-      vrc.total_devengado,
-      vrc.total_haberes - vrc.total_devengado as total_descuentos
-   from stage.vm_remuneracion_cabecera vrc
-   join sfp.persona p on p.documento = vrc.documento
-   join sfp.nivel n on n.codigo = vrc.nivel_codigo
-   join sfp.entidad e on e.nivel_id = n.nivel_id and e.codigo = vrc.entidad_codigo
-   join sfp.oee o on o.entidad_id = e.entidad_id and o.codigo = vrc.oee_codigo
-   join sfp.funcionario f on f.persona_id = p.persona_id and f.oee_id = o.oee_id
-   join sfp.profesion s on s.codigo = vrc.profesion_codigo
-   join sfp.cargo c on c.codigo = vrc.cargo_codigo
-   join sfp.estado d on d.codigo = vrc.estado_codigo
-   join sfp.periodo t on t.anho = vrc.anho and t.mes = vrc.mes
-) tm
-join sfp.funcionario_puesto fp on fp.funcionario_id = tm.funcionario_id and fp.profesion_id = tm.profesion_id and fp.cargo_id = tm.cargo_id and fp.estado_id = tm.estado_id and fp.anho_ingreso = tm.anho_ingreso
-order by fp.funcionario_puesto_id
-),
-datos_target as (
-select
+    <connection>PostgreSQL-Lab</connection>
+    <sql>select distinct
 	rc.remuneracion_cabecera_id,
-	rc.periodo_id,
-	rc.funcionario_puesto_id
-from sfp.remuneracion_cabecera rc
-join sfp.periodo p on p.periodo_id = rc.periodo_id
-where p.anho = ?::int2
-	and p.mes = ?::int2
-order by rc.remuneracion_cabecera_id, rc.funcionario_puesto_id
-)
-select ds.*, dt.remuneracion_cabecera_id
-from datos_origen ds
-left join datos_target dt on dt.periodo_id = ds.periodo_id and dt.funcionario_puesto_id = ds.funcionario_puesto_id;</sql>
+	ff.fuente_financiamiento_id,
+	og.objeto_gasto_id,
+	case when stage.isnumeric(linea) then vrd.linea::int4 else -1 end as linea,
+	vrd.categoria::varchar(16) as categoria,
+	coalesce(vrd.presupuestado, 0) as monto_haberes,
+	coalesce(vrd.devengado, 0) as monto_devengado,
+	coalesce(vrd.presupuestado, 0) - coalesce(vrd.devengado, 0) as monto_descuentos
+from stage.vw_remuneracion_detalle vrd
+join oltp.periodo t on t.anho = vrd.anho and t.mes = vrd.mes
+join oltp.persona p on p.documento = vrd.documento
+join oltp.nivel n on n.codigo = vrd.nivel_codigo
+join oltp.entidad e on e.nivel_id = n.nivel_id and e.codigo = vrd.entidad_codigo
+join oltp.oee o on o.entidad_id = e.entidad_id and o.codigo = vrd.oee_codigo
+join oltp.funcionario f on f.persona_id = p.persona_id and f.oee_id = o.oee_id
+join oltp.cargo c on c.codigo = vrd.cargo_codigo
+join oltp.profesion r on r.codigo = vrd.profesion_codigo
+join oltp.funcionario_puesto fp on fp.funcionario_id = f.funcionario_id and fp.cargo_id = c.cargo_id and fp.profesion_id = r.profesion_id and fp.anho_ingreso = vrd.anho_ingreso
+join oltp.remuneracion_cabecera rc on rc.periodo_id = t.periodo_id and rc.funcionario_puesto_id = fp.funcionario_puesto_id
+join oltp.fuente_financiamiento ff on ff.codigo = vrd.fuente_financiamiento_codigo
+join oltp.objeto_gasto og on og.objeto_gasto = vrd.objeto_gasto
+order by rc.remuneracion_cabecera_id,ff.fuente_financiamiento_id, og.objeto_gasto_id, linea, categoria;</sql>
     <limit/>
-    <lookup>Get periodo</lookup>
+    <lookup/>
     <execute_each_row>N</execute_each_row>
     <variables_active>N</variables_active>
     <lazy_conversion_active>N</lazy_conversion_active>
     <cached_row_meta_active>N</cached_row_meta_active>
     <row-meta>
-      <value-meta>
-        <type>Integer</type>
-        <storagetype>normal</storagetype>
-        <name>periodo_id</name>
-        <length>4</length>
-        <precision>0</precision>
-        <origin>Leer datos</origin>
-        <comments>periodo_id</comments>
-        <conversion_Mask>####0;-####0</conversion_Mask>
-        <decimal_symbol>,</decimal_symbol>
-        <grouping_symbol>.</grouping_symbol>
-        <currency_symbol/>
-        <trim_type>none</trim_type>
-        <case_insensitive>N</case_insensitive>
-        <collator_disabled>Y</collator_disabled>
-        <collator_strength>0</collator_strength>
-        <sort_descending>N</sort_descending>
-        <output_padding>N</output_padding>
-        <date_format_lenient>N</date_format_lenient>
-        <date_format_locale>en_US</date_format_locale>
-        <date_format_timezone>America/Asuncion</date_format_timezone>
-        <lenient_string_to_number>N</lenient_string_to_number>
-      </value-meta>
-      <value-meta>
-        <type>Integer</type>
-        <storagetype>normal</storagetype>
-        <name>funcionario_puesto_id</name>
-        <length>9</length>
-        <precision>0</precision>
-        <origin>Leer datos</origin>
-        <comments>funcionario_puesto_id</comments>
-        <conversion_Mask>####0;-####0</conversion_Mask>
-        <decimal_symbol>,</decimal_symbol>
-        <grouping_symbol>.</grouping_symbol>
-        <currency_symbol/>
-        <trim_type>none</trim_type>
-        <case_insensitive>N</case_insensitive>
-        <collator_disabled>Y</collator_disabled>
-        <collator_strength>0</collator_strength>
-        <sort_descending>N</sort_descending>
-        <output_padding>N</output_padding>
-        <date_format_lenient>N</date_format_lenient>
-        <date_format_locale>en_US</date_format_locale>
-        <date_format_timezone>America/Asuncion</date_format_timezone>
-        <lenient_string_to_number>N</lenient_string_to_number>
-      </value-meta>
-      <value-meta>
-        <type>Integer</type>
-        <storagetype>normal</storagetype>
-        <name>total_haberes</name>
-        <length>15</length>
-        <precision>0</precision>
-        <origin>Leer datos</origin>
-        <comments>total_haberes</comments>
-        <conversion_Mask>####0;-####0</conversion_Mask>
-        <decimal_symbol>,</decimal_symbol>
-        <grouping_symbol>.</grouping_symbol>
-        <currency_symbol/>
-        <trim_type>none</trim_type>
-        <case_insensitive>N</case_insensitive>
-        <collator_disabled>Y</collator_disabled>
-        <collator_strength>0</collator_strength>
-        <sort_descending>N</sort_descending>
-        <output_padding>N</output_padding>
-        <date_format_lenient>N</date_format_lenient>
-        <date_format_locale>en_US</date_format_locale>
-        <date_format_timezone>America/Asuncion</date_format_timezone>
-        <lenient_string_to_number>N</lenient_string_to_number>
-      </value-meta>
-      <value-meta>
-        <type>Integer</type>
-        <storagetype>normal</storagetype>
-        <name>total_devengado</name>
-        <length>15</length>
-        <precision>0</precision>
-        <origin>Leer datos</origin>
-        <comments>total_devengado</comments>
-        <conversion_Mask>####0;-####0</conversion_Mask>
-        <decimal_symbol>,</decimal_symbol>
-        <grouping_symbol>.</grouping_symbol>
-        <currency_symbol/>
-        <trim_type>none</trim_type>
-        <case_insensitive>N</case_insensitive>
-        <collator_disabled>Y</collator_disabled>
-        <collator_strength>0</collator_strength>
-        <sort_descending>N</sort_descending>
-        <output_padding>N</output_padding>
-        <date_format_lenient>N</date_format_lenient>
-        <date_format_locale>en_US</date_format_locale>
-        <date_format_timezone>America/Asuncion</date_format_timezone>
-        <lenient_string_to_number>N</lenient_string_to_number>
-      </value-meta>
-      <value-meta>
-        <type>Integer</type>
-        <storagetype>normal</storagetype>
-        <name>total_descuentos</name>
-        <length>15</length>
-        <precision>0</precision>
-        <origin>Leer datos</origin>
-        <comments>total_descuentos</comments>
-        <conversion_Mask>####0;-####0</conversion_Mask>
-        <decimal_symbol>,</decimal_symbol>
-        <grouping_symbol>.</grouping_symbol>
-        <currency_symbol/>
-        <trim_type>none</trim_type>
-        <case_insensitive>N</case_insensitive>
-        <collator_disabled>Y</collator_disabled>
-        <collator_strength>0</collator_strength>
-        <sort_descending>N</sort_descending>
-        <output_padding>N</output_padding>
-        <date_format_lenient>N</date_format_lenient>
-        <date_format_locale>en_US</date_format_locale>
-        <date_format_timezone>America/Asuncion</date_format_timezone>
-        <lenient_string_to_number>N</lenient_string_to_number>
-      </value-meta>
       <value-meta>
         <type>Integer</type>
         <storagetype>normal</storagetype>
@@ -1043,7 +1061,168 @@ left join datos_target dt on dt.periodo_id = ds.periodo_id and dt.funcionario_pu
         <sort_descending>N</sort_descending>
         <output_padding>N</output_padding>
         <date_format_lenient>N</date_format_lenient>
-        <date_format_locale>en_US</date_format_locale>
+        <date_format_locale>es_PY</date_format_locale>
+        <date_format_timezone>America/Asuncion</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+      <value-meta>
+        <type>Integer</type>
+        <storagetype>normal</storagetype>
+        <name>fuente_financiamiento_id</name>
+        <length>4</length>
+        <precision>0</precision>
+        <origin>Leer datos</origin>
+        <comments>fuente_financiamiento_id</comments>
+        <conversion_Mask>####0;-####0</conversion_Mask>
+        <decimal_symbol>,</decimal_symbol>
+        <grouping_symbol>.</grouping_symbol>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>es_PY</date_format_locale>
+        <date_format_timezone>America/Asuncion</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+      <value-meta>
+        <type>Integer</type>
+        <storagetype>normal</storagetype>
+        <name>objeto_gasto_id</name>
+        <length>4</length>
+        <precision>0</precision>
+        <origin>Leer datos</origin>
+        <comments>objeto_gasto_id</comments>
+        <conversion_Mask>####0;-####0</conversion_Mask>
+        <decimal_symbol>,</decimal_symbol>
+        <grouping_symbol>.</grouping_symbol>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>es_PY</date_format_locale>
+        <date_format_timezone>America/Asuncion</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+      <value-meta>
+        <type>Integer</type>
+        <storagetype>normal</storagetype>
+        <name>linea</name>
+        <length>9</length>
+        <precision>0</precision>
+        <origin>Leer datos</origin>
+        <comments>linea</comments>
+        <conversion_Mask>####0;-####0</conversion_Mask>
+        <decimal_symbol>,</decimal_symbol>
+        <grouping_symbol>.</grouping_symbol>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>es_PY</date_format_locale>
+        <date_format_timezone>America/Asuncion</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+      <value-meta>
+        <type>String</type>
+        <storagetype>normal</storagetype>
+        <name>categoria</name>
+        <length>16</length>
+        <precision>-1</precision>
+        <origin>Leer datos</origin>
+        <comments>categoria</comments>
+        <conversion_Mask/>
+        <decimal_symbol>,</decimal_symbol>
+        <grouping_symbol>.</grouping_symbol>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>es_PY</date_format_locale>
+        <date_format_timezone>America/Asuncion</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+      <value-meta>
+        <type>Integer</type>
+        <storagetype>normal</storagetype>
+        <name>monto_haberes</name>
+        <length>9</length>
+        <precision>0</precision>
+        <origin>Leer datos</origin>
+        <comments>monto_haberes</comments>
+        <conversion_Mask>####0;-####0</conversion_Mask>
+        <decimal_symbol>,</decimal_symbol>
+        <grouping_symbol>.</grouping_symbol>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>es_PY</date_format_locale>
+        <date_format_timezone>America/Asuncion</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+      <value-meta>
+        <type>Integer</type>
+        <storagetype>normal</storagetype>
+        <name>monto_devengado</name>
+        <length>9</length>
+        <precision>0</precision>
+        <origin>Leer datos</origin>
+        <comments>monto_devengado</comments>
+        <conversion_Mask>####0;-####0</conversion_Mask>
+        <decimal_symbol>,</decimal_symbol>
+        <grouping_symbol>.</grouping_symbol>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>es_PY</date_format_locale>
+        <date_format_timezone>America/Asuncion</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+      <value-meta>
+        <type>Integer</type>
+        <storagetype>normal</storagetype>
+        <name>monto_descuentos</name>
+        <length>9</length>
+        <precision>0</precision>
+        <origin>Leer datos</origin>
+        <comments>monto_descuentos</comments>
+        <conversion_Mask>####0;-####0</conversion_Mask>
+        <decimal_symbol>,</decimal_symbol>
+        <grouping_symbol>.</grouping_symbol>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>es_PY</date_format_locale>
         <date_format_timezone>America/Asuncion</date_format_timezone>
         <lenient_string_to_number>N</lenient_string_to_number>
       </value-meta>
@@ -1057,13 +1236,198 @@ left join datos_target dt on dt.periodo_id = ds.periodo_id and dt.funcionario_pu
       </output>
     </remotesteps>
     <GUI>
-      <xloc>352</xloc>
-      <yloc>288</yloc>
+      <xloc>272</xloc>
+      <yloc>400</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Seleccionar inserts</name>
+    <name>Leer remuneracion_cab</name>
+    <type>TableInput</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>PostgreSQL-Lab</connection>
+    <sql>select
+	rd.remuneracion_detalle_id,
+	rd.remuneracion_cabecera_id,
+	rd.fuente_financiamiento_id,
+	rd.objeto_gasto_id,
+	rd.linea,
+	rd.categoria
+from oltp.remuneracion_cabecera rc
+join oltp.periodo p on p.periodo_id = rc.periodo_id
+join oltp.remuneracion_detalle rd on rd.remuneracion_cabecera_id = rc.remuneracion_cabecera_id
+where p.anho = ?::int2
+	and p.mes = ?::int2
+order by rd.remuneracion_detalle_id, rd.remuneracion_cabecera_id;</sql>
+    <limit>0</limit>
+    <lookup>Get variables</lookup>
+    <execute_each_row>N</execute_each_row>
+    <variables_active>N</variables_active>
+    <lazy_conversion_active>N</lazy_conversion_active>
+    <cached_row_meta_active>N</cached_row_meta_active>
+    <row-meta>
+      <value-meta>
+        <type>Integer</type>
+        <storagetype>normal</storagetype>
+        <name>remuneracion_detalle_id</name>
+        <length>15</length>
+        <precision>0</precision>
+        <origin>Leer remuneracion_cab</origin>
+        <comments>remuneracion_detalle_id</comments>
+        <conversion_Mask>####0;-####0</conversion_Mask>
+        <decimal_symbol>,</decimal_symbol>
+        <grouping_symbol>.</grouping_symbol>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>es_PY</date_format_locale>
+        <date_format_timezone>America/Asuncion</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+      <value-meta>
+        <type>Integer</type>
+        <storagetype>normal</storagetype>
+        <name>remuneracion_cabecera_id</name>
+        <length>15</length>
+        <precision>0</precision>
+        <origin>Leer remuneracion_cab</origin>
+        <comments>remuneracion_cabecera_id</comments>
+        <conversion_Mask>####0;-####0</conversion_Mask>
+        <decimal_symbol>,</decimal_symbol>
+        <grouping_symbol>.</grouping_symbol>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>es_PY</date_format_locale>
+        <date_format_timezone>America/Asuncion</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+      <value-meta>
+        <type>Integer</type>
+        <storagetype>normal</storagetype>
+        <name>fuente_financiamiento_id</name>
+        <length>4</length>
+        <precision>0</precision>
+        <origin>Leer remuneracion_cab</origin>
+        <comments>fuente_financiamiento_id</comments>
+        <conversion_Mask>####0;-####0</conversion_Mask>
+        <decimal_symbol>,</decimal_symbol>
+        <grouping_symbol>.</grouping_symbol>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>es_PY</date_format_locale>
+        <date_format_timezone>America/Asuncion</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+      <value-meta>
+        <type>Integer</type>
+        <storagetype>normal</storagetype>
+        <name>objeto_gasto_id</name>
+        <length>4</length>
+        <precision>0</precision>
+        <origin>Leer remuneracion_cab</origin>
+        <comments>objeto_gasto_id</comments>
+        <conversion_Mask>####0;-####0</conversion_Mask>
+        <decimal_symbol>,</decimal_symbol>
+        <grouping_symbol>.</grouping_symbol>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>es_PY</date_format_locale>
+        <date_format_timezone>America/Asuncion</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+      <value-meta>
+        <type>Integer</type>
+        <storagetype>normal</storagetype>
+        <name>linea</name>
+        <length>9</length>
+        <precision>0</precision>
+        <origin>Leer remuneracion_cab</origin>
+        <comments>linea</comments>
+        <conversion_Mask>####0;-####0</conversion_Mask>
+        <decimal_symbol>,</decimal_symbol>
+        <grouping_symbol>.</grouping_symbol>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>es_PY</date_format_locale>
+        <date_format_timezone>America/Asuncion</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+      <value-meta>
+        <type>String</type>
+        <storagetype>normal</storagetype>
+        <name>categoria</name>
+        <length>16</length>
+        <precision>-1</precision>
+        <origin>Leer remuneracion_cab</origin>
+        <comments>categoria</comments>
+        <conversion_Mask/>
+        <decimal_symbol>,</decimal_symbol>
+        <grouping_symbol>.</grouping_symbol>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>es_PY</date_format_locale>
+        <date_format_timezone>America/Asuncion</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+    </row-meta>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>448</xloc>
+      <yloc>240</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Seleccionar columnas</name>
     <type>SelectValues</type>
     <description/>
     <distribute>Y</distribute>
@@ -1075,19 +1439,36 @@ left join datos_target dt on dt.periodo_id = ds.periodo_id and dt.funcionario_pu
     </partitioning>
     <fields>
       <field>
-        <name>periodo_id</name>
+        <name>remuneracion_cabecera_id</name>
+        <rename/>
       </field>
       <field>
-        <name>funcionario_puesto_id</name>
+        <name>fuente_financiamiento_id</name>
+        <rename/>
       </field>
       <field>
-        <name>total_haberes</name>
+        <name>objeto_gasto_id</name>
+        <rename/>
       </field>
       <field>
-        <name>total_devengado</name>
+        <name>linea</name>
+        <rename/>
       </field>
       <field>
-        <name>total_descuentos</name>
+        <name>categoria</name>
+        <rename/>
+      </field>
+      <field>
+        <name>monto_haberes</name>
+        <rename/>
+      </field>
+      <field>
+        <name>monto_devengado</name>
+        <rename/>
+      </field>
+      <field>
+        <name>monto_descuentos</name>
+        <rename/>
       </field>
       <field>
         <name>usuario</name>
@@ -1104,56 +1485,8 @@ left join datos_target dt on dt.periodo_id = ds.periodo_id and dt.funcionario_pu
       </output>
     </remotesteps>
     <GUI>
-      <xloc>864</xloc>
-      <yloc>288</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Seleccionar updates</name>
-    <type>SelectValues</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <fields>
-      <field>
-        <name>remuneracion_cabecera_id</name>
-      </field>
-      <field>
-        <name>total_haberes</name>
-      </field>
-      <field>
-        <name>total_devengado</name>
-      </field>
-      <field>
-        <name>total_descuentos</name>
-      </field>
-      <field>
-        <name>usuario</name>
-        <rename>usuario_modificacion</rename>
-      </field>
-      <field>
-        <name>fecha_hora</name>
-        <rename>fecha_modificacion</rename>
-      </field>
-      <select_unspecified>N</select_unspecified>
-    </fields>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>688</xloc>
-      <yloc>416</yloc>
+      <xloc>1008</xloc>
+      <yloc>400</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <transformation>
   <info>
-    <name>stg_to_remuneracion_cabecera</name>
-    <description/>
-    <extended_description/>
-    <trans_version/>
+    <name>stg_to_persona_v2</name>
+    <description>Ingestador</description>
+    <extended_description>1-Lee los datos del stage area.
+2-Limpieza de datos.
+3-Pegado de claves FK.
+4-Cargar los datos a la tabla destino.</extended_description>
+    <trans_version>1</trans_version>
     <trans_type>Normal</trans_type>
-    <trans_status>0</trans_status>
+    <trans_status>2</trans_status>
     <directory>/</directory>
     <parameters>
     </parameters>
@@ -40,37 +43,37 @@
         </field>
         <field>
           <id>LINES_READ</id>
-          <enabled>Y</enabled>
+          <enabled>N</enabled>
           <name>LINES_READ</name>
           <subject/>
         </field>
         <field>
           <id>LINES_WRITTEN</id>
-          <enabled>Y</enabled>
+          <enabled>N</enabled>
           <name>LINES_WRITTEN</name>
           <subject/>
         </field>
         <field>
           <id>LINES_UPDATED</id>
-          <enabled>Y</enabled>
+          <enabled>N</enabled>
           <name>LINES_UPDATED</name>
           <subject/>
         </field>
         <field>
           <id>LINES_INPUT</id>
-          <enabled>Y</enabled>
+          <enabled>N</enabled>
           <name>LINES_INPUT</name>
           <subject/>
         </field>
         <field>
           <id>LINES_OUTPUT</id>
-          <enabled>Y</enabled>
+          <enabled>N</enabled>
           <name>LINES_OUTPUT</name>
           <subject/>
         </field>
         <field>
           <id>LINES_REJECTED</id>
-          <enabled>Y</enabled>
+          <enabled>N</enabled>
           <name>LINES_REJECTED</name>
           <subject/>
         </field>
@@ -411,7 +414,7 @@
     <size_rowset>100000</size_rowset>
     <sleep_time_empty>50</sleep_time_empty>
     <sleep_time_full>50</sleep_time_full>
-    <unique_connections>N</unique_connections>
+    <unique_connections>Y</unique_connections>
     <feedback_shown>Y</feedback_shown>
     <feedback_size>500000</feedback_size>
     <using_thread_priorities>Y</using_thread_priorities>
@@ -428,9 +431,9 @@
     <clusterschemas>
     </clusterschemas>
     <created_user>-</created_user>
-    <created_date>2024/03/21 10:20:20.563</created_date>
+    <created_date>2023/03/07 18:30:04.910</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2024/03/21 10:20:20.563</modified_date>
+    <modified_date>2023/03/07 18:30:04.910</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -489,18 +492,13 @@
   </connection>
   <order>
     <hop>
+      <from>Limpiar datos</from>
+      <to>Get fecha</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
       <from>Get fecha</from>
       <to>Get usuario</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Seleccionar inserts</from>
-      <to>Cargar remuneracion_cabecera</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Leer datos</from>
-      <to>Get fecha</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
@@ -520,17 +518,22 @@
     </hop>
     <hop>
       <from>Seleccionar updates</from>
-      <to>Actualizar remuneracion_cabecera</to>
+      <to>Actualizar persona</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Get periodo</from>
-      <to>Leer datos</to>
+      <from>Seleccionar inserts</from>
+      <to>Cargar persona</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Leer datos</from>
+      <to>Limpiar datos</to>
       <enabled>Y</enabled>
     </hop>
   </order>
   <step>
-    <name>Actualizar remuneracion_cabecera</name>
+    <name>Actualizar persona</name>
     <type>Update</type>
     <description/>
     <distribute>Y</distribute>
@@ -541,31 +544,43 @@
       <schema_name/>
     </partitioning>
     <connection>PostgreSQL-LAB_BIGDATA</connection>
-    <skip_lookup>N</skip_lookup>
-    <commit>500000</commit>
+    <skip_lookup>Y</skip_lookup>
+    <commit>0</commit>
     <use_batch>Y</use_batch>
     <error_ignored>N</error_ignored>
     <ignore_flag_field/>
     <lookup>
       <schema>${LAB_BIGDATA_SCHEMA_SFP}</schema>
-      <table>remuneracion_cabecera</table>
+      <table>persona</table>
       <key>
-        <name>remuneracion_cabecera_id</name>
-        <field>remuneracion_cabecera_id</field>
+        <name>persona_id</name>
+        <field>persona_id</field>
         <condition>=</condition>
         <name2/>
       </key>
       <value>
-        <name>total_haberes</name>
-        <rename>total_haberes</rename>
+        <name>nombre</name>
+        <rename>nombre</rename>
       </value>
       <value>
-        <name>total_devengado</name>
-        <rename>total_devengado</rename>
+        <name>apellido</name>
+        <rename>apellido</rename>
       </value>
       <value>
-        <name>total_descuentos</name>
-        <rename>total_descuentos</rename>
+        <name>fecha_nacimiento</name>
+        <rename>fecha_nacimiento</rename>
+      </value>
+      <value>
+        <name>sexo_id</name>
+        <rename>sexo_id</rename>
+      </value>
+      <value>
+        <name>naciondalidad_id</name>
+        <rename>naciondalidad_id</rename>
+      </value>
+      <value>
+        <name>tipo_discapacidad_id</name>
+        <rename>tipo_discapacidad_id</rename>
       </value>
       <value>
         <name>usuario_modificacion</name>
@@ -585,13 +600,13 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>688</xloc>
+      <xloc>768</xloc>
       <yloc>528</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Cargar remuneracion_cabecera</name>
+    <name>Cargar persona</name>
     <type>TableOutput</type>
     <description/>
     <distribute>Y</distribute>
@@ -603,11 +618,11 @@
     </partitioning>
     <connection>PostgreSQL-LAB_BIGDATA</connection>
     <schema>${LAB_BIGDATA_SCHEMA_SFP}</schema>
-    <table>remuneracion_cabecera</table>
-    <commit>500000</commit>
+    <table>persona</table>
+    <commit>0</commit>
     <truncate>N</truncate>
     <ignore_errors>N</ignore_errors>
-    <use_batch>Y</use_batch>
+    <use_batch>N</use_batch>
     <specify_fields>Y</specify_fields>
     <partitioning_enabled>N</partitioning_enabled>
     <partitioning_field/>
@@ -620,24 +635,32 @@
     <return_field/>
     <fields>
       <field>
-        <column_name>periodo_id</column_name>
-        <stream_name>periodo_id</stream_name>
+        <column_name>documento</column_name>
+        <stream_name>documento</stream_name>
       </field>
       <field>
-        <column_name>funcionario_puesto_id</column_name>
-        <stream_name>funcionario_puesto_id</stream_name>
+        <column_name>nombre</column_name>
+        <stream_name>nombre</stream_name>
       </field>
       <field>
-        <column_name>total_haberes</column_name>
-        <stream_name>total_haberes</stream_name>
+        <column_name>apellido</column_name>
+        <stream_name>apellido</stream_name>
       </field>
       <field>
-        <column_name>total_devengado</column_name>
-        <stream_name>total_devengado</stream_name>
+        <column_name>fecha_nacimiento</column_name>
+        <stream_name>fecha_nacimiento</stream_name>
       </field>
       <field>
-        <column_name>total_descuentos</column_name>
-        <stream_name>total_descuentos</stream_name>
+        <column_name>sexo_id</column_name>
+        <stream_name>sexo_id</stream_name>
+      </field>
+      <field>
+        <column_name>naciondalidad_id</column_name>
+        <stream_name>naciondalidad_id</stream_name>
+      </field>
+      <field>
+        <column_name>tipo_discapacidad_id</column_name>
+        <stream_name>tipo_discapacidad_id</stream_name>
       </field>
       <field>
         <column_name>usuario_creacion</column_name>
@@ -653,8 +676,8 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>1056</xloc>
-      <yloc>288</yloc>
+      <xloc>1120</xloc>
+      <yloc>256</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -674,7 +697,7 @@
     <compare>
       <condition>
         <negated>N</negated>
-        <leftvalue>remuneracion_cabecera_id</leftvalue>
+        <leftvalue>persona_id</leftvalue>
         <function>IS NULL</function>
         <rightvalue/>
       </condition>
@@ -688,8 +711,8 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>688</xloc>
-      <yloc>288</yloc>
+      <xloc>768</xloc>
+      <yloc>256</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -719,89 +742,8 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>448</xloc>
-      <yloc>288</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Get periodo</name>
-    <type>TableInput</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <connection>PostgreSQL-LAB_BIGDATA</connection>
-    <sql>select anho, mes from raw.raw_nomina_sfp limit 1;</sql>
-    <limit>0</limit>
-    <lookup/>
-    <execute_each_row>N</execute_each_row>
-    <variables_active>N</variables_active>
-    <lazy_conversion_active>N</lazy_conversion_active>
-    <cached_row_meta_active>N</cached_row_meta_active>
-    <row-meta>
-      <value-meta>
-        <type>Integer</type>
-        <storagetype>normal</storagetype>
-        <name>anho</name>
-        <length>4</length>
-        <precision>0</precision>
-        <origin>Table input</origin>
-        <comments>anho</comments>
-        <conversion_Mask>####0;-####0</conversion_Mask>
-        <decimal_symbol>,</decimal_symbol>
-        <grouping_symbol>.</grouping_symbol>
-        <currency_symbol/>
-        <trim_type>none</trim_type>
-        <case_insensitive>N</case_insensitive>
-        <collator_disabled>Y</collator_disabled>
-        <collator_strength>0</collator_strength>
-        <sort_descending>N</sort_descending>
-        <output_padding>N</output_padding>
-        <date_format_lenient>N</date_format_lenient>
-        <date_format_locale>en_US</date_format_locale>
-        <date_format_timezone>America/Asuncion</date_format_timezone>
-        <lenient_string_to_number>N</lenient_string_to_number>
-      </value-meta>
-      <value-meta>
-        <type>Integer</type>
-        <storagetype>normal</storagetype>
-        <name>mes</name>
-        <length>4</length>
-        <precision>0</precision>
-        <origin>Table input</origin>
-        <comments>mes</comments>
-        <conversion_Mask>####0;-####0</conversion_Mask>
-        <decimal_symbol>,</decimal_symbol>
-        <grouping_symbol>.</grouping_symbol>
-        <currency_symbol/>
-        <trim_type>none</trim_type>
-        <case_insensitive>N</case_insensitive>
-        <collator_disabled>Y</collator_disabled>
-        <collator_strength>0</collator_strength>
-        <sort_descending>N</sort_descending>
-        <output_padding>N</output_padding>
-        <date_format_lenient>N</date_format_lenient>
-        <date_format_locale>en_US</date_format_locale>
-        <date_format_timezone>America/Asuncion</date_format_timezone>
-        <lenient_string_to_number>N</lenient_string_to_number>
-      </value-meta>
-    </row-meta>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>208</xloc>
-      <yloc>288</yloc>
+      <xloc>512</xloc>
+      <yloc>256</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -839,8 +781,8 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>544</xloc>
-      <yloc>288</yloc>
+      <xloc>624</xloc>
+      <yloc>256</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -858,65 +800,130 @@
     <connection>PostgreSQL-LAB_BIGDATA</connection>
     <sql>with datos_origen as (
 select
-   tm.periodo_id,
-   fp.funcionario_puesto_id,
-   tm.total_haberes,
-   tm.total_devengado,
-   tm.total_descuentos  
-from (
-   select distinct
-	  t.periodo_id,
-      f.funcionario_id,
-      s.profesion_id,
-      c.cargo_id,
-      d.estado_id,
-      vrc.anho_ingreso,
-      vrc.total_haberes,
-      vrc.total_devengado,
-      vrc.total_haberes - vrc.total_devengado as total_descuentos
-   from stage.vm_remuneracion_cabecera vrc
-   join sfp.persona p on p.documento = vrc.documento
-   join sfp.nivel n on n.codigo = vrc.nivel_codigo
-   join sfp.entidad e on e.nivel_id = n.nivel_id and e.codigo = vrc.entidad_codigo
-   join sfp.oee o on o.entidad_id = e.entidad_id and o.codigo = vrc.oee_codigo
-   join sfp.funcionario f on f.persona_id = p.persona_id and f.oee_id = o.oee_id
-   join sfp.profesion s on s.codigo = vrc.profesion_codigo
-   join sfp.cargo c on c.codigo = vrc.cargo_codigo
-   join sfp.estado d on d.codigo = vrc.estado_codigo
-   join sfp.periodo t on t.anho = vrc.anho and t.mes = vrc.mes
-) tm
-join sfp.funcionario_puesto fp on fp.funcionario_id = tm.funcionario_id and fp.profesion_id = tm.profesion_id and fp.cargo_id = tm.cargo_id and fp.estado_id = tm.estado_id and fp.anho_ingreso = tm.anho_ingreso
-order by fp.funcionario_puesto_id
-),
-datos_target as (
-select
-	rc.remuneracion_cabecera_id,
-	rc.periodo_id,
-	rc.funcionario_puesto_id
-from sfp.remuneracion_cabecera rc
-join sfp.periodo p on p.periodo_id = rc.periodo_id
-where p.anho = ?::int2
-	and p.mes = ?::int2
-order by rc.remuneracion_cabecera_id, rc.funcionario_puesto_id
+	vp.documento,
+	vp.nombre,
+	vp.apellido,
+	vp.fecha_nacimiento,
+	s.sexo_id,
+	n.naciondalidad_id,
+	td.tipo_discapacidad_id
+from stage.vw_persona vp
+join sfp.sexo s on s.codigo = vp.sexo_codigo
+join sfp.nacionalidad n on n.codigo = vp.nacionalidad_codigo
+join sfp.tipo_discapacidad td on td.codigo = vp.tipo_discapacidad_codigo
+order by vp.documento
 )
-select ds.*, dt.remuneracion_cabecera_id
+select ds.*, ps.persona_id
 from datos_origen ds
-left join datos_target dt on dt.periodo_id = ds.periodo_id and dt.funcionario_puesto_id = ds.funcionario_puesto_id;</sql>
+left join sfp.persona ps on ds.documento = ps.documento
+order by documento;</sql>
     <limit/>
-    <lookup>Get periodo</lookup>
+    <lookup/>
     <execute_each_row>N</execute_each_row>
     <variables_active>N</variables_active>
     <lazy_conversion_active>N</lazy_conversion_active>
     <cached_row_meta_active>N</cached_row_meta_active>
     <row-meta>
       <value-meta>
+        <type>String</type>
+        <storagetype>normal</storagetype>
+        <name>documento</name>
+        <length>2147483647</length>
+        <precision>-1</precision>
+        <origin>Leer datos</origin>
+        <comments>documento</comments>
+        <conversion_Mask/>
+        <decimal_symbol>,</decimal_symbol>
+        <grouping_symbol>.</grouping_symbol>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>es_PY</date_format_locale>
+        <date_format_timezone>America/Asuncion</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+      <value-meta>
+        <type>String</type>
+        <storagetype>normal</storagetype>
+        <name>nombre</name>
+        <length>2147483647</length>
+        <precision>-1</precision>
+        <origin>Leer datos</origin>
+        <comments>nombre</comments>
+        <conversion_Mask/>
+        <decimal_symbol>,</decimal_symbol>
+        <grouping_symbol>.</grouping_symbol>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>es_PY</date_format_locale>
+        <date_format_timezone>America/Asuncion</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+      <value-meta>
+        <type>String</type>
+        <storagetype>normal</storagetype>
+        <name>apellido</name>
+        <length>2147483647</length>
+        <precision>-1</precision>
+        <origin>Leer datos</origin>
+        <comments>apellido</comments>
+        <conversion_Mask/>
+        <decimal_symbol>,</decimal_symbol>
+        <grouping_symbol>.</grouping_symbol>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>es_PY</date_format_locale>
+        <date_format_timezone>America/Asuncion</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+      <value-meta>
+        <type>Date</type>
+        <storagetype>normal</storagetype>
+        <name>fecha_nacimiento</name>
+        <length>-1</length>
+        <precision>-1</precision>
+        <origin>Leer datos</origin>
+        <comments>fecha_nacimiento</comments>
+        <conversion_Mask/>
+        <decimal_symbol>,</decimal_symbol>
+        <grouping_symbol>.</grouping_symbol>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>es_PY</date_format_locale>
+        <date_format_timezone>America/Asuncion</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+      <value-meta>
         <type>Integer</type>
         <storagetype>normal</storagetype>
-        <name>periodo_id</name>
+        <name>sexo_id</name>
         <length>4</length>
         <precision>0</precision>
         <origin>Leer datos</origin>
-        <comments>periodo_id</comments>
+        <comments>sexo_id</comments>
         <conversion_Mask>####0;-####0</conversion_Mask>
         <decimal_symbol>,</decimal_symbol>
         <grouping_symbol>.</grouping_symbol>
@@ -928,18 +935,64 @@ left join datos_target dt on dt.periodo_id = ds.periodo_id and dt.funcionario_pu
         <sort_descending>N</sort_descending>
         <output_padding>N</output_padding>
         <date_format_lenient>N</date_format_lenient>
-        <date_format_locale>en_US</date_format_locale>
+        <date_format_locale>es_PY</date_format_locale>
         <date_format_timezone>America/Asuncion</date_format_timezone>
         <lenient_string_to_number>N</lenient_string_to_number>
       </value-meta>
       <value-meta>
         <type>Integer</type>
         <storagetype>normal</storagetype>
-        <name>funcionario_puesto_id</name>
+        <name>naciondalidad_id</name>
+        <length>4</length>
+        <precision>0</precision>
+        <origin>Leer datos</origin>
+        <comments>naciondalidad_id</comments>
+        <conversion_Mask>####0;-####0</conversion_Mask>
+        <decimal_symbol>,</decimal_symbol>
+        <grouping_symbol>.</grouping_symbol>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>es_PY</date_format_locale>
+        <date_format_timezone>America/Asuncion</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+      <value-meta>
+        <type>Integer</type>
+        <storagetype>normal</storagetype>
+        <name>tipo_discapacidad_id</name>
+        <length>4</length>
+        <precision>0</precision>
+        <origin>Leer datos</origin>
+        <comments>tipo_discapacidad_id</comments>
+        <conversion_Mask>####0;-####0</conversion_Mask>
+        <decimal_symbol>,</decimal_symbol>
+        <grouping_symbol>.</grouping_symbol>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>es_PY</date_format_locale>
+        <date_format_timezone>America/Asuncion</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+      <value-meta>
+        <type>Integer</type>
+        <storagetype>normal</storagetype>
+        <name>persona_id</name>
         <length>9</length>
         <precision>0</precision>
         <origin>Leer datos</origin>
-        <comments>funcionario_puesto_id</comments>
+        <comments>persona_id</comments>
         <conversion_Mask>####0;-####0</conversion_Mask>
         <decimal_symbol>,</decimal_symbol>
         <grouping_symbol>.</grouping_symbol>
@@ -951,99 +1004,7 @@ left join datos_target dt on dt.periodo_id = ds.periodo_id and dt.funcionario_pu
         <sort_descending>N</sort_descending>
         <output_padding>N</output_padding>
         <date_format_lenient>N</date_format_lenient>
-        <date_format_locale>en_US</date_format_locale>
-        <date_format_timezone>America/Asuncion</date_format_timezone>
-        <lenient_string_to_number>N</lenient_string_to_number>
-      </value-meta>
-      <value-meta>
-        <type>Integer</type>
-        <storagetype>normal</storagetype>
-        <name>total_haberes</name>
-        <length>15</length>
-        <precision>0</precision>
-        <origin>Leer datos</origin>
-        <comments>total_haberes</comments>
-        <conversion_Mask>####0;-####0</conversion_Mask>
-        <decimal_symbol>,</decimal_symbol>
-        <grouping_symbol>.</grouping_symbol>
-        <currency_symbol/>
-        <trim_type>none</trim_type>
-        <case_insensitive>N</case_insensitive>
-        <collator_disabled>Y</collator_disabled>
-        <collator_strength>0</collator_strength>
-        <sort_descending>N</sort_descending>
-        <output_padding>N</output_padding>
-        <date_format_lenient>N</date_format_lenient>
-        <date_format_locale>en_US</date_format_locale>
-        <date_format_timezone>America/Asuncion</date_format_timezone>
-        <lenient_string_to_number>N</lenient_string_to_number>
-      </value-meta>
-      <value-meta>
-        <type>Integer</type>
-        <storagetype>normal</storagetype>
-        <name>total_devengado</name>
-        <length>15</length>
-        <precision>0</precision>
-        <origin>Leer datos</origin>
-        <comments>total_devengado</comments>
-        <conversion_Mask>####0;-####0</conversion_Mask>
-        <decimal_symbol>,</decimal_symbol>
-        <grouping_symbol>.</grouping_symbol>
-        <currency_symbol/>
-        <trim_type>none</trim_type>
-        <case_insensitive>N</case_insensitive>
-        <collator_disabled>Y</collator_disabled>
-        <collator_strength>0</collator_strength>
-        <sort_descending>N</sort_descending>
-        <output_padding>N</output_padding>
-        <date_format_lenient>N</date_format_lenient>
-        <date_format_locale>en_US</date_format_locale>
-        <date_format_timezone>America/Asuncion</date_format_timezone>
-        <lenient_string_to_number>N</lenient_string_to_number>
-      </value-meta>
-      <value-meta>
-        <type>Integer</type>
-        <storagetype>normal</storagetype>
-        <name>total_descuentos</name>
-        <length>15</length>
-        <precision>0</precision>
-        <origin>Leer datos</origin>
-        <comments>total_descuentos</comments>
-        <conversion_Mask>####0;-####0</conversion_Mask>
-        <decimal_symbol>,</decimal_symbol>
-        <grouping_symbol>.</grouping_symbol>
-        <currency_symbol/>
-        <trim_type>none</trim_type>
-        <case_insensitive>N</case_insensitive>
-        <collator_disabled>Y</collator_disabled>
-        <collator_strength>0</collator_strength>
-        <sort_descending>N</sort_descending>
-        <output_padding>N</output_padding>
-        <date_format_lenient>N</date_format_lenient>
-        <date_format_locale>en_US</date_format_locale>
-        <date_format_timezone>America/Asuncion</date_format_timezone>
-        <lenient_string_to_number>N</lenient_string_to_number>
-      </value-meta>
-      <value-meta>
-        <type>Integer</type>
-        <storagetype>normal</storagetype>
-        <name>remuneracion_cabecera_id</name>
-        <length>15</length>
-        <precision>0</precision>
-        <origin>Leer datos</origin>
-        <comments>remuneracion_cabecera_id</comments>
-        <conversion_Mask>####0;-####0</conversion_Mask>
-        <decimal_symbol>,</decimal_symbol>
-        <grouping_symbol>.</grouping_symbol>
-        <currency_symbol/>
-        <trim_type>none</trim_type>
-        <case_insensitive>N</case_insensitive>
-        <collator_disabled>Y</collator_disabled>
-        <collator_strength>0</collator_strength>
-        <sort_descending>N</sort_descending>
-        <output_padding>N</output_padding>
-        <date_format_lenient>N</date_format_lenient>
-        <date_format_locale>en_US</date_format_locale>
+        <date_format_locale>es_PY</date_format_locale>
         <date_format_timezone>America/Asuncion</date_format_timezone>
         <lenient_string_to_number>N</lenient_string_to_number>
       </value-meta>
@@ -1057,8 +1018,61 @@ left join datos_target dt on dt.periodo_id = ds.periodo_id and dt.funcionario_pu
       </output>
     </remotesteps>
     <GUI>
-      <xloc>352</xloc>
-      <yloc>288</yloc>
+      <xloc>224</xloc>
+      <yloc>256</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Limpiar datos</name>
+    <type>StringOperations</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <fields>
+      <field>
+        <in_stream_name>nombre</in_stream_name>
+        <out_stream_name/>
+        <trim_type>both</trim_type>
+        <lower_upper>upper</lower_upper>
+        <padding_type/>
+        <pad_char/>
+        <pad_len/>
+        <init_cap/>
+        <mask_xml/>
+        <digits/>
+        <remove_special_characters/>
+      </field>
+      <field>
+        <in_stream_name>apellido</in_stream_name>
+        <out_stream_name/>
+        <trim_type>both</trim_type>
+        <lower_upper>upper</lower_upper>
+        <padding_type/>
+        <pad_char/>
+        <pad_len/>
+        <init_cap/>
+        <mask_xml/>
+        <digits/>
+        <remove_special_characters/>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>384</xloc>
+      <yloc>256</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1075,25 +1089,48 @@ left join datos_target dt on dt.periodo_id = ds.periodo_id and dt.funcionario_pu
     </partitioning>
     <fields>
       <field>
-        <name>periodo_id</name>
+        <name>documento</name>
       </field>
       <field>
-        <name>funcionario_puesto_id</name>
+        <name>nombre</name>
       </field>
       <field>
-        <name>total_haberes</name>
+        <name>apellido</name>
       </field>
       <field>
-        <name>total_devengado</name>
+        <name>fecha_nacimiento</name>
       </field>
       <field>
-        <name>total_descuentos</name>
+        <name>sexo_id</name>
+      </field>
+      <field>
+        <name>naciondalidad_id</name>
+      </field>
+      <field>
+        <name>tipo_discapacidad_id</name>
       </field>
       <field>
         <name>usuario</name>
         <rename>usuario_creacion</rename>
       </field>
       <select_unspecified>N</select_unspecified>
+      <meta>
+        <name>fecha_nacimiento</name>
+        <rename>fecha_nacimiento</rename>
+        <type>Date</type>
+        <length>-2</length>
+        <precision>-2</precision>
+        <conversion_mask>yyyy-MM-dd</conversion_mask>
+        <date_format_lenient>true</date_format_lenient>
+        <date_format_locale/>
+        <date_format_timezone/>
+        <lenient_string_to_number>false</lenient_string_to_number>
+        <encoding/>
+        <decimal_symbol/>
+        <grouping_symbol/>
+        <currency_symbol/>
+        <storage_type/>
+      </meta>
     </fields>
     <attributes/>
     <cluster_schema/>
@@ -1104,8 +1141,8 @@ left join datos_target dt on dt.periodo_id = ds.periodo_id and dt.funcionario_pu
       </output>
     </remotesteps>
     <GUI>
-      <xloc>864</xloc>
-      <yloc>288</yloc>
+      <xloc>944</xloc>
+      <yloc>256</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1122,16 +1159,28 @@ left join datos_target dt on dt.periodo_id = ds.periodo_id and dt.funcionario_pu
     </partitioning>
     <fields>
       <field>
-        <name>remuneracion_cabecera_id</name>
+        <name>persona_id</name>
       </field>
       <field>
-        <name>total_haberes</name>
+        <name>documento</name>
       </field>
       <field>
-        <name>total_devengado</name>
+        <name>nombre</name>
       </field>
       <field>
-        <name>total_descuentos</name>
+        <name>apellido</name>
+      </field>
+      <field>
+        <name>fecha_nacimiento</name>
+      </field>
+      <field>
+        <name>sexo_id</name>
+      </field>
+      <field>
+        <name>naciondalidad_id</name>
+      </field>
+      <field>
+        <name>tipo_discapacidad_id</name>
       </field>
       <field>
         <name>usuario</name>
@@ -1142,6 +1191,23 @@ left join datos_target dt on dt.periodo_id = ds.periodo_id and dt.funcionario_pu
         <rename>fecha_modificacion</rename>
       </field>
       <select_unspecified>N</select_unspecified>
+      <meta>
+        <name>fecha_nacimiento</name>
+        <rename>fecha_nacimiento</rename>
+        <type>Date</type>
+        <length>-2</length>
+        <precision>-2</precision>
+        <conversion_mask>yyyy-MM-dd</conversion_mask>
+        <date_format_lenient>true</date_format_lenient>
+        <date_format_locale/>
+        <date_format_timezone/>
+        <lenient_string_to_number>false</lenient_string_to_number>
+        <encoding/>
+        <decimal_symbol/>
+        <grouping_symbol/>
+        <currency_symbol/>
+        <storage_type/>
+      </meta>
     </fields>
     <attributes/>
     <cluster_schema/>
@@ -1152,8 +1218,8 @@ left join datos_target dt on dt.periodo_id = ds.periodo_id and dt.funcionario_pu
       </output>
     </remotesteps>
     <GUI>
-      <xloc>688</xloc>
-      <yloc>416</yloc>
+      <xloc>768</xloc>
+      <yloc>384</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

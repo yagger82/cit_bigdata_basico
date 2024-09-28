@@ -20,7 +20,7 @@
 
 -- DROP DATABASE laboratorio_bd2;
 
-CREATE DATABASE database
+CREATE DATABASE bigdata
 	OWNER postgres
 	ENCODING UTF8
 	TEMPLATE template0
@@ -53,4 +53,4 @@ CREATE SCHEMA sfp AUTHORIZATION postgres;
 COMMENT ON SCHEMA sfp IS 'Implementación del modelo de datos físico de la base de datos sfp de gestión de remuneración de funcionarios público.';
 
 
-DROP SCHEMA public;
+-- DROP SCHEMA public;

@@ -594,10 +594,10 @@ CREATE TABLE sfp.remuneracion_cabecera (
                 total_devengado BIGINT NOT NULL,
                 total_descuentos BIGINT NOT NULL,
                 activo BOOLEAN DEFAULT true NOT NULL,
-                fecha_creacion TIMESTAMP DEFAULT now() NOT NULL,
-                fecha_modificacion TIMESTAMP,
-                usuario_modificacion VARCHAR(16),
                 usuario_creacion VARCHAR(16) NOT NULL,
+                fecha_creacion TIMESTAMP DEFAULT now() NOT NULL,
+                usuario_modificacion VARCHAR(16),
+                fecha_modificacion TIMESTAMP,
                 CONSTRAINT remuneracion_cabecera_pk PRIMARY KEY (remuneracion_cabecera_id)
 );
 COMMENT ON TABLE sfp.remuneracion_cabecera IS 'Tabla que registra las cabeceras de las transacciones de pagos de salarios y otros a los funcionarios públicos.';
@@ -608,10 +608,10 @@ COMMENT ON COLUMN sfp.remuneracion_cabecera.total_haberes IS 'Sumatoria montos h
 COMMENT ON COLUMN sfp.remuneracion_cabecera.total_devengado IS 'Sumatoria montos devengados';
 COMMENT ON COLUMN sfp.remuneracion_cabecera.total_descuentos IS 'Sumatoria descuentos';
 COMMENT ON COLUMN sfp.remuneracion_cabecera.activo IS 'Estado del registro';
-COMMENT ON COLUMN sfp.remuneracion_cabecera.fecha_creacion IS 'Fecha y hora de creación del registro';
-COMMENT ON COLUMN sfp.remuneracion_cabecera.fecha_modificacion IS 'Fecha y hora de la última modificación del registro';
-COMMENT ON COLUMN sfp.remuneracion_cabecera.usuario_modificacion IS 'Nombre de usuario que realizó la última modificación del registro';
 COMMENT ON COLUMN sfp.remuneracion_cabecera.usuario_creacion IS 'Nombre de usuario de creación del registro';
+COMMENT ON COLUMN sfp.remuneracion_cabecera.fecha_creacion IS 'Fecha y hora de creación del registro';
+COMMENT ON COLUMN sfp.remuneracion_cabecera.usuario_modificacion IS 'Nombre de usuario que realizó la última modificación del registro';
+COMMENT ON COLUMN sfp.remuneracion_cabecera.fecha_modificacion IS 'Fecha y hora de la última modificación del registro';
 
 
 ALTER SEQUENCE sfp.remuneracion_cabecera_remuneracion_cabecera_id_seq OWNED BY sfp.remuneracion_cabecera.remuneracion_cabecera_id;
@@ -635,8 +635,8 @@ CREATE TABLE sfp.remuneracion_detalle (
                 activo BOOLEAN DEFAULT true NOT NULL,
                 usuario_creacion VARCHAR(16) NOT NULL,
                 fecha_creacion TIMESTAMP DEFAULT now() NOT NULL,
-                fecha_modificacion TIMESTAMP,
                 usuario_modificacion VARCHAR(16),
+                fecha_modificacion TIMESTAMP,
                 CONSTRAINT remuneracion_detalle_pk PRIMARY KEY (remuneracion_detalle_id)
 );
 COMMENT ON TABLE sfp.remuneracion_detalle IS 'Tabla que registra los detalles de las transacciones de pagos de salarios y otros a los funcionarios públicos.';
@@ -652,8 +652,8 @@ COMMENT ON COLUMN sfp.remuneracion_detalle.monto_descuentos IS 'Monto descuentos
 COMMENT ON COLUMN sfp.remuneracion_detalle.activo IS 'Estado del registro';
 COMMENT ON COLUMN sfp.remuneracion_detalle.usuario_creacion IS 'Nombre de usuario de creación del registro';
 COMMENT ON COLUMN sfp.remuneracion_detalle.fecha_creacion IS 'Fecha y hora de creación del registro';
-COMMENT ON COLUMN sfp.remuneracion_detalle.fecha_modificacion IS 'Fecha y hora de la última modificación del registro';
 COMMENT ON COLUMN sfp.remuneracion_detalle.usuario_modificacion IS 'Nombre de usuario que realizó la última modificación del registro';
+COMMENT ON COLUMN sfp.remuneracion_detalle.fecha_modificacion IS 'Fecha y hora de la última modificación del registro';
 
 
 ALTER SEQUENCE sfp.remuneracion_detalle_remuneracion_detalle_id_seq OWNED BY sfp.remuneracion_detalle.remuneracion_detalle_id;

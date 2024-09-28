@@ -14,14 +14,35 @@
 
 -- Si la conversión es exitosa, la función devuelve verdadero (TRUE); de lo contrario, 
 -- devuelve falso (FALSE). Esta función verifica si una cadena es numérico.
-CREATE OR REPLACE FUNCTION stage.isnumeric(text) RETURNS BOOLEAN AS $$
-DECLARE
-    x NUMERIC;
-BEGIN
-    x = $1::NUMERIC;
-    RETURN TRUE;
-EXCEPTION
-    WHEN others THEN
-        RETURN FALSE;
-END;
-$$ STRICT LANGUAGE plpgsql IMMUTABLE;
+create or replace function stage.isnumeric(text) returns boolean as $$
+declare
+    x numeric;
+begin
+    x = $1::numeric;
+    return true;
+exception
+    when others then
+        return false;
+end;
+$$ strict language plpgsql immutable;
+
+
+
+--crear la función de refresco
+create or replace function stage.refrescar_vm_remuneracion_cabecera_detalle() returns trigger as $$
+begin
+	-- actualizar vistas en el orden correcto
+	refresh materialized view stage.vm_remuneracion_detalle;
+
+	refresh materialized view stage.vm_remuneracion_cabecera;
+
+	return null;
+end;
+$$ language plpgsql;
+
+--crear el trigger
+create trigger actualizar_vm_remuneracion_cabecera_detalle
+after insert or update or delete
+on raw.raw_nomina_sfp
+for each statement
+execute function stage.refrescar_vm_remuneracion_cabecera_detalle();

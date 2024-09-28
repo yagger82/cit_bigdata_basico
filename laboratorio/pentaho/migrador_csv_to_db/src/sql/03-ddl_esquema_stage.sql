@@ -224,7 +224,7 @@ order by documento;
 
 -- vw_funcionario_puesto definition
 
--- drop view stage.vw_funcionario_puesto
+-- drop view stage.vw_funcionario_puesto;
 
 -- select * from stage.vw_funcionario_puesto;
 
@@ -237,12 +237,12 @@ select distinct
 	entidad as entidad_codigo,
 	oee as oee_codigo,
 	trim(estado) as estado_codigo,
-	trim(trim('"' from cargo)) as cargo_descripcion,
-	md5(trim(trim('"' from cargo))) as cargo_codigo,
-	trim(trim('"' from profesion)) as profesion_descripcion,
-	md5(trim(trim('"' from profesion))) as profesion_codigo,
-	anho_ingreso,
-	trim(funcion) as funcion
+	upper(trim(trim('"' from coalesce(profesion, 'DESCONOCIDO')))) as profesion_descripcion,
+	md5(upper(trim(trim('"' from coalesce(profesion, 'DESCONOCIDO'))))) as profesion_codigo,	
+	upper(trim(trim('"' from coalesce(cargo, 'DESCONOCIDO')))) as cargo_descripcion,
+	md5(upper(trim(trim('"' from coalesce(cargo, 'DESCONOCIDO'))))) as cargo_codigo,
+	coalesce(anho_ingreso, 0) as anho_ingreso,
+	upper(trim(funcion)) as funcion
 from
 	raw.raw_nomina_sfp
 where
@@ -250,17 +250,14 @@ where
 	and nivel is not null
 	and entidad is not null
 	and oee is not null
-	and estado is not null
-	and cargo is not null
-	and profesion is not null
 	and substring(documento, 1, 1) not in('A', 'V') -- no  persona
-order by documento;
+order by documento, nivel, entidad, oee, anho_ingreso;
 
 
 
 -- vw_funcionario definition
 
--- drop view stage.vw_funcionario
+-- drop view stage.vw_funcionario;
 
 -- select * from stage.vw_funcionario;
 
@@ -280,7 +277,7 @@ order by documento, nivel_codigo, entidad_codigo, oee_codigo;
 
 -- vw_cargo definition
 
--- drop view stage.vw_cargo
+-- drop view stage.vw_cargo;
 
 -- select * from stage.vw_cargo;
 
@@ -291,13 +288,13 @@ select distinct
 	cargo_codigo as codigo,
 	cargo_descripcion as descripcion
 from stage.vw_funcionario_puesto
-order by cargo_codigo;
+order by cargo_descripcion;
 
 
 
 -- vw_profesion definition
 
--- drop view stage.vw_profesion
+-- drop view stage.vw_profesion;
 
 -- select * from stage.vw_profesion;
 
@@ -308,7 +305,7 @@ select distinct
 	profesion_codigo as codigo,
 	profesion_descripcion as descripcion
 from stage.vw_funcionario_puesto
-order by profesion_codigo;
+order by profesion_descripcion;
 
 
 
@@ -319,55 +316,107 @@ order by profesion_codigo;
 -- ###########################################################################
 
 
--- vw_remuneracion_detalle definition
+-- vm_remuneracion_detalle definition
 
--- drop view stage.vw_remuneracion_detalle
+-- drop materialized view stage.vm_remuneracion_detalle;
 
--- select * from stage.vw_remuneracion_detalle;
+-- select * from stage.vm_remuneracion_detalle;
 
--- select count(*) from stage.vw_remuneracion_detalle;
+-- select count(*) from stage.vm_remuneracion_detalle;
 
-create or replace view stage.vw_remuneracion_detalle as
-select distinct
+create materialized view stage.vm_remuneracion_detalle as
+select
 	anho,
 	mes,
 	documento,
 	nivel as nivel_codigo,
 	entidad as entidad_codigo,
 	oee as oee_codigo,
-	md5(trim(trim('"' from cargo))) as cargo_codigo,
-	md5(trim(trim('"' from profesion))) as profesion_codigo,
-	cargo,
-	profesion,
-	anho_ingreso,
+	md5(upper(trim(trim('"' from coalesce(profesion, 'DESCONOCIDO'))))) as profesion_codigo,
+	md5(upper(trim(trim('"' from coalesce(cargo, 'DESCONOCIDO'))))) as cargo_codigo,
+	trim(estado) as estado_codigo,
+	coalesce(anho_ingreso, 0) as anho_ingreso,
 	coalesce(fuente_financiamiento, '-1')::char(2) as fuente_financiamiento_codigo,
-	objeto_gasto,
-	linea,
-	categoria,
-	presupuestado,
-	devengado
+	objeto_gasto::smallint,
+	case when stage.isnumeric(linea) then linea::int4 else -1 end as linea,
+	trim(categoria)::varchar(16) as categoria,
+	coalesce(presupuestado, 0) as monto_haberes,
+	coalesce(devengado, 0) as monto_devengado
 from raw.raw_nomina_sfp
 where
 	documento is not null
 	and nivel is not null
 	and entidad is not null
 	and oee is not null
-	and cargo is not null
-	and profesion is not null
 	and substring(documento, 1, 1) not in('A', 'V') 
 order by documento;
 
 
 
--- vw_remuneracion_cabecera definition
+-- vm_remuneracion_cabecera definition
 
--- drop view stage.vw_remuneracion_cabecera
+-- drop materialized view stage.vm_remuneracion_cabecera;
 
--- select * from stage.vw_remuneracion_cabecera;
+-- select * from stage.vm_remuneracion_cabecera;
 
--- select count(*) from stage.vw_remuneracion_cabecera;
+-- select count(*) from stage.vm_remuneracion_cabecera;
 
-create or replace view stage.vw_remuneracion_cabecera as
+create materialized view stage.vm_remuneracion_cabecera as
+select
+	tm.anho,
+	tm.mes,
+	tm.documento,
+	tm.nivel_codigo,
+	tm.entidad_codigo,
+	tm.oee_codigo,
+	tm.cargo_codigo,
+	tm.profesion_codigo,
+	tm.estado_codigo,
+	tm.anho_ingreso,
+	sum(tm.monto_haberes) as total_haberes,
+	sum(tm.monto_devengado) as total_devengado
+from (
+	select
+		anho,
+		mes,
+		documento,
+		nivel as nivel_codigo,
+		entidad as entidad_codigo,
+		oee as oee_codigo,
+		md5(upper(trim(trim('"' from coalesce(profesion, 'DESCONOCIDO'))))) as profesion_codigo,
+		md5(upper(trim(trim('"' from coalesce(cargo, 'DESCONOCIDO'))))) as cargo_codigo,
+		trim(estado) as estado_codigo,
+		coalesce(anho_ingreso, 0) as anho_ingreso,
+		coalesce(fuente_financiamiento, '-1')::char(2) as fuente_financiamiento_codigo,
+		objeto_gasto::smallint,
+		case when stage.isnumeric(linea) then linea::int4 else -1 end as linea,
+		trim(categoria)::varchar(16) as categoria,
+		coalesce(presupuestado, 0) as monto_haberes,
+		coalesce(devengado, 0) as monto_devengado
+	from raw.raw_nomina_sfp
+	where
+		documento is not null
+		and nivel is not null
+		and entidad is not null
+		and oee is not null
+		and substring(documento, 1, 1) not in('A', 'V') 
+) tm
+group by tm.anho,
+	tm.mes,
+	tm.documento,
+	tm.nivel_codigo,
+	tm.entidad_codigo,
+	tm.oee_codigo,
+	tm.cargo_codigo,
+	tm.cargo_codigo,
+	tm.profesion_codigo,
+	tm.estado_codigo,
+	tm.anho_ingreso
+order by tm.documento;
+
+
+/*
+create materialized view stage.vm_remuneracion_cabecera as
 select
 	anho,
 	mes,
@@ -377,11 +426,11 @@ select
 	oee_codigo,
 	cargo_codigo,
 	profesion_codigo,
+	estado_codigo,
 	anho_ingreso,
-	sum(coalesce(presupuestado, 0)) as total_haberes,
-	sum(coalesce(devengado, 0)) as total_devengado,
-	sum(coalesce(presupuestado, 0) - coalesce(devengado, 0)) as total_descuentos
-from stage.vw_remuneracion_detalle
+	sum(monto_haberes) as total_haberes,
+	sum(monto_devengado) as total_devengado
+from stage.vm_remuneracion_detalle
 group by anho,
 	mes,
 	documento,
@@ -391,5 +440,7 @@ group by anho,
 	cargo_codigo,
 	cargo_codigo,
 	profesion_codigo,
+	estado_codigo,
 	anho_ingreso
 order by documento;
+*/

@@ -306,7 +306,7 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>432</xloc>
+      <xloc>400</xloc>
       <yloc>176</yloc>
       <attributes_kjc/>
     </entry>
@@ -345,7 +345,7 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>560</xloc>
+      <xloc>528</xloc>
       <yloc>176</yloc>
       <attributes_kjc/>
     </entry>
@@ -362,7 +362,7 @@
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
       <exec_per_row>N</exec_per_row>
-      <set_logfile>Y</set_logfile>
+      <set_logfile>N</set_logfile>
       <logfile>${Internal.Entry.Current.Directory}/../logs/logfile_ingestador</logfile>
       <logext>.log</logext>
       <add_date>Y</add_date>
@@ -382,7 +382,7 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>704</xloc>
+      <xloc>672</xloc>
       <yloc>176</yloc>
       <attributes_kjc/>
     </entry>
@@ -394,7 +394,7 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>848</xloc>
+      <xloc>816</xloc>
       <yloc>176</yloc>
       <attributes_kjc/>
     </entry>
@@ -407,7 +407,7 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>640</xloc>
+      <xloc>608</xloc>
       <yloc>336</yloc>
       <attributes_kjc/>
     </entry>
@@ -436,7 +436,7 @@
       <to>Success</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
-      <enabled>N</enabled>
+      <enabled>Y</enabled>
       <evaluation>Y</evaluation>
       <unconditional>N</unconditional>
     </hop>
@@ -454,7 +454,7 @@
       <to>Abort job</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
-      <enabled>N</enabled>
+      <enabled>Y</enabled>
       <evaluation>N</evaluation>
       <unconditional>N</unconditional>
     </hop>

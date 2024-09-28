@@ -294,8 +294,8 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>848</xloc>
-      <yloc>208</yloc>
+      <xloc>912</xloc>
+      <yloc>224</yloc>
       <attributes_kjc/>
     </entry>
     <entry>
@@ -305,7 +305,7 @@
       <attributes/>
       <specification_method>filename</specification_method>
       <trans_object_id/>
-      <filename>${Internal.Entry.Current.Directory}/tasks/stg_to_remuneracion_cabecera.ktr</filename>
+      <filename>${Internal.Entry.Current.Directory}/../transformaciones/stg_to_remuneracion_cabecera.ktr</filename>
       <transname/>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
@@ -313,7 +313,7 @@
       <clear_rows>N</clear_rows>
       <clear_files>N</clear_files>
       <set_logfile>Y</set_logfile>
-      <logfile>${Internal.Entry.Current.Directory}/../logs/logfile_ingestador</logfile>
+      <logfile>${Internal.Entry.Current.Directory}/../../logs/logfile_ingestador</logfile>
       <logext>.log</logext>
       <add_date>Y</add_date>
       <add_time>N</add_time>
@@ -333,8 +333,8 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>400</xloc>
-      <yloc>208</yloc>
+      <xloc>464</xloc>
+      <yloc>224</yloc>
       <attributes_kjc/>
     </entry>
     <entry>
@@ -344,7 +344,7 @@
       <attributes/>
       <specification_method>filename</specification_method>
       <trans_object_id/>
-      <filename>${Internal.Entry.Current.Directory}/tasks/stg_to_remuneracion_detalle.ktr</filename>
+      <filename>${Internal.Entry.Current.Directory}/../transformaciones/stg_to_remuneracion_detalle.ktr</filename>
       <transname/>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
@@ -352,7 +352,7 @@
       <clear_rows>N</clear_rows>
       <clear_files>N</clear_files>
       <set_logfile>Y</set_logfile>
-      <logfile>${Internal.Entry.Current.Directory}/../logs/logfile_ingestador</logfile>
+      <logfile>${Internal.Entry.Current.Directory}/../../logs/logfile_ingestador</logfile>
       <logext>.log</logext>
       <add_date>Y</add_date>
       <add_time>N</add_time>
@@ -372,8 +372,8 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>656</xloc>
-      <yloc>208</yloc>
+      <xloc>720</xloc>
+      <yloc>224</yloc>
       <attributes_kjc/>
     </entry>
     <entry>
@@ -394,8 +394,8 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>192</xloc>
-      <yloc>208</yloc>
+      <xloc>256</xloc>
+      <yloc>224</yloc>
       <attributes_kjc/>
     </entry>
     <entry>
@@ -407,8 +407,8 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>544</xloc>
-      <yloc>416</yloc>
+      <xloc>608</xloc>
+      <yloc>400</yloc>
       <attributes_kjc/>
     </entry>
   </entries>
