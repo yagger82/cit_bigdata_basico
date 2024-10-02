@@ -51,29 +51,29 @@ select count(*) from sfp.objeto_gasto;
 
 
 --NIVEL
-select * from nivel;
-select count(*) from nivel;
+select * from sfp.nivel;
+select count(*) from sfp.nivel;
 
 --ENTIDAD
-select * from entidad;
-select count(*) from entidad;
+select * from sfp.entidad;
+select count(*) from sfp.entidad;
 
 --OEE
-select * from oee;
-select count(*) from oee;
+select * from sfp.oee;
+select count(*) from sfp.oee;
 
 --SEXO
-select * from sexo;
-select count(*) from sexo;
+select * from sfp.sexo;
+select count(*) from sfp.sexo;
 
 --TIPO DISCAPACIDAD
-select * from tipo_discapacidad;
-select count(*) from tipo_discapacidad;
+select * from sfp.tipo_discapacidad;
+select count(*) from sfp.tipo_discapacidad;
 
 --NACIONALIDAD
-select * from nacionalidad;
-select count(*) from nacionalidad;
+select * from sfp.nacionalidad;
+select count(*) from sfp.nacionalidad;
 
 --PERSONA
-select * from persona;
-select count(*) from persona;
+select * from sfp.persona;
+select count(*) from sfp.persona;

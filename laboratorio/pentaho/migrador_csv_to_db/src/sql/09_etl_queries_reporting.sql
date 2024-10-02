@@ -1,5 +1,3 @@
-
-
 /* UNIVERSIDAD NACIONAL DE ASUNCION
  * Facultad Politécnica - Proyecto Centro de Innovación TIC - Curso Básico de Introducción a Big Data
  * 
@@ -64,11 +62,13 @@ order by tm.id
 /* CONTEO DE FILAS DE CADA TABLA DEL sfp
  */
 
--- drop view stage.rpt_vw_conteo_sfp;
+-- drop view stage.rpt_vm_conteo_tablas_sfp;
 
--- select * from stage.rpt_vw_conteo_sfp;
+-- select * from stage.rpt_vm_conteo_tablas_sfp;
 
-create or replace view stage.rpt_vw_conteo_sfp as
+-- refresh materialized view stage.rpt_vm_conteo_tablas_sfp;
+
+create materialized view stage.rpt_vm_conteo_tablas_sfp as
 select
 	tm.id,
 	tm.tabla,
