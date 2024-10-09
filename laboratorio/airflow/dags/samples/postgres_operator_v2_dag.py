@@ -1,11 +1,11 @@
 #Importa los módulos necesarios
 from airflow import DAG
+from airflow.models import Variable
 from airflow.operators.empty import EmptyOperator
 from airflow.providers.postgres.operators.postgres import PostgresOperator
 from airflow.utils.dates import days_ago
-from airflow.models import Variable
 
-# Define los argumentos del DAG
+#Define los argumentos del DAG
 default_args = {
     'owner': 'airflow',
     'start_date': days_ago(0),
@@ -14,26 +14,30 @@ default_args = {
 
 # Crea el DAG
 dag = DAG(
-    dag_id="POSTGRES_OPERATOR_V1_DAG",
+    dag_id="POSTGRES_OPERATOR_V2_DAG",
     default_args=default_args,
-    description='DAG implementa un PostgresOperator único.',
+    description='Este es un DAG de prueba con el Operador de PostgreSQL para modularizar Scripts SQL.',
     schedule_interval=None,  # Frecuencia de ejecución del DAG (@once)
     template_searchpath=Variable.get("dags_folder") + 'samples/sql',
     catchup=False,
     tags=['samples', 'postgresql', 'rjimenez']
 )
 
-# Agrega el operador PostgresOperator
+# Agregar los operadores PostgresOperator
 with dag:
 
     start = EmptyOperator(task_id='START', dag=dag)
 
-    task_execute_sql = PostgresOperator(
-        task_id='EXECUTE_SQL',
-        sql='postgres_operator_v1.sql',  # Ruta al archivo SQL
-        postgres_conn_id='postgres_default',  # Nombre de la conexión configurada en el airflow web
+    execute_sql_step_1 = PostgresOperator(
+        task_id='EXECUTE_SQL_STEP_1',
+        sql='postgres_operator_v2_step_1.sql'  # Ruta al archivo SQL
+    )
+
+    execute_sql_step_2 = PostgresOperator(
+        task_id='EXECUTE_SQL_STEP_2',
+        sql='postgres_operator_v2_step_2.sql'  # Ruta al archivo SQL
     )
 
     end = EmptyOperator(task_id='END', dag=dag)
 
-start >> task_execute_sql >> end
+start >> execute_sql_step_1 >> execute_sql_step_2 >> end
