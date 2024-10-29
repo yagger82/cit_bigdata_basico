@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <transformation>
   <info>
-    <name>WebScraping_BCP</name>
+    <name>stg_gasto_clasificacion_dim_fijo</name>
     <description/>
     <extended_description/>
     <trans_version/>
     <trans_type>Normal</trans_type>
-    <trans_status>0</trans_status>
     <directory>/</directory>
     <parameters>
     </parameters>
@@ -428,44 +427,90 @@
     <clusterschemas>
     </clusterschemas>
     <created_user>-</created_user>
-    <created_date>2021/09/14 16:17:55.609</created_date>
+    <created_date>2024/06/06 16:03:44.763</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2021/09/14 16:17:55.609</modified_date>
+    <modified_date>2024/06/06 16:03:44.763</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
   <notepads>
   </notepads>
+  <connection>
+    <name>PostgreSQL-DWH</name>
+    <server>${LAB_DWH_HOSTNAME}</server>
+    <type>POSTGRESQL</type>
+    <access>Native</access>
+    <database>${LAB_DWH_DATABASE}</database>
+    <port>${LAB_DWH_PORTNUMBER}</port>
+    <username>${LAB_DWH_USERNAME}</username>
+    <password>${LAB_DWH_PASSWORD}</password>
+    <servername/>
+    <data_tablespace/>
+    <index_tablespace/>
+    <attributes>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>IS_CLUSTERED</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>PORT_NUMBER</code>
+        <attribute>${LAB_DWH_PORTNUMBER}</attribute>
+      </attribute>
+      <attribute>
+        <code>PRESERVE_RESERVED_WORD_CASE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>QUOTE_ALL_FIELDS</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>USE_POOLING</code>
+        <attribute>N</attribute>
+      </attribute>
+    </attributes>
+  </connection>
   <order>
     <hop>
-      <from>URL</from>
-      <to>HTTP client</to>
+      <from>Formatear datos</from>
+      <to>Ordenar datos</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>HTTP client</from>
-      <to>Get HTML</to>
+      <from>Ordenar datos</from>
+      <to>Eliminar duplicados</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Get HTML</from>
-      <to>Select tbody</to>
+      <from>Leer clasificacion de gastos</from>
+      <to>Formatear datos</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Select tbody</from>
-      <to>Get rows</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Get rows</from>
-      <to>monedas</to>
+      <from>Eliminar duplicados</from>
+      <to>Cargar dim_gasto_clasificacion</to>
       <enabled>Y</enabled>
     </hop>
   </order>
   <step>
-    <name>Get HTML</name>
-    <type>ScriptValueMod</type>
+    <name>Cargar dim_gasto_clasificacion</name>
+    <type>CombinationLookup</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
@@ -474,45 +519,105 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <compatible>N</compatible>
-    <optimizationLevel>9</optimizationLevel>
-    <jsScripts>
-      <jsScript>
-        <jsScript_type>0</jsScript_type>
-        <jsScript_name>onTransform</jsScript_name>
-        <jsScript_script>java;
-
-// pseudo import
-Jsoup = org.jsoup.Jsoup;
-Whitelist = org.jsoup.safety.Whitelist;
-
-// make wellformed document
-doc = Jsoup.parse(html);
-
-
-// nothing beats a clean body
-doc.body().html(Jsoup.clean(doc.body().html(), Whitelist.relaxed().preserveRelativeLinks(true)));
-
-// we don't need a head
-doc.head().remove();
-// select single root markup containing our xloop
-//doc.select("tbody").after("mobile_noscript").first().remove();
-
-
-// select single root markup containing our xloop
-//var xhtml = doc.select("tbody").first().outerHtml();
-var xhtml = doc.select("tbody").outerHtml();
-xhtml = xhtml.replaceAll("&lt;img .*?>","").replaceAll("&amp;nbsp;"," ");</jsScript_script>
-      </jsScript>
-    </jsScripts>
+    <schema>${LAB_DWH_SCHEMADM}</schema>
+    <table>dim_gasto_clasificacion</table>
+    <connection>PostgreSQL-DWH</connection>
+    <commit>100</commit>
+    <cache_size>9999</cache_size>
+    <replace>N</replace>
+    <preloadCache>N</preloadCache>
+    <crc>N</crc>
+    <crcfield>hashcode</crcfield>
+    <fields>
+      <key>
+        <name>grupo_codigo</name>
+        <lookup>grupo_codigo</lookup>
+      </key>
+      <key>
+        <name>grupo_descripcion</name>
+        <lookup>grupo_descripcion</lookup>
+      </key>
+      <key>
+        <name>subgrupo_codigo</name>
+        <lookup>subgrupo_codigo</lookup>
+      </key>
+      <key>
+        <name>subgrupo_descripcion</name>
+        <lookup>subgrupo_descripcion</lookup>
+      </key>
+      <key>
+        <name>objeto_gasto_codigo</name>
+        <lookup>objeto_gasto_codigo</lookup>
+      </key>
+      <key>
+        <name>objeto_gasto_descripcion</name>
+        <lookup>objeto_gasto_descripcion</lookup>
+      </key>
+      <key>
+        <name>control_financiero_codigo</name>
+        <lookup>control_financiero_codigo</lookup>
+      </key>
+      <key>
+        <name>control_financiero_descripcion</name>
+        <lookup>control_financiero_descripcion</lookup>
+      </key>
+      <key>
+        <name>clasificacion_gasto_descripcion</name>
+        <lookup>clasificacion_gasto_descripcion</lookup>
+      </key>
+      <return>
+        <name>gasto_clasificacion_sk</name>
+        <creation_method>autoinc</creation_method>
+        <use_autoinc>Y</use_autoinc>
+      </return>
+    </fields>
+    <sequence/>
+    <last_update_field>fecha_ultima_modificacion</last_update_field>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>1008</xloc>
+      <yloc>256</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Eliminar duplicados</name>
+    <type>Unique</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <count_rows>N</count_rows>
+    <count_field/>
+    <reject_duplicate_row>N</reject_duplicate_row>
+    <error_description/>
     <fields>
       <field>
-        <name>xhtml</name>
-        <rename>xhtml</rename>
-        <type>String</type>
-        <length>-1</length>
-        <precision>-1</precision>
-        <replace>N</replace>
+        <name>grupo_codigo</name>
+        <case_insensitive>N</case_insensitive>
+      </field>
+      <field>
+        <name>subgrupo_codigo</name>
+        <case_insensitive>N</case_insensitive>
+      </field>
+      <field>
+        <name>objeto_gasto_codigo</name>
+        <case_insensitive>N</case_insensitive>
+      </field>
+      <field>
+        <name>control_financiero_codigo</name>
+        <case_insensitive>N</case_insensitive>
       </field>
     </fields>
     <attributes/>
@@ -524,14 +629,14 @@ xhtml = xhtml.replaceAll("&lt;img .*?>","").replaceAll("&amp;nbsp;"," ");</jsScr
       </output>
     </remotesteps>
     <GUI>
-      <xloc>480</xloc>
-      <yloc>192</yloc>
+      <xloc>784</xloc>
+      <yloc>256</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Get rows</name>
-    <type>getXMLData</type>
+    <name>Formatear datos</name>
+    <type>StringOperations</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
@@ -540,21 +645,115 @@ xhtml = xhtml.replaceAll("&lt;img .*?>","").replaceAll("&amp;nbsp;"," ");</jsScr
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <include>N</include>
-    <include_field/>
-    <rownum>N</rownum>
-    <addresultfile>N</addresultfile>
-    <namespaceaware>N</namespaceaware>
-    <ignorecomments>Y</ignorecomments>
-    <readurl>N</readurl>
-    <validating>N</validating>
-    <usetoken>N</usetoken>
-    <IsIgnoreEmptyFile>Y</IsIgnoreEmptyFile>
-    <doNotFailIfNoFile>Y</doNotFailIfNoFile>
-    <rownum_field/>
-    <encoding>UTF-8</encoding>
+    <fields>
+      <field>
+        <in_stream_name>grupo_descripcion</in_stream_name>
+        <out_stream_name/>
+        <trim_type>both</trim_type>
+        <lower_upper>upper</lower_upper>
+        <padding_type>none</padding_type>
+        <pad_char/>
+        <pad_len/>
+        <init_cap>N</init_cap>
+        <mask_xml>None</mask_xml>
+        <digits>none</digits>
+        <remove_special_characters>none</remove_special_characters>
+      </field>
+      <field>
+        <in_stream_name>subgrupo_descripcion</in_stream_name>
+        <out_stream_name/>
+        <trim_type>both</trim_type>
+        <lower_upper>upper</lower_upper>
+        <padding_type>none</padding_type>
+        <pad_char/>
+        <pad_len/>
+        <init_cap>N</init_cap>
+        <mask_xml>None</mask_xml>
+        <digits>none</digits>
+        <remove_special_characters>none</remove_special_characters>
+      </field>
+      <field>
+        <in_stream_name>objeto_gasto_descripcion</in_stream_name>
+        <out_stream_name/>
+        <trim_type>both</trim_type>
+        <lower_upper>upper</lower_upper>
+        <padding_type>none</padding_type>
+        <pad_char/>
+        <pad_len/>
+        <init_cap>N</init_cap>
+        <mask_xml>None</mask_xml>
+        <digits>none</digits>
+        <remove_special_characters>none</remove_special_characters>
+      </field>
+      <field>
+        <in_stream_name>control_financiero_descripcion</in_stream_name>
+        <out_stream_name/>
+        <trim_type>both</trim_type>
+        <lower_upper>upper</lower_upper>
+        <padding_type>none</padding_type>
+        <pad_char/>
+        <pad_len/>
+        <init_cap>N</init_cap>
+        <mask_xml>None</mask_xml>
+        <digits>none</digits>
+        <remove_special_characters>none</remove_special_characters>
+      </field>
+      <field>
+        <in_stream_name>clasificacion_gasto_descripcion</in_stream_name>
+        <out_stream_name/>
+        <trim_type>both</trim_type>
+        <lower_upper>upper</lower_upper>
+        <padding_type>none</padding_type>
+        <pad_char/>
+        <pad_len/>
+        <init_cap>N</init_cap>
+        <mask_xml>None</mask_xml>
+        <digits>none</digits>
+        <remove_special_characters>none</remove_special_characters>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>416</xloc>
+      <yloc>256</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Leer clasificacion de gastos</name>
+    <type>ExcelInput</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <header>Y</header>
+    <noempty>Y</noempty>
+    <stoponempty>N</stoponempty>
+    <filefield/>
+    <sheetfield/>
+    <sheetrownumfield/>
+    <rownumfield/>
+    <sheetfield/>
+    <filefield/>
+    <limit>0</limit>
+    <encoding/>
+    <add_to_result_filenames>Y</add_to_result_filenames>
+    <accept_filenames>N</accept_filenames>
+    <accept_field/>
+    <accept_stepname/>
     <file>
-      <name/>
+      <name>${LAB_DWH_CLASIFICADOR_GASTOS}</name>
       <filemask/>
       <exclude_filemask/>
       <file_required>N</file_required>
@@ -562,57 +761,130 @@ xhtml = xhtml.replaceAll("&lt;img .*?>","").replaceAll("&amp;nbsp;"," ");</jsScr
     </file>
     <fields>
       <field>
-        <name>Moneda</name>
-        <xpath>td[1]</xpath>
-        <element_type>node</element_type>
-        <result_type>valueof</result_type>
-        <type>String</type>
+        <name>grupo_codigo</name>
+        <type>Integer</type>
+        <length>-1</length>
+        <precision>0</precision>
+        <trim_type>none</trim_type>
+        <repeat>N</repeat>
         <format/>
         <currency/>
         <decimal/>
         <group/>
-        <length>-1</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-        <repeat>N</repeat>
       </field>
       <field>
-        <name>Simbolo</name>
-        <xpath>td[2]</xpath>
-        <element_type>node</element_type>
-        <result_type>valueof</result_type>
+        <name>grupo_descripcion</name>
         <type>String</type>
+        <length>32</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+        <repeat>N</repeat>
         <format/>
         <currency/>
         <decimal/>
         <group/>
-        <length>-1</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-        <repeat>N</repeat>
       </field>
       <field>
-        <name>Cotizacion</name>
-        <xpath>td[4]</xpath>
-        <element_type>node</element_type>
-        <result_type>valueof</result_type>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
+        <name>subgrupo_codigo</name>
+        <type>Integer</type>
         <length>-1</length>
         <precision>-1</precision>
         <trim_type>none</trim_type>
         <repeat>N</repeat>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+      </field>
+      <field>
+        <name>subgrupo_descripcion</name>
+        <type>String</type>
+        <length>64</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+        <repeat>N</repeat>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+      </field>
+      <field>
+        <name>objeto_gasto_codigo</name>
+        <type>Integer</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+        <repeat>N</repeat>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+      </field>
+      <field>
+        <name>objeto_gasto_descripcion</name>
+        <type>String</type>
+        <length>128</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+        <repeat>N</repeat>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+      </field>
+      <field>
+        <name>control_financiero_codigo</name>
+        <type>Integer</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+        <repeat>N</repeat>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+      </field>
+      <field>
+        <name>control_financiero_descripcion</name>
+        <type>String</type>
+        <length>64</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+        <repeat>N</repeat>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+      </field>
+      <field>
+        <name>clasificacion_gasto_descripcion</name>
+        <type>String</type>
+        <length>16</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+        <repeat>N</repeat>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
       </field>
     </fields>
-    <limit>0</limit>
-    <loopxpath>//tr</loopxpath>
-    <IsInFields>Y</IsInFields>
-    <IsAFile>N</IsAFile>
-    <XmlField>xhtml</XmlField>
-    <prunePath/>
+    <sheets>
+      <sheet>
+        <name>stg_gasto_clasificacion_dim</name>
+        <startrow>0</startrow>
+        <startcol>0</startcol>
+      </sheet>
+    </sheets>
+    <strict_types>N</strict_types>
+    <error_ignored>N</error_ignored>
+    <error_line_skipped>N</error_line_skipped>
+    <bad_line_files_destination_directory/>
+    <bad_line_files_extension>warning</bad_line_files_extension>
+    <error_line_files_destination_directory/>
+    <error_line_files_extension>error</error_line_files_extension>
+    <line_number_files_destination_directory/>
+    <line_number_files_extension>line</line_number_files_extension>
     <shortFileFieldName/>
     <pathFieldName/>
     <hiddenFieldName/>
@@ -621,6 +893,8 @@ xhtml = xhtml.replaceAll("&lt;img .*?>","").replaceAll("&amp;nbsp;"," ");</jsScr
     <rootUriNameFieldName/>
     <extensionFieldName/>
     <sizeFieldName/>
+    <spreadsheet_type>POI</spreadsheet_type>
+    <password>Encrypted </password>
     <attributes/>
     <cluster_schema/>
     <remotesteps>
@@ -630,14 +904,14 @@ xhtml = xhtml.replaceAll("&lt;img .*?>","").replaceAll("&amp;nbsp;"," ");</jsScr
       </output>
     </remotesteps>
     <GUI>
-      <xloc>736</xloc>
-      <yloc>192</yloc>
+      <xloc>240</xloc>
+      <yloc>256</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>HTTP client</name>
-    <type>HTTP</type>
+    <name>Ordenar datos</name>
+    <type>SortRows</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
@@ -646,63 +920,46 @@ xhtml = xhtml.replaceAll("&lt;img .*?>","").replaceAll("&amp;nbsp;"," ");</jsScr
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <url/>
-    <urlInField>Y</urlInField>
-    <urlField>URL</urlField>
-    <encoding/>
-    <httpLogin/>
-    <httpPassword>Encrypted </httpPassword>
-    <proxyHost/>
-    <proxyPort/>
-    <socketTimeout/>
-    <connectionTimeout/>
-    <closeIdleConnectionsTime/>
-    <lookup>
-      <arg>
-        <name>anho</name>
-        <parameter>anho</parameter>
-      </arg>
-      <arg>
-        <name>mes</name>
-        <parameter>mes</parameter>
-      </arg>
-    </lookup>
-    <result>
-      <name>html</name>
-      <code>status</code>
-      <response_time/>
-      <response_header/>
-    </result>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>368</xloc>
-      <yloc>192</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Select tbody</name>
-    <type>SelectValues</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
+    <directory>%%java.io.tmpdir%%</directory>
+    <prefix>out</prefix>
+    <sort_size>1000000</sort_size>
+    <free_memory/>
+    <compress>N</compress>
+    <compress_variable/>
+    <unique_rows>N</unique_rows>
     <fields>
       <field>
-        <name>xhtml</name>
+        <name>grupo_codigo</name>
+        <ascending>Y</ascending>
+        <case_sensitive>N</case_sensitive>
+        <collator_enabled>N</collator_enabled>
+        <collator_strength>0</collator_strength>
+        <presorted>N</presorted>
       </field>
-      <select_unspecified>N</select_unspecified>
+      <field>
+        <name>subgrupo_codigo</name>
+        <ascending>Y</ascending>
+        <case_sensitive>N</case_sensitive>
+        <collator_enabled>N</collator_enabled>
+        <collator_strength>0</collator_strength>
+        <presorted>N</presorted>
+      </field>
+      <field>
+        <name>objeto_gasto_codigo</name>
+        <ascending>Y</ascending>
+        <case_sensitive>N</case_sensitive>
+        <collator_enabled>N</collator_enabled>
+        <collator_strength>0</collator_strength>
+        <presorted>N</presorted>
+      </field>
+      <field>
+        <name>control_financiero_codigo</name>
+        <ascending>Y</ascending>
+        <case_sensitive>N</case_sensitive>
+        <collator_enabled>N</collator_enabled>
+        <collator_strength>0</collator_strength>
+        <presorted>N</presorted>
+      </field>
     </fields>
     <attributes/>
     <cluster_schema/>
@@ -713,113 +970,8 @@ xhtml = xhtml.replaceAll("&lt;img .*?>","").replaceAll("&amp;nbsp;"," ");</jsScr
       </output>
     </remotesteps>
     <GUI>
-      <xloc>608</xloc>
-      <yloc>192</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>URL</name>
-    <type>RowGenerator</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <fields>
-      <field>
-        <name>URL</name>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif>https://www.bcp.gov.py/webapps/web/cotizacion/monedas-mensual</nullif>
-        <length>-1</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>anho</name>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif>2024</nullif>
-        <length>-1</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>mes</name>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif>04</nullif>
-        <length>-1</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-    </fields>
-    <limit>1</limit>
-    <never_ending>N</never_ending>
-    <interval_in_ms>5000</interval_in_ms>
-    <row_time_field>now</row_time_field>
-    <last_time_field>FiveSecondsAgo</last_time_field>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>224</xloc>
-      <yloc>192</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>monedas</name>
-    <type>SelectValues</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <fields>
-      <field>
-        <name>Moneda</name>
-      </field>
-      <field>
-        <name>Simbolo</name>
-      </field>
-      <field>
-        <name>Cotizacion</name>
-      </field>
-      <select_unspecified>N</select_unspecified>
-    </fields>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>848</xloc>
-      <yloc>192</yloc>
+      <xloc>592</xloc>
+      <yloc>256</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

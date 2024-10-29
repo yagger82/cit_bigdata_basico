@@ -3,9 +3,9 @@
   <info>
     <name>csv_to_raw</name>
     <description>Copiador CSV a RAW</description>
-    <extended_description>1-Lee los datos del CSV.
-2-Seleciona las variables.
-3-Copia los datos en bruto en una tabla target.</extended_description>
+    <extended_description>1-Leer los datos del CSV.
+2-Selecionar las columnas para ser copiadas.
+3-Copiar los datos en bruto en una tabla plana</extended_description>
     <trans_version>1</trans_version>
     <trans_type>Normal</trans_type>
     <trans_status>2</trans_status>
@@ -439,14 +439,14 @@
   <notepads>
   </notepads>
   <connection>
-    <name>PostgreSQL-LAB_BIGDATA</name>
-    <server>${LAB_BIGDATA_HOSTNAME}</server>
+    <name>PostgreSQL-DWH</name>
+    <server>${LAB_DWH_HOSTNAME}</server>
     <type>POSTGRESQL</type>
     <access>Native</access>
-    <database>${LAB_BIGDATA_DATABASE}</database>
-    <port>${LAB_BIGDATA_PORTNUMBER}</port>
-    <username>${LAB_BIGDATA_USERNAME}</username>
-    <password>${LAB_BIGDATA_PASSWORD}</password>
+    <database>${LAB_DWH_DATABASE}</database>
+    <port>${LAB_DWH_PORTNUMBER}</port>
+    <username>${LAB_DWH_USERNAME}</username>
+    <password>${LAB_DWH_PASSWORD}</password>
     <servername/>
     <data_tablespace/>
     <index_tablespace/>
@@ -465,7 +465,7 @@
       </attribute>
       <attribute>
         <code>PORT_NUMBER</code>
-        <attribute>${LAB_BIGDATA_PORTNUMBER}</attribute>
+        <attribute>${LAB_DWH_PORTNUMBER}</attribute>
       </attribute>
       <attribute>
         <code>PRESERVE_RESERVED_WORD_CASE</code>
@@ -491,13 +491,18 @@
   </connection>
   <order>
     <hop>
-      <from>Leer datos</from>
-      <to>Seleccionar variables</to>
+      <from>Leer CSV OEE</from>
+      <to>Columnas oee</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Seleccionar variables</from>
-      <to>Filtrar datos</to>
+      <from>Columnas oee</from>
+      <to>Copiar RAW</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Leer CSV NOMINA</from>
+      <to>Columnas nomina</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
@@ -510,7 +515,48 @@
       <to>Cargar datos eliminados</to>
       <enabled>Y</enabled>
     </hop>
+    <hop>
+      <from>Columnas nomina</from>
+      <to>Block this step</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Block this step</from>
+      <to>Filtrar datos</to>
+      <enabled>Y</enabled>
+    </hop>
   </order>
+  <step>
+    <name>Block this step</name>
+    <type>BlockUntilStepsFinish</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <steps>
+      <step>
+        <name>Copiar RAW</name>
+        <CopyNr>0</CopyNr>
+      </step>
+    </steps>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>624</xloc>
+      <yloc>416</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
   <step>
     <name>Cargar datos crudos</name>
     <type>PGBulkLoader</type>
@@ -522,9 +568,9 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <connection>PostgreSQL-LAB_BIGDATA</connection>
-    <schema>${LAB_BIGDATA_SCHEMA_RAW}</schema>
-    <table>raw_nomina_sfp</table>
+    <connection>PostgreSQL-DWH</connection>
+    <schema>${LAB_DWH_SCHEMA_RAW}</schema>
+    <table>raw_sfp_nomina</table>
     <load_action>TRUNCATE</load_action>
     <dbname_override/>
     <enclosure>"</enclosure>
@@ -658,7 +704,7 @@
     <mapping>
       <stream_name>fecha_nacimiento</stream_name>
       <field_name>fecha_nacimiento</field_name>
-      <date_mask>DATE</date_mask>
+      <date_mask/>
     </mapping>
     <mapping>
       <stream_name>profesion</stream_name>
@@ -674,8 +720,8 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>784</xloc>
-      <yloc>128</yloc>
+      <xloc>928</xloc>
+      <yloc>336</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -690,14 +736,14 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <connection>PostgreSQL-LAB_BIGDATA</connection>
-    <schema>${LAB_BIGDATA_SCHEMA_RAW}</schema>
-    <table>raw_nomina_sfp_eliminado</table>
+    <connection>PostgreSQL-DWH</connection>
+    <schema>${LAB_DWH_SCHEMA_RAW}</schema>
+    <table>raw_sfp_nomina_eliminado</table>
     <load_action>TRUNCATE</load_action>
     <dbname_override/>
     <enclosure>"</enclosure>
     <delimiter>;</delimiter>
-    <stop_on_error>Y</stop_on_error>
+    <stop_on_error>N</stop_on_error>
     <mapping>
       <stream_name>anho</stream_name>
       <field_name>anho</field_name>
@@ -826,7 +872,7 @@
     <mapping>
       <stream_name>fecha_nacimiento</stream_name>
       <field_name>fecha_nacimiento</field_name>
-      <date_mask>DATE</date_mask>
+      <date_mask/>
     </mapping>
     <mapping>
       <stream_name>profesion</stream_name>
@@ -842,8 +888,238 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>784</xloc>
-      <yloc>272</yloc>
+      <xloc>928</xloc>
+      <yloc>496</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Columnas nomina</name>
+    <type>SelectValues</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <fields>
+      <field>
+        <name>anho</name>
+      </field>
+      <field>
+        <name>mes</name>
+      </field>
+      <field>
+        <name>nivel</name>
+      </field>
+      <field>
+        <name>descripcion_nivel</name>
+      </field>
+      <field>
+        <name>entidad</name>
+      </field>
+      <field>
+        <name>descripcion_entidad</name>
+      </field>
+      <field>
+        <name>oee</name>
+      </field>
+      <field>
+        <name>descripcion_oee</name>
+      </field>
+      <field>
+        <name>documento</name>
+      </field>
+      <field>
+        <name>nombres</name>
+      </field>
+      <field>
+        <name>apellidos</name>
+      </field>
+      <field>
+        <name>funcion</name>
+      </field>
+      <field>
+        <name>estado</name>
+      </field>
+      <field>
+        <name>anho_ingreso</name>
+      </field>
+      <field>
+        <name>sexo</name>
+      </field>
+      <field>
+        <name>discapacidad</name>
+      </field>
+      <field>
+        <name>tipo_discapacidad</name>
+      </field>
+      <field>
+        <name>objeto_gasto</name>
+      </field>
+      <field>
+        <name>concepto</name>
+      </field>
+      <field>
+        <name>linea</name>
+      </field>
+      <field>
+        <name>categoria</name>
+      </field>
+      <field>
+        <name>cargo</name>
+      </field>
+      <field>
+        <name>fuente_financiamiento</name>
+      </field>
+      <field>
+        <name>presupuestado</name>
+      </field>
+      <field>
+        <name>devengado</name>
+      </field>
+      <field>
+        <name>fecha_nacimiento</name>
+      </field>
+      <field>
+        <name>profesion</name>
+      </field>
+      <select_unspecified>N</select_unspecified>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>464</xloc>
+      <yloc>416</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Columnas oee</name>
+    <type>SelectValues</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <fields>
+      <field>
+        <name>codigo_nivel</name>
+      </field>
+      <field>
+        <name>descripcion_nivel</name>
+      </field>
+      <field>
+        <name>codigo_entidad</name>
+      </field>
+      <field>
+        <name>descripcion_entidad</name>
+      </field>
+      <field>
+        <name>codigo_oee</name>
+      </field>
+      <field>
+        <name>descripcion_oee</name>
+      </field>
+      <field>
+        <name>descripcion_corta</name>
+      </field>
+      <select_unspecified>N</select_unspecified>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>464</xloc>
+      <yloc>176</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Copiar RAW</name>
+    <type>TableOutput</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>PostgreSQL-DWH</connection>
+    <schema>${LAB_DWH_SCHEMA_RAW}</schema>
+    <table>raw_sfp_oee</table>
+    <commit>0</commit>
+    <truncate>Y</truncate>
+    <ignore_errors>N</ignore_errors>
+    <use_batch>N</use_batch>
+    <specify_fields>Y</specify_fields>
+    <partitioning_enabled>N</partitioning_enabled>
+    <partitioning_field/>
+    <partitioning_daily>N</partitioning_daily>
+    <partitioning_monthly>Y</partitioning_monthly>
+    <tablename_in_field>N</tablename_in_field>
+    <tablename_field/>
+    <tablename_in_table>Y</tablename_in_table>
+    <return_keys>N</return_keys>
+    <return_field/>
+    <fields>
+      <field>
+        <column_name>codigo_nivel</column_name>
+        <stream_name>codigo_nivel</stream_name>
+      </field>
+      <field>
+        <column_name>descripcion_nivel</column_name>
+        <stream_name>descripcion_nivel</stream_name>
+      </field>
+      <field>
+        <column_name>codigo_entidad</column_name>
+        <stream_name>codigo_entidad</stream_name>
+      </field>
+      <field>
+        <column_name>descripcion_entidad</column_name>
+        <stream_name>descripcion_entidad</stream_name>
+      </field>
+      <field>
+        <column_name>codigo_oee</column_name>
+        <stream_name>codigo_oee</stream_name>
+      </field>
+      <field>
+        <column_name>descripcion_oee</column_name>
+        <stream_name>descripcion_oee</stream_name>
+      </field>
+      <field>
+        <column_name>descripcion_corta</column_name>
+        <stream_name>descripcion_corta</stream_name>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>656</xloc>
+      <yloc>176</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -907,13 +1183,13 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>560</xloc>
-      <yloc>224</yloc>
+      <xloc>752</xloc>
+      <yloc>416</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Leer datos</name>
+    <name>Leer CSV NOMINA</name>
     <type>CsvInput</type>
     <description/>
     <distribute>Y</distribute>
@@ -923,7 +1199,7 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <filename>${LAB_BIGDATA_DATASET}</filename>
+    <filename>${LAB_DWH_DATASET_SFP_NOMINA}</filename>
     <filename_field/>
     <rownum_field/>
     <include_filename>N</include_filename>
@@ -1333,14 +1609,14 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>192</xloc>
-      <yloc>224</yloc>
+      <xloc>272</xloc>
+      <yloc>416</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Seleccionar variables</name>
-    <type>SelectValues</type>
+    <name>Leer CSV OEE</name>
+    <type>CsvInput</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
@@ -1349,106 +1625,142 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
+    <filename>${LAB_DWH_DATASET_SFP_OEE}</filename>
+    <filename_field/>
+    <rownum_field/>
+    <include_filename>N</include_filename>
+    <separator>,</separator>
+    <enclosure>"</enclosure>
+    <header>Y</header>
+    <buffer_size>50000</buffer_size>
+    <lazy_conversion>N</lazy_conversion>
+    <add_filename_result>N</add_filename_result>
+    <parallel>N</parallel>
+    <newline_possible>N</newline_possible>
+    <format>mixed</format>
+    <encoding/>
     <fields>
       <field>
-        <name>anho</name>
-      </field>
-      <field>
-        <name>mes</name>
-      </field>
-      <field>
-        <name>nivel</name>
+        <name>codigo_nivel</name>
+        <type>Integer</type>
+        <format>#</format>
+        <currency>$</currency>
+        <decimal>,</decimal>
+        <group>.</group>
+        <length>15</length>
+        <precision>0</precision>
+        <trim_type>none</trim_type>
       </field>
       <field>
         <name>descripcion_nivel</name>
+        <type>String</type>
+        <format/>
+        <currency>$</currency>
+        <decimal>,</decimal>
+        <group>.</group>
+        <length>35</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
       </field>
       <field>
-        <name>entidad</name>
+        <name>codigo_entidad</name>
+        <type>Integer</type>
+        <format>#</format>
+        <currency>$</currency>
+        <decimal>,</decimal>
+        <group>.</group>
+        <length>15</length>
+        <precision>0</precision>
+        <trim_type>none</trim_type>
       </field>
       <field>
         <name>descripcion_entidad</name>
+        <type>String</type>
+        <format/>
+        <currency>$</currency>
+        <decimal>,</decimal>
+        <group>.</group>
+        <length>58</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
       </field>
       <field>
-        <name>oee</name>
+        <name>codigo_oee</name>
+        <type>Integer</type>
+        <format>#</format>
+        <currency>$</currency>
+        <decimal>,</decimal>
+        <group>.</group>
+        <length>15</length>
+        <precision>0</precision>
+        <trim_type>none</trim_type>
       </field>
       <field>
         <name>descripcion_oee</name>
+        <type>String</type>
+        <format/>
+        <currency>$</currency>
+        <decimal>,</decimal>
+        <group>.</group>
+        <length>111</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
       </field>
       <field>
-        <name>documento</name>
+        <name>descripcion_corta</name>
+        <type>String</type>
+        <format/>
+        <currency>$</currency>
+        <decimal>,</decimal>
+        <group>.</group>
+        <length>9</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
       </field>
       <field>
-        <name>nombres</name>
+        <name>direccion</name>
+        <type>String</type>
+        <format/>
+        <currency>$</currency>
+        <decimal>,</decimal>
+        <group>.</group>
+        <length>110</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
       </field>
       <field>
-        <name>apellidos</name>
+        <name>telefono</name>
+        <type>String</type>
+        <format/>
+        <currency>$</currency>
+        <decimal>,</decimal>
+        <group>.</group>
+        <length>33</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
       </field>
       <field>
-        <name>funcion</name>
+        <name>pagina_web</name>
+        <type>String</type>
+        <format/>
+        <currency>$</currency>
+        <decimal>,</decimal>
+        <group>.</group>
+        <length>42</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
       </field>
       <field>
-        <name>estado</name>
+        <name>uri</name>
+        <type>String</type>
+        <format/>
+        <currency>$</currency>
+        <decimal>,</decimal>
+        <group>.</group>
+        <length>38</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
       </field>
-      <field>
-        <name>anho_ingreso</name>
-      </field>
-      <field>
-        <name>sexo</name>
-      </field>
-      <field>
-        <name>discapacidad</name>
-      </field>
-      <field>
-        <name>tipo_discapacidad</name>
-      </field>
-      <field>
-        <name>objeto_gasto</name>
-      </field>
-      <field>
-        <name>concepto</name>
-      </field>
-      <field>
-        <name>linea</name>
-      </field>
-      <field>
-        <name>categoria</name>
-      </field>
-      <field>
-        <name>cargo</name>
-      </field>
-      <field>
-        <name>fuente_financiamiento</name>
-      </field>
-      <field>
-        <name>presupuestado</name>
-      </field>
-      <field>
-        <name>devengado</name>
-      </field>
-      <field>
-        <name>fecha_nacimiento</name>
-      </field>
-      <field>
-        <name>profesion</name>
-      </field>
-      <select_unspecified>N</select_unspecified>
-      <meta>
-        <name>fecha_nacimiento</name>
-        <rename>fecha_nacimiento</rename>
-        <type>Date</type>
-        <length>-2</length>
-        <precision>-2</precision>
-        <conversion_mask/>
-        <date_format_lenient>false</date_format_lenient>
-        <date_format_locale/>
-        <date_format_timezone/>
-        <lenient_string_to_number>false</lenient_string_to_number>
-        <encoding/>
-        <decimal_symbol/>
-        <grouping_symbol/>
-        <currency_symbol/>
-        <storage_type/>
-      </meta>
     </fields>
     <attributes/>
     <cluster_schema/>
@@ -1459,8 +1771,8 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>384</xloc>
-      <yloc>224</yloc>
+      <xloc>272</xloc>
+      <yloc>176</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

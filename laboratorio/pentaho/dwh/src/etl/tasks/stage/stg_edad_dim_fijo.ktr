@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <transformation>
   <info>
-    <name>WebScraping_BCP</name>
+    <name>stg_edad_dim_fijo</name>
     <description/>
     <extended_description/>
     <trans_version/>
     <trans_type>Normal</trans_type>
-    <trans_status>0</trans_status>
     <directory>/</directory>
     <parameters>
     </parameters>
@@ -428,44 +427,100 @@
     <clusterschemas>
     </clusterschemas>
     <created_user>-</created_user>
-    <created_date>2021/09/14 16:17:55.609</created_date>
+    <created_date>2024/06/06 16:40:20.464</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2021/09/14 16:17:55.609</modified_date>
+    <modified_date>2024/06/06 16:40:20.464</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
   <notepads>
   </notepads>
+  <connection>
+    <name>PostgreSQL-DWH</name>
+    <server>${LAB_DWH_HOSTNAME}</server>
+    <type>POSTGRESQL</type>
+    <access>Native</access>
+    <database>${LAB_DWH_DATABASE}</database>
+    <port>${LAB_DWH_PORTNUMBER}</port>
+    <username>${LAB_DWH_USERNAME}</username>
+    <password>${LAB_DWH_PASSWORD}</password>
+    <servername/>
+    <data_tablespace/>
+    <index_tablespace/>
+    <attributes>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>IS_CLUSTERED</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>PORT_NUMBER</code>
+        <attribute>${LAB_DWH_PORTNUMBER}</attribute>
+      </attribute>
+      <attribute>
+        <code>PRESERVE_RESERVED_WORD_CASE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>QUOTE_ALL_FIELDS</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>USE_POOLING</code>
+        <attribute>N</attribute>
+      </attribute>
+    </attributes>
+  </connection>
   <order>
     <hop>
-      <from>URL</from>
-      <to>HTTP client</to>
+      <from>Agregar edad</from>
+      <to>Agregar grupos etarios</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>HTTP client</from>
-      <to>Get HTML</to>
+      <from>Agregar filas</from>
+      <to>Agregar edad</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Get HTML</from>
-      <to>Select tbody</to>
+      <from>Agregar grupos etarios</from>
+      <to>Seleccionar columnas</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Select tbody</from>
-      <to>Get rows</to>
+      <from>Seleccionar columnas</from>
+      <to>Append streams</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Get rows</from>
-      <to>monedas</to>
+      <from>valores_fijos</from>
+      <to>Append streams</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Append streams</from>
+      <to>Cargar dim_edad</to>
       <enabled>Y</enabled>
     </hop>
   </order>
   <step>
-    <name>Get HTML</name>
-    <type>ScriptValueMod</type>
+    <name>Agregar edad</name>
+    <type>Sequence</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
@@ -474,47 +529,16 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <compatible>N</compatible>
-    <optimizationLevel>9</optimizationLevel>
-    <jsScripts>
-      <jsScript>
-        <jsScript_type>0</jsScript_type>
-        <jsScript_name>onTransform</jsScript_name>
-        <jsScript_script>java;
-
-// pseudo import
-Jsoup = org.jsoup.Jsoup;
-Whitelist = org.jsoup.safety.Whitelist;
-
-// make wellformed document
-doc = Jsoup.parse(html);
-
-
-// nothing beats a clean body
-doc.body().html(Jsoup.clean(doc.body().html(), Whitelist.relaxed().preserveRelativeLinks(true)));
-
-// we don't need a head
-doc.head().remove();
-// select single root markup containing our xloop
-//doc.select("tbody").after("mobile_noscript").first().remove();
-
-
-// select single root markup containing our xloop
-//var xhtml = doc.select("tbody").first().outerHtml();
-var xhtml = doc.select("tbody").outerHtml();
-xhtml = xhtml.replaceAll("&lt;img .*?>","").replaceAll("&amp;nbsp;"," ");</jsScript_script>
-      </jsScript>
-    </jsScripts>
-    <fields>
-      <field>
-        <name>xhtml</name>
-        <rename>xhtml</rename>
-        <type>String</type>
-        <length>-1</length>
-        <precision>-1</precision>
-        <replace>N</replace>
-      </field>
-    </fields>
+    <valuename>edad</valuename>
+    <use_database>N</use_database>
+    <connection/>
+    <schema/>
+    <seqname>SEQ_</seqname>
+    <use_counter>Y</use_counter>
+    <counter_name/>
+    <start_at>1</start_at>
+    <increment_by>1</increment_by>
+    <max_value>999999999</max_value>
     <attributes/>
     <cluster_schema/>
     <remotesteps>
@@ -524,202 +548,13 @@ xhtml = xhtml.replaceAll("&lt;img .*?>","").replaceAll("&amp;nbsp;"," ");</jsScr
       </output>
     </remotesteps>
     <GUI>
-      <xloc>480</xloc>
-      <yloc>192</yloc>
+      <xloc>352</xloc>
+      <yloc>176</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Get rows</name>
-    <type>getXMLData</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <include>N</include>
-    <include_field/>
-    <rownum>N</rownum>
-    <addresultfile>N</addresultfile>
-    <namespaceaware>N</namespaceaware>
-    <ignorecomments>Y</ignorecomments>
-    <readurl>N</readurl>
-    <validating>N</validating>
-    <usetoken>N</usetoken>
-    <IsIgnoreEmptyFile>Y</IsIgnoreEmptyFile>
-    <doNotFailIfNoFile>Y</doNotFailIfNoFile>
-    <rownum_field/>
-    <encoding>UTF-8</encoding>
-    <file>
-      <name/>
-      <filemask/>
-      <exclude_filemask/>
-      <file_required>N</file_required>
-      <include_subfolders>N</include_subfolders>
-    </file>
-    <fields>
-      <field>
-        <name>Moneda</name>
-        <xpath>td[1]</xpath>
-        <element_type>node</element_type>
-        <result_type>valueof</result_type>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <length>-1</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-        <repeat>N</repeat>
-      </field>
-      <field>
-        <name>Simbolo</name>
-        <xpath>td[2]</xpath>
-        <element_type>node</element_type>
-        <result_type>valueof</result_type>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <length>-1</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-        <repeat>N</repeat>
-      </field>
-      <field>
-        <name>Cotizacion</name>
-        <xpath>td[4]</xpath>
-        <element_type>node</element_type>
-        <result_type>valueof</result_type>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <length>-1</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-        <repeat>N</repeat>
-      </field>
-    </fields>
-    <limit>0</limit>
-    <loopxpath>//tr</loopxpath>
-    <IsInFields>Y</IsInFields>
-    <IsAFile>N</IsAFile>
-    <XmlField>xhtml</XmlField>
-    <prunePath/>
-    <shortFileFieldName/>
-    <pathFieldName/>
-    <hiddenFieldName/>
-    <lastModificationTimeFieldName/>
-    <uriNameFieldName/>
-    <rootUriNameFieldName/>
-    <extensionFieldName/>
-    <sizeFieldName/>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>736</xloc>
-      <yloc>192</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>HTTP client</name>
-    <type>HTTP</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <url/>
-    <urlInField>Y</urlInField>
-    <urlField>URL</urlField>
-    <encoding/>
-    <httpLogin/>
-    <httpPassword>Encrypted </httpPassword>
-    <proxyHost/>
-    <proxyPort/>
-    <socketTimeout/>
-    <connectionTimeout/>
-    <closeIdleConnectionsTime/>
-    <lookup>
-      <arg>
-        <name>anho</name>
-        <parameter>anho</parameter>
-      </arg>
-      <arg>
-        <name>mes</name>
-        <parameter>mes</parameter>
-      </arg>
-    </lookup>
-    <result>
-      <name>html</name>
-      <code>status</code>
-      <response_time/>
-      <response_header/>
-    </result>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>368</xloc>
-      <yloc>192</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Select tbody</name>
-    <type>SelectValues</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <fields>
-      <field>
-        <name>xhtml</name>
-      </field>
-      <select_unspecified>N</select_unspecified>
-    </fields>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>608</xloc>
-      <yloc>192</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>URL</name>
+    <name>Agregar filas</name>
     <type>RowGenerator</type>
     <description/>
     <distribute>Y</distribute>
@@ -731,43 +566,19 @@ xhtml = xhtml.replaceAll("&lt;img .*?>","").replaceAll("&amp;nbsp;"," ");</jsScr
     </partitioning>
     <fields>
       <field>
-        <name>URL</name>
-        <type>String</type>
+        <name>tmp</name>
+        <type>Integer</type>
         <format/>
         <currency/>
         <decimal/>
         <group/>
-        <nullif>https://www.bcp.gov.py/webapps/web/cotizacion/monedas-mensual</nullif>
-        <length>-1</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>anho</name>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif>2024</nullif>
-        <length>-1</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>mes</name>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif>04</nullif>
+        <nullif>-1</nullif>
         <length>-1</length>
         <precision>-1</precision>
         <set_empty_string>N</set_empty_string>
       </field>
     </fields>
-    <limit>1</limit>
+    <limit>99</limit>
     <never_ending>N</never_ending>
     <interval_in_ms>5000</interval_in_ms>
     <row_time_field>now</row_time_field>
@@ -781,13 +592,274 @@ xhtml = xhtml.replaceAll("&lt;img .*?>","").replaceAll("&amp;nbsp;"," ");</jsScr
       </output>
     </remotesteps>
     <GUI>
-      <xloc>224</xloc>
-      <yloc>192</yloc>
+      <xloc>144</xloc>
+      <yloc>176</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>monedas</name>
+    <name>Agregar grupos etarios</name>
+    <type>ScriptValueMod</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <compatible>Y</compatible>
+    <optimizationLevel>9</optimizationLevel>
+    <jsScripts>
+      <jsScript>
+        <jsScript_type>0</jsScript_type>
+        <jsScript_name>Script 1</jsScript_name>
+        <jsScript_script>//Script here
+
+var franjaEtariaActivaActiva;
+var grupoEtarioEtapa;
+var grupoEtarioRango;
+
+
+function isInRange(x, min, max) {
+    return min &lt;= x &amp;&amp; x &lt;= max;
+}
+
+
+//Construir Grupos Etarios
+switch (true) {
+
+    case isInRange(edad.getInteger(),1,17):
+        grupoEtarioEtapa = "MENORES";
+		grupoEtarioRango = "1 a 17 AÑOS";
+        break;
+
+    case isInRange(edad.getInteger(),18,20):
+        grupoEtarioEtapa = "JOVENES";
+		grupoEtarioRango = "18 a 20 AÑOS";
+        break;
+
+    case isInRange(edad.getInteger(),21,26):
+        grupoEtarioEtapa = "ADULTOS JOVENES";
+		grupoEtarioRango = "21 a 26 AÑOS";
+        break;
+
+    case isInRange(edad.getInteger(),27,59):
+        grupoEtarioEtapa = "ADULTEZ";
+		grupoEtarioRango = "27 a 59 AÑOS";
+        break;
+
+    case isInRange(edad.getInteger(),60,99):
+        grupoEtarioEtapa = "PERSONAS MAYORES";
+		grupoEtarioRango = "60 a 65+ AÑOS";
+        break;
+
+    default:
+        franjaEtariaActiva = 'not found';
+        break;
+}
+
+//Construir franja etaria activa
+switch (true) {
+
+	case isInRange(edad.getInteger(),1,14):
+        franjaEtariaActiva = 'MENORES';
+        break;
+
+	case isInRange(edad.getInteger(),15,17):
+        franjaEtariaActiva = '15 - 17 AÑOS';
+        break;
+
+    case isInRange(edad.getInteger(),18,20):
+        franjaEtariaActiva = '18 - 20 AÑOS';
+        break;
+
+    case isInRange(edad.getInteger(),21,24):
+        franjaEtariaActiva = '21 - 24 AÑOS';
+        break;
+
+    case isInRange(edad.getInteger(),25,29):
+        franjaEtariaActiva = '25 - 29 AÑOS';
+        break;
+
+    case isInRange(edad.getInteger(),30,34):
+        franjaEtariaActiva = '30 - 34 AÑOS';
+        break;
+
+    case isInRange(edad.getInteger(),35,39):
+        franjaEtariaActiva = '35 - 39 AÑOS';
+        break;
+
+    case isInRange(edad.getInteger(),40,44):
+        franjaEtariaActiva = '40 - 44 AÑOS';
+        break;
+
+    case isInRange(edad.getInteger(),45,49):
+        franjaEtariaActiva = '45 - 49 AÑOS';
+        break;
+
+    case isInRange(edad.getInteger(),50,54):
+        franjaEtariaActiva = '50 - 54 AÑOS';
+        break;
+
+    case isInRange(edad.getInteger(),55,59):
+        franjaEtariaActiva = '55 - 59 AÑOS';
+        break;
+
+    case isInRange(edad.getInteger(),60,64):
+        franjaEtariaActiva = '60 - 64 AÑOS';
+        break;
+
+    case isInRange(edad.getInteger(),65,69):
+        franjaEtariaActiva = '65 - 69 AÑOS';
+        break;
+
+    case isInRange(edad.getInteger(),70,74):
+        franjaEtariaActiva = '70 - 74 AÑOS';
+        break;
+
+    case isInRange(edad.getInteger(),75,79):
+        franjaEtariaActiva = '75 - 79 AÑOS';
+        break;
+
+    case isInRange(edad.getInteger(),80,120):
+        franjaEtariaActiva = '80+ AÑOS';
+        break;
+
+    default:
+        franjaEtariaActiva = 'not found';
+        break;
+}</jsScript_script>
+      </jsScript>
+    </jsScripts>
+    <fields>
+      <field>
+        <name>grupoEtarioRango</name>
+        <rename>grupo_etario_rango</rename>
+        <type>String</type>
+        <length>16</length>
+        <precision>-1</precision>
+        <replace>N</replace>
+      </field>
+      <field>
+        <name>grupoEtarioEtapa</name>
+        <rename>grupo_etario_etapa</rename>
+        <type>String</type>
+        <length>16</length>
+        <precision>-1</precision>
+        <replace>N</replace>
+      </field>
+      <field>
+        <name>franjaEtariaActiva</name>
+        <rename>franja_etaria_activa</rename>
+        <type>String</type>
+        <length>16</length>
+        <precision>0</precision>
+        <replace>N</replace>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>560</xloc>
+      <yloc>176</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Append streams</name>
+    <type>Append</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <head_name>Seleccionar columnas</head_name>
+    <tail_name>valores_fijos</tail_name>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>976</xloc>
+      <yloc>272</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Cargar dim_edad</name>
+    <type>CombinationLookup</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <schema>${LAB_DWH_SCHEMADM}</schema>
+    <table>dim_edad</table>
+    <connection>PostgreSQL-DWH</connection>
+    <commit>100</commit>
+    <cache_size>9999</cache_size>
+    <replace>N</replace>
+    <preloadCache>N</preloadCache>
+    <crc>N</crc>
+    <crcfield>hashcode</crcfield>
+    <fields>
+      <key>
+        <name>edad_sk</name>
+        <lookup>edad_sk</lookup>
+      </key>
+      <key>
+        <name>grupo_etario_rango</name>
+        <lookup>grupo_etario_rango</lookup>
+      </key>
+      <key>
+        <name>grupo_etario_etapa</name>
+        <lookup>grupo_etario_etapa</lookup>
+      </key>
+      <key>
+        <name>franja_etaria_activa</name>
+        <lookup>franja_etaria_activa</lookup>
+      </key>
+      <return>
+        <name>edad_sk</name>
+        <creation_method>autoinc</creation_method>
+        <use_autoinc>Y</use_autoinc>
+      </return>
+    </fields>
+    <sequence/>
+    <last_update_field>fecha_ultima_modificacion</last_update_field>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>1200</xloc>
+      <yloc>272</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Seleccionar columnas</name>
     <type>SelectValues</type>
     <description/>
     <distribute>Y</distribute>
@@ -799,13 +871,17 @@ xhtml = xhtml.replaceAll("&lt;img .*?>","").replaceAll("&amp;nbsp;"," ");</jsScr
     </partitioning>
     <fields>
       <field>
-        <name>Moneda</name>
+        <name>edad</name>
+        <rename>edad_sk</rename>
       </field>
       <field>
-        <name>Simbolo</name>
+        <name>grupo_etario_rango</name>
       </field>
       <field>
-        <name>Cotizacion</name>
+        <name>grupo_etario_etapa</name>
+      </field>
+      <field>
+        <name>franja_etaria_activa</name>
       </field>
       <select_unspecified>N</select_unspecified>
     </fields>
@@ -818,8 +894,97 @@ xhtml = xhtml.replaceAll("&lt;img .*?>","").replaceAll("&amp;nbsp;"," ");</jsScr
       </output>
     </remotesteps>
     <GUI>
-      <xloc>848</xloc>
-      <yloc>192</yloc>
+      <xloc>736</xloc>
+      <yloc>176</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>valores_fijos</name>
+    <type>DataGrid</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <fields>
+      <field>
+        <name>edad_sk</name>
+        <type>Integer</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <length>-1</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+        <field_null_if/>
+      </field>
+      <field>
+        <name>grupo_etario_rango</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <length>16</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+        <field_null_if/>
+      </field>
+      <field>
+        <name>grupo_etario_etapa</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <length>16</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+        <field_null_if/>
+      </field>
+      <field>
+        <name>franja_etaria_activa</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <length>16</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+        <field_null_if/>
+      </field>
+    </fields>
+    <data>
+      <line>
+        <item>-1</item>
+        <item>DESCONOCIDO</item>
+        <item>DESCONOCIDO</item>
+        <item>DESCONOCIDO</item>
+      </line>
+      <line>
+        <item>-2</item>
+        <item>NO APLICA</item>
+        <item>NO APLICA</item>
+        <item>NO APLICA</item>
+      </line>
+    </data>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>752</xloc>
+      <yloc>368</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <transformation>
   <info>
-    <name>WebScraping_BCP</name>
+    <name>stg_institucion_dim</name>
     <description/>
     <extended_description/>
     <trans_version/>
@@ -428,44 +428,80 @@
     <clusterschemas>
     </clusterschemas>
     <created_user>-</created_user>
-    <created_date>2021/09/14 16:17:55.609</created_date>
+    <created_date>2024/05/30 17:01:17.650</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2021/09/14 16:17:55.609</modified_date>
+    <modified_date>2024/05/30 17:01:17.650</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
   <notepads>
   </notepads>
+  <connection>
+    <name>PostgreSQL-DWH</name>
+    <server>${LAB_DWH_HOSTNAME}</server>
+    <type>POSTGRESQL</type>
+    <access>Native</access>
+    <database>${LAB_DWH_DATABASE}</database>
+    <port>${LAB_DWH_PORTNUMBER}</port>
+    <username>${LAB_DWH_USERNAME}</username>
+    <password>${LAB_DWH_PASSWORD}</password>
+    <servername/>
+    <data_tablespace/>
+    <index_tablespace/>
+    <attributes>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>IS_CLUSTERED</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>PORT_NUMBER</code>
+        <attribute>${LAB_DWH_PORTNUMBER}</attribute>
+      </attribute>
+      <attribute>
+        <code>PRESERVE_RESERVED_WORD_CASE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>QUOTE_ALL_FIELDS</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>USE_POOLING</code>
+        <attribute>N</attribute>
+      </attribute>
+    </attributes>
+  </connection>
   <order>
     <hop>
-      <from>URL</from>
-      <to>HTTP client</to>
+      <from>Leer stg_institucion</from>
+      <to>String operations</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>HTTP client</from>
-      <to>Get HTML</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Get HTML</from>
-      <to>Select tbody</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Select tbody</from>
-      <to>Get rows</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Get rows</from>
-      <to>monedas</to>
+      <from>String operations</from>
+      <to>Cargar dim_institucion tipo1</to>
       <enabled>Y</enabled>
     </hop>
   </order>
   <step>
-    <name>Get HTML</name>
-    <type>ScriptValueMod</type>
+    <name>Cargar dim_institucion tipo1</name>
+    <type>CombinationLookup</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
@@ -474,45 +510,285 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <compatible>N</compatible>
-    <optimizationLevel>9</optimizationLevel>
-    <jsScripts>
-      <jsScript>
-        <jsScript_type>0</jsScript_type>
-        <jsScript_name>onTransform</jsScript_name>
-        <jsScript_script>java;
-
-// pseudo import
-Jsoup = org.jsoup.Jsoup;
-Whitelist = org.jsoup.safety.Whitelist;
-
-// make wellformed document
-doc = Jsoup.parse(html);
-
-
-// nothing beats a clean body
-doc.body().html(Jsoup.clean(doc.body().html(), Whitelist.relaxed().preserveRelativeLinks(true)));
-
-// we don't need a head
-doc.head().remove();
-// select single root markup containing our xloop
-//doc.select("tbody").after("mobile_noscript").first().remove();
-
-
-// select single root markup containing our xloop
-//var xhtml = doc.select("tbody").first().outerHtml();
-var xhtml = doc.select("tbody").outerHtml();
-xhtml = xhtml.replaceAll("&lt;img .*?>","").replaceAll("&amp;nbsp;"," ");</jsScript_script>
-      </jsScript>
-    </jsScripts>
+    <schema>${LAB_DWH_SCHEMADM}</schema>
+    <table>dim_institucion</table>
+    <connection>PostgreSQL-DWH</connection>
+    <commit>100</commit>
+    <cache_size>9999</cache_size>
+    <replace>N</replace>
+    <preloadCache>Y</preloadCache>
+    <crc>N</crc>
+    <crcfield>hashcode</crcfield>
+    <fields>
+      <key>
+        <name>nivel_codigo</name>
+        <lookup>nivel_codigo</lookup>
+      </key>
+      <key>
+        <name>nivel_descripcion</name>
+        <lookup>nivel_descripcion</lookup>
+      </key>
+      <key>
+        <name>entidad_codigo</name>
+        <lookup>entidad_codigo</lookup>
+      </key>
+      <key>
+        <name>entidad_descripcion</name>
+        <lookup>entidad_descripcion</lookup>
+      </key>
+      <key>
+        <name>oee_codigo</name>
+        <lookup>oee_codigo</lookup>
+      </key>
+      <key>
+        <name>oee_descripcion</name>
+        <lookup>oee_descripcion</lookup>
+      </key>
+      <return>
+        <name>institucion_sk</name>
+        <creation_method>autoinc</creation_method>
+        <use_autoinc>Y</use_autoinc>
+      </return>
+    </fields>
+    <sequence/>
+    <last_update_field>fecha_ultima_modificacion</last_update_field>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>688</xloc>
+      <yloc>288</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Leer stg_institucion</name>
+    <type>TableInput</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>PostgreSQL-DWH</connection>
+    <sql>select * from stage.vw_stg_institucion;</sql>
+    <limit>0</limit>
+    <lookup/>
+    <execute_each_row>N</execute_each_row>
+    <variables_active>N</variables_active>
+    <lazy_conversion_active>N</lazy_conversion_active>
+    <cached_row_meta_active>N</cached_row_meta_active>
+    <row-meta>
+      <value-meta>
+        <type>Integer</type>
+        <storagetype>normal</storagetype>
+        <name>nivel_codigo</name>
+        <length>4</length>
+        <precision>0</precision>
+        <origin>Table input</origin>
+        <comments>nivel_codigo</comments>
+        <conversion_Mask>####0;-####0</conversion_Mask>
+        <decimal_symbol>,</decimal_symbol>
+        <grouping_symbol>.</grouping_symbol>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>es_PY</date_format_locale>
+        <date_format_timezone>America/Asuncion</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+      <value-meta>
+        <type>String</type>
+        <storagetype>normal</storagetype>
+        <name>nivel_descripcion</name>
+        <length>2147483647</length>
+        <precision>-1</precision>
+        <origin>Table input</origin>
+        <comments>nivel_descripcion</comments>
+        <conversion_Mask/>
+        <decimal_symbol>,</decimal_symbol>
+        <grouping_symbol>.</grouping_symbol>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>es_PY</date_format_locale>
+        <date_format_timezone>America/Asuncion</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+      <value-meta>
+        <type>Integer</type>
+        <storagetype>normal</storagetype>
+        <name>entidad_codigo</name>
+        <length>4</length>
+        <precision>0</precision>
+        <origin>Table input</origin>
+        <comments>entidad_codigo</comments>
+        <conversion_Mask>####0;-####0</conversion_Mask>
+        <decimal_symbol>,</decimal_symbol>
+        <grouping_symbol>.</grouping_symbol>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>es_PY</date_format_locale>
+        <date_format_timezone>America/Asuncion</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+      <value-meta>
+        <type>String</type>
+        <storagetype>normal</storagetype>
+        <name>entidad_descripcion</name>
+        <length>2147483647</length>
+        <precision>-1</precision>
+        <origin>Table input</origin>
+        <comments>entidad_descripcion</comments>
+        <conversion_Mask/>
+        <decimal_symbol>,</decimal_symbol>
+        <grouping_symbol>.</grouping_symbol>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>es_PY</date_format_locale>
+        <date_format_timezone>America/Asuncion</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+      <value-meta>
+        <type>Integer</type>
+        <storagetype>normal</storagetype>
+        <name>oee_codigo</name>
+        <length>4</length>
+        <precision>0</precision>
+        <origin>Table input</origin>
+        <comments>oee_codigo</comments>
+        <conversion_Mask>####0;-####0</conversion_Mask>
+        <decimal_symbol>,</decimal_symbol>
+        <grouping_symbol>.</grouping_symbol>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>es_PY</date_format_locale>
+        <date_format_timezone>America/Asuncion</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+      <value-meta>
+        <type>String</type>
+        <storagetype>normal</storagetype>
+        <name>oee_descripcion</name>
+        <length>2147483647</length>
+        <precision>-1</precision>
+        <origin>Table input</origin>
+        <comments>oee_descripcion</comments>
+        <conversion_Mask/>
+        <decimal_symbol>,</decimal_symbol>
+        <grouping_symbol>.</grouping_symbol>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>es_PY</date_format_locale>
+        <date_format_timezone>America/Asuncion</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+    </row-meta>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>272</xloc>
+      <yloc>288</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>String operations</name>
+    <type>StringOperations</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
     <fields>
       <field>
-        <name>xhtml</name>
-        <rename>xhtml</rename>
-        <type>String</type>
-        <length>-1</length>
-        <precision>-1</precision>
-        <replace>N</replace>
+        <in_stream_name>nivel_descripcion</in_stream_name>
+        <out_stream_name/>
+        <trim_type>both</trim_type>
+        <lower_upper>upper</lower_upper>
+        <padding_type/>
+        <pad_char/>
+        <pad_len/>
+        <init_cap/>
+        <mask_xml/>
+        <digits/>
+        <remove_special_characters/>
+      </field>
+      <field>
+        <in_stream_name>entidad_descripcion</in_stream_name>
+        <out_stream_name/>
+        <trim_type>both</trim_type>
+        <lower_upper>upper</lower_upper>
+        <padding_type/>
+        <pad_char/>
+        <pad_len/>
+        <init_cap/>
+        <mask_xml/>
+        <digits/>
+        <remove_special_characters/>
+      </field>
+      <field>
+        <in_stream_name>oee_descripcion</in_stream_name>
+        <out_stream_name/>
+        <trim_type>both</trim_type>
+        <lower_upper>upper</lower_upper>
+        <padding_type/>
+        <pad_char/>
+        <pad_len/>
+        <init_cap/>
+        <mask_xml/>
+        <digits/>
+        <remove_special_characters/>
       </field>
     </fields>
     <attributes/>
@@ -525,301 +801,7 @@ xhtml = xhtml.replaceAll("&lt;img .*?>","").replaceAll("&amp;nbsp;"," ");</jsScr
     </remotesteps>
     <GUI>
       <xloc>480</xloc>
-      <yloc>192</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Get rows</name>
-    <type>getXMLData</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <include>N</include>
-    <include_field/>
-    <rownum>N</rownum>
-    <addresultfile>N</addresultfile>
-    <namespaceaware>N</namespaceaware>
-    <ignorecomments>Y</ignorecomments>
-    <readurl>N</readurl>
-    <validating>N</validating>
-    <usetoken>N</usetoken>
-    <IsIgnoreEmptyFile>Y</IsIgnoreEmptyFile>
-    <doNotFailIfNoFile>Y</doNotFailIfNoFile>
-    <rownum_field/>
-    <encoding>UTF-8</encoding>
-    <file>
-      <name/>
-      <filemask/>
-      <exclude_filemask/>
-      <file_required>N</file_required>
-      <include_subfolders>N</include_subfolders>
-    </file>
-    <fields>
-      <field>
-        <name>Moneda</name>
-        <xpath>td[1]</xpath>
-        <element_type>node</element_type>
-        <result_type>valueof</result_type>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <length>-1</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-        <repeat>N</repeat>
-      </field>
-      <field>
-        <name>Simbolo</name>
-        <xpath>td[2]</xpath>
-        <element_type>node</element_type>
-        <result_type>valueof</result_type>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <length>-1</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-        <repeat>N</repeat>
-      </field>
-      <field>
-        <name>Cotizacion</name>
-        <xpath>td[4]</xpath>
-        <element_type>node</element_type>
-        <result_type>valueof</result_type>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <length>-1</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-        <repeat>N</repeat>
-      </field>
-    </fields>
-    <limit>0</limit>
-    <loopxpath>//tr</loopxpath>
-    <IsInFields>Y</IsInFields>
-    <IsAFile>N</IsAFile>
-    <XmlField>xhtml</XmlField>
-    <prunePath/>
-    <shortFileFieldName/>
-    <pathFieldName/>
-    <hiddenFieldName/>
-    <lastModificationTimeFieldName/>
-    <uriNameFieldName/>
-    <rootUriNameFieldName/>
-    <extensionFieldName/>
-    <sizeFieldName/>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>736</xloc>
-      <yloc>192</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>HTTP client</name>
-    <type>HTTP</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <url/>
-    <urlInField>Y</urlInField>
-    <urlField>URL</urlField>
-    <encoding/>
-    <httpLogin/>
-    <httpPassword>Encrypted </httpPassword>
-    <proxyHost/>
-    <proxyPort/>
-    <socketTimeout/>
-    <connectionTimeout/>
-    <closeIdleConnectionsTime/>
-    <lookup>
-      <arg>
-        <name>anho</name>
-        <parameter>anho</parameter>
-      </arg>
-      <arg>
-        <name>mes</name>
-        <parameter>mes</parameter>
-      </arg>
-    </lookup>
-    <result>
-      <name>html</name>
-      <code>status</code>
-      <response_time/>
-      <response_header/>
-    </result>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>368</xloc>
-      <yloc>192</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Select tbody</name>
-    <type>SelectValues</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <fields>
-      <field>
-        <name>xhtml</name>
-      </field>
-      <select_unspecified>N</select_unspecified>
-    </fields>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>608</xloc>
-      <yloc>192</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>URL</name>
-    <type>RowGenerator</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <fields>
-      <field>
-        <name>URL</name>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif>https://www.bcp.gov.py/webapps/web/cotizacion/monedas-mensual</nullif>
-        <length>-1</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>anho</name>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif>2024</nullif>
-        <length>-1</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>mes</name>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif>04</nullif>
-        <length>-1</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-    </fields>
-    <limit>1</limit>
-    <never_ending>N</never_ending>
-    <interval_in_ms>5000</interval_in_ms>
-    <row_time_field>now</row_time_field>
-    <last_time_field>FiveSecondsAgo</last_time_field>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>224</xloc>
-      <yloc>192</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>monedas</name>
-    <type>SelectValues</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <fields>
-      <field>
-        <name>Moneda</name>
-      </field>
-      <field>
-        <name>Simbolo</name>
-      </field>
-      <field>
-        <name>Cotizacion</name>
-      </field>
-      <select_unspecified>N</select_unspecified>
-    </fields>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>848</xloc>
-      <yloc>192</yloc>
+      <yloc>288</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
