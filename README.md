@@ -1,6 +1,6 @@
-# [FPUNA-CIT] LABORATORIO - CURSO BÁSICO BIG DATA 2025
+# [FPUNA-CIT] LABORATORIO - CURSO BÁSICO BIG DATA
 
-**Universidad Nacional de Asunción - Facultad Politécnica** - **Proyecto Centro de Innovación TIC, P-K UNA**
+**Universidad Nacional de Asunción - Facultad Politécnica** - **Proyecto Centro de Innovación TIC, Paraguay-Korea UNA**
 
 **Profesor:** Ing. Richard D. Jiménez-R.
 
