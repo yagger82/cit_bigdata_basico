@@ -10,10 +10,17 @@ del desarrollo de proyectos prácticos. En el contexto de un curso básico de in
 conceptos clave mediante la resolución de problemas reales y el análisis de grandes volúmenes de datos.
 
 ## Proyectos de Casos de Uso
+
+Aquí tienes una estructura de directorios organizada para las clases de laboratorio del curso básico de Introducción a Big Data. Esta estructura facilita el almacenamiento y acceso a los materiales del curso.
+
+- materiales
+- configuracion
 - samples
-- migrador_csv_to_db
-- dwh
-- rpt_cit_asistencia
+- casos_practicos
+    - migrador_csv_to_db
+    - reporting
+    - dwh
+- ejercicios
 
 ## Características
 - Transformaciones y trabajos listos para usar.
