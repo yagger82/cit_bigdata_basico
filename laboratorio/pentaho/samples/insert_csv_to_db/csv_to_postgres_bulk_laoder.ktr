@@ -506,7 +506,7 @@
     </partitioning>
     <connection>PostgreSQL-BIGDATA-LAB</connection>
     <schema>${BIGDATA_LAB_SCHEMA_SAMPLE}</schema>
-    <table>sfp_nominas</table>
+    <table>raw_nomina_sfp</table>
     <load_action>TRUNCATE</load_action>
     <dbname_override/>
     <enclosure>"</enclosure>

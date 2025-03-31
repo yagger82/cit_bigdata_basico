@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <transformation>
   <info>
-    <name>transformar</name>
+    <name>cargar</name>
     <description/>
     <extended_description/>
     <trans_version/>
     <trans_type>Normal</trans_type>
+    <trans_status>0</trans_status>
     <directory>/</directory>
     <parameters>
     </parameters>
@@ -410,7 +411,7 @@
     <size_rowset>10000</size_rowset>
     <sleep_time_empty>50</sleep_time_empty>
     <sleep_time_full>50</sleep_time_full>
-    <unique_connections>N</unique_connections>
+    <unique_connections>Y</unique_connections>
     <feedback_shown>Y</feedback_shown>
     <feedback_size>50000</feedback_size>
     <using_thread_priorities>Y</using_thread_priorities>
@@ -427,24 +428,75 @@
     <clusterschemas>
     </clusterschemas>
     <created_user>-</created_user>
-    <created_date>2025/03/28 16:33:00.724</created_date>
+    <created_date>2025/03/23 21:28:53.949</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2025/03/28 16:33:00.724</modified_date>
-    <key_for_session_key/>
+    <modified_date>2025/03/23 21:28:53.949</modified_date>
+    <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
   <notepads>
   </notepads>
+  <connection>
+    <name>PostgreSQL-BIGDATA-LAB</name>
+    <server>${BIGDATA_LAB_HOSTNAME}</server>
+    <type>POSTGRESQL</type>
+    <access>Native</access>
+    <database>${BIGDATA_LAB_DATABASE}</database>
+    <port>${BIGDATA_LAB_PORTNUMBER}</port>
+    <username>${BIGDATA_LAB_USERNAME}</username>
+    <password>${BIGDATA_LAB_PASSWORD}</password>
+    <servername/>
+    <data_tablespace/>
+    <index_tablespace/>
+    <attributes>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>IS_CLUSTERED</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>PORT_NUMBER</code>
+        <attribute>${BIGDATA_LAB_PORTNUMBER}</attribute>
+      </attribute>
+      <attribute>
+        <code>PRESERVE_RESERVED_WORD_CASE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>QUOTE_ALL_FIELDS</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>USE_POOLING</code>
+        <attribute>N</attribute>
+      </attribute>
+    </attributes>
+  </connection>
   <order>
     <hop>
-      <from>CSV file input</from>
-      <to>Select values</to>
+      <from>Get rows from result</from>
+      <to>Table output</to>
       <enabled>Y</enabled>
     </hop>
   </order>
   <step>
-    <name>CSV file input</name>
-    <type>CsvInput</type>
+    <name>Get rows from result</name>
+    <type>RowsFromResult</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
@@ -453,405 +505,144 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <filename>D:\Dataset\Opendata\SFP\Nomina\Funcionarios_2024\funcionarios_2024_01_develop.csv</filename>
-    <filename_field/>
-    <rownum_field/>
-    <include_filename>N</include_filename>
-    <separator>,</separator>
-    <enclosure>"</enclosure>
-    <header>Y</header>
-    <buffer_size>50000</buffer_size>
-    <lazy_conversion>Y</lazy_conversion>
-    <add_filename_result>N</add_filename_result>
-    <parallel>N</parallel>
-    <newline_possible>N</newline_possible>
-    <format>DOS</format>
-    <encoding>windows-1250</encoding>
     <fields>
       <field>
-        <name>anho</name>
-        <type>Integer</type>
-        <format>#</format>
-        <currency>$</currency>
-        <decimal>,</decimal>
-        <group>.</group>
-        <length>15</length>
-        <precision>0</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>mes</name>
-        <type>Integer</type>
-        <format>#</format>
-        <currency>$</currency>
-        <decimal>,</decimal>
-        <group>.</group>
-        <length>15</length>
-        <precision>0</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>nivel</name>
-        <type>Integer</type>
-        <format>#</format>
-        <currency>$</currency>
-        <decimal>,</decimal>
-        <group>.</group>
-        <length>15</length>
-        <precision>0</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>descripcion_nivel</name>
+        <name>periodo_anho</name>
         <type>String</type>
-        <format/>
-        <currency>$</currency>
-        <decimal>,</decimal>
-        <group>.</group>
-        <length>59</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>entidad</name>
-        <type>Integer</type>
-        <format>#</format>
-        <currency>$</currency>
-        <decimal>,</decimal>
-        <group>.</group>
-        <length>15</length>
-        <precision>0</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>descripcion_entidad</name>
-        <type>String</type>
-        <format/>
-        <currency>$</currency>
-        <decimal>,</decimal>
-        <group>.</group>
-        <length>70</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>oee</name>
-        <type>Integer</type>
-        <format>#</format>
-        <currency>$</currency>
-        <decimal>,</decimal>
-        <group>.</group>
-        <length>15</length>
-        <precision>0</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>descripcion_oee</name>
-        <type>String</type>
-        <format/>
-        <currency>$</currency>
-        <decimal>,</decimal>
-        <group>.</group>
-        <length>111</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>documento</name>
-        <type>String</type>
-        <format/>
-        <currency>$</currency>
-        <decimal>,</decimal>
-        <group>.</group>
-        <length>8</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>nombres</name>
-        <type>String</type>
-        <format/>
-        <currency>$</currency>
-        <decimal>,</decimal>
-        <group>.</group>
-        <length>37</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>apellidos</name>
-        <type>String</type>
-        <format/>
-        <currency>$</currency>
-        <decimal>,</decimal>
-        <group>.</group>
-        <length>33</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>funcion</name>
-        <type>String</type>
-        <format/>
-        <currency>$</currency>
-        <decimal>,</decimal>
-        <group>.</group>
-        <length>461</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>estado</name>
-        <type>String</type>
-        <format/>
-        <currency>$</currency>
-        <decimal>,</decimal>
-        <group>.</group>
-        <length>11</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>carga_horaria</name>
-        <type>String</type>
-        <format/>
-        <currency>$</currency>
-        <decimal>,</decimal>
-        <group>.</group>
-        <length>332</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>anho_ingreso</name>
-        <type>Integer</type>
-        <format>#</format>
-        <currency>$</currency>
-        <decimal>,</decimal>
-        <group>.</group>
-        <length>15</length>
-        <precision>0</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>sexo</name>
-        <type>String</type>
-        <format/>
-        <currency>$</currency>
-        <decimal>,</decimal>
-        <group>.</group>
-        <length>9</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>discapacidad</name>
-        <type>String</type>
-        <format/>
-        <currency>$</currency>
-        <decimal>,</decimal>
-        <group>.</group>
-        <length>2</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>tipo_discapacidad</name>
-        <type>String</type>
-        <format/>
-        <currency>$</currency>
-        <decimal>,</decimal>
-        <group>.</group>
-        <length>11</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>fuente_financiamiento</name>
-        <type>Integer</type>
-        <format>#</format>
-        <currency>$</currency>
-        <decimal>,</decimal>
-        <group>.</group>
-        <length>15</length>
-        <precision>0</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>objeto_gasto</name>
-        <type>Integer</type>
-        <format>#</format>
-        <currency>$</currency>
-        <decimal>,</decimal>
-        <group>.</group>
-        <length>15</length>
-        <precision>0</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>concepto</name>
-        <type>String</type>
-        <format/>
-        <currency>$</currency>
-        <decimal>,</decimal>
-        <group>.</group>
-        <length>152</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>linea</name>
-        <type>String</type>
-        <format/>
-        <currency>$</currency>
-        <decimal>,</decimal>
-        <group>.</group>
-        <length>9</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>categoria</name>
-        <type>String</type>
-        <format/>
-        <currency>$</currency>
-        <decimal>,</decimal>
-        <group>.</group>
-        <length>13</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>cargo</name>
-        <type>String</type>
-        <format/>
-        <currency>$</currency>
-        <decimal>,</decimal>
-        <group>.</group>
-        <length>174</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>presupuestado</name>
-        <type>Integer</type>
-        <format>#</format>
-        <currency>$</currency>
-        <decimal>,</decimal>
-        <group>.</group>
-        <length>15</length>
-        <precision>0</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>devengado</name>
-        <type>Integer</type>
-        <format>#</format>
-        <currency>$</currency>
-        <decimal>,</decimal>
-        <group>.</group>
-        <length>15</length>
-        <precision>0</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>movimiento</name>
-        <type>String</type>
-        <format/>
-        <currency>$</currency>
-        <decimal>,</decimal>
-        <group>.</group>
-        <length>25</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>lugar</name>
-        <type>String</type>
-        <format/>
-        <currency>$</currency>
-        <decimal>,</decimal>
-        <group>.</group>
-        <length>114</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>fecha_nacimiento</name>
-        <type>Date</type>
-        <format>yyyy/MM/dd HH:mm:ss.SSS</format>
-        <currency>$</currency>
-        <decimal>,</decimal>
-        <group>.</group>
         <length>-1</length>
         <precision>-1</precision>
-        <trim_type>none</trim_type>
       </field>
       <field>
-        <name>fec_ult_modif</name>
+        <name>periodo_mes</name>
         <type>String</type>
-        <format/>
-        <currency>$</currency>
-        <decimal>,</decimal>
-        <group>.</group>
-        <length>29</length>
+        <length>-1</length>
         <precision>-1</precision>
-        <trim_type>none</trim_type>
       </field>
       <field>
-        <name>uri</name>
+        <name>nivel_codigo</name>
         <type>String</type>
-        <format/>
-        <currency>$</currency>
-        <decimal>,</decimal>
-        <group>.</group>
-        <length>48</length>
+        <length>-1</length>
         <precision>-1</precision>
-        <trim_type>none</trim_type>
       </field>
       <field>
-        <name>fecha_acto</name>
+        <name>nivel_descripcion</name>
         <type>String</type>
-        <format/>
-        <currency>$</currency>
-        <decimal>,</decimal>
-        <group>.</group>
-        <length>24</length>
+        <length>-1</length>
         <precision>-1</precision>
-        <trim_type>none</trim_type>
       </field>
       <field>
-        <name>correo</name>
+        <name>entidad_codigo</name>
         <type>String</type>
-        <format/>
-        <currency>$</currency>
-        <decimal>,</decimal>
-        <group>.</group>
-        <length>50</length>
+        <length>-1</length>
         <precision>-1</precision>
-        <trim_type>none</trim_type>
       </field>
       <field>
-        <name>profesion</name>
+        <name>entidad_descripcion</name>
         <type>String</type>
-        <format/>
-        <currency>$</currency>
-        <decimal>,</decimal>
-        <group>.</group>
-        <length>200</length>
+        <length>-1</length>
         <precision>-1</precision>
-        <trim_type>none</trim_type>
       </field>
       <field>
-        <name>motivo_movimiento</name>
+        <name>oee_codigo</name>
         <type>String</type>
-        <format/>
-        <currency>$</currency>
-        <decimal>,</decimal>
-        <group>.</group>
-        <length>237</length>
+        <length>-1</length>
         <precision>-1</precision>
-        <trim_type>none</trim_type>
+      </field>
+      <field>
+        <name>oee_descripcion</name>
+        <type>String</type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <name>funcionario_cedula</name>
+        <type>String</type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <name>funcionario_nombres</name>
+        <type>String</type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <name>funcionario_apellidos</name>
+        <type>String</type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <name>funcionario_sexo</name>
+        <type>String</type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <name>funcionario_fecha_nacimiento</name>
+        <type>String</type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <name>funcionario_discapacidad</name>
+        <type>String</type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <name>funcionario_discapacidad_tipo</name>
+        <type>String</type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <name>funcionario_estado</name>
+        <type>String</type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <name>funcionario_anho_ingreso</name>
+        <type>String</type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <name>rubro_linea_codigo</name>
+        <type>String</type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <name>rubro_categoria_codigo</name>
+        <type>String</type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <name>rubro_objeto_gasto_codigo</name>
+        <type>String</type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <name>rubro_objeto_gasto_concepto</name>
+        <type>String</type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <name>monto_presupuestado</name>
+        <type>Integer</type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <name>monto_devengado</name>
+        <type>Integer</type>
+        <length>-1</length>
+        <precision>-1</precision>
       </field>
     </fields>
     <attributes/>
@@ -863,14 +654,14 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>240</xloc>
-      <yloc>256</yloc>
+      <xloc>336</xloc>
+      <yloc>304</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Select values</name>
-    <type>SelectValues</type>
+    <name>Table output</name>
+    <type>TableOutput</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
@@ -879,77 +670,116 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
+    <connection>PostgreSQL-BIGDATA-LAB</connection>
+    <schema>${BIGDATA_LAB_SCHEMA_REPGI}</schema>
+    <table>rp_nomina_sfp</table>
+    <commit>0</commit>
+    <truncate>Y</truncate>
+    <ignore_errors>N</ignore_errors>
+    <use_batch>N</use_batch>
+    <specify_fields>Y</specify_fields>
+    <partitioning_enabled>N</partitioning_enabled>
+    <partitioning_field/>
+    <partitioning_daily>N</partitioning_daily>
+    <partitioning_monthly>Y</partitioning_monthly>
+    <tablename_in_field>N</tablename_in_field>
+    <tablename_field/>
+    <tablename_in_table>Y</tablename_in_table>
+    <return_keys>N</return_keys>
+    <return_field/>
     <fields>
       <field>
-        <name>anho</name>
+        <column_name>periodo_anho</column_name>
+        <stream_name>periodo_anho</stream_name>
       </field>
       <field>
-        <name>mes</name>
+        <column_name>periodo_mes</column_name>
+        <stream_name>periodo_mes</stream_name>
       </field>
       <field>
-        <name>nivel</name>
+        <column_name>nivel_codigo</column_name>
+        <stream_name>nivel_codigo</stream_name>
       </field>
       <field>
-        <name>descripcion_nivel</name>
+        <column_name>nivel_descripcion</column_name>
+        <stream_name>nivel_descripcion</stream_name>
       </field>
       <field>
-        <name>entidad</name>
+        <column_name>entidad_codigo</column_name>
+        <stream_name>entidad_codigo</stream_name>
       </field>
       <field>
-        <name>descripcion_entidad</name>
+        <column_name>entidad_descripcion</column_name>
+        <stream_name>entidad_descripcion</stream_name>
       </field>
       <field>
-        <name>oee</name>
+        <column_name>oee_codigo</column_name>
+        <stream_name>oee_codigo</stream_name>
       </field>
       <field>
-        <name>descripcion_oee</name>
+        <column_name>oee_descripcion</column_name>
+        <stream_name>oee_descripcion</stream_name>
       </field>
       <field>
-        <name>documento</name>
+        <column_name>funcionario_cedula</column_name>
+        <stream_name>funcionario_cedula</stream_name>
       </field>
       <field>
-        <name>nombres</name>
+        <column_name>funcionario_nombres</column_name>
+        <stream_name>funcionario_nombres</stream_name>
       </field>
       <field>
-        <name>apellidos</name>
+        <column_name>funcionario_apellidos</column_name>
+        <stream_name>funcionario_apellidos</stream_name>
       </field>
       <field>
-        <name>sexo</name>
+        <column_name>funcionario_sexo</column_name>
+        <stream_name>funcionario_sexo</stream_name>
       </field>
       <field>
-        <name>fecha_nacimiento</name>
+        <column_name>funcionario_fecha_nacimiento</column_name>
+        <stream_name>funcionario_fecha_nacimiento</stream_name>
       </field>
       <field>
-        <name>discapacidad</name>
+        <column_name>funcionario_discapacidad</column_name>
+        <stream_name>funcionario_discapacidad</stream_name>
       </field>
       <field>
-        <name>tipo_discapacidad</name>
+        <column_name>funcionario_discapacidad_tipo</column_name>
+        <stream_name>funcionario_discapacidad_tipo</stream_name>
       </field>
       <field>
-        <name>estado</name>
+        <column_name>funcionario_estado</column_name>
+        <stream_name>funcionario_estado</stream_name>
       </field>
       <field>
-        <name>anho_ingreso</name>
+        <column_name>funcionario_anho_ingreso</column_name>
+        <stream_name>funcionario_anho_ingreso</stream_name>
       </field>
       <field>
-        <name>linea</name>
+        <column_name>rubro_linea_codigo</column_name>
+        <stream_name>rubro_linea_codigo</stream_name>
       </field>
       <field>
-        <name>categoria</name>
+        <column_name>rubro_categoria_codigo</column_name>
+        <stream_name>rubro_categoria_codigo</stream_name>
       </field>
       <field>
-        <name>objeto_gasto</name>
+        <column_name>rubro_objeto_gasto_codigo</column_name>
+        <stream_name>rubro_objeto_gasto_codigo</stream_name>
       </field>
       <field>
-        <name>concepto</name>
+        <column_name>rubro_objeto_gasto_concepto</column_name>
+        <stream_name>rubro_objeto_gasto_concepto</stream_name>
       </field>
       <field>
-        <name>presupuestado</name>
+        <column_name>monto_presupuestado</column_name>
+        <stream_name>monto_presupuestado</stream_name>
       </field>
       <field>
-        <name>devengado</name>
+        <column_name>monto_devengado</column_name>
+        <stream_name>monto_devengado</stream_name>
       </field>
-      <select_unspecified>N</select_unspecified>
     </fields>
     <attributes/>
     <cluster_schema/>
@@ -960,8 +790,8 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>432</xloc>
-      <yloc>256</yloc>
+      <xloc>608</xloc>
+      <yloc>304</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

@@ -444,6 +444,16 @@
     </hop>
     <hop>
       <from>Select values</from>
+      <to>Filter rows</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Filter rows</from>
+      <to>Eliminados</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Filter rows</from>
       <to>Copy rows to result</to>
       <enabled>Y</enabled>
     </hop>
@@ -459,8 +469,8 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <filename>D:\Dataset\Opendata\SFP\Nomina\Funcionarios_2024\funcionarios_2024_01_develop.csv</filename>
-    <filename_field/>
+    <filename>${BIGDATA_LAB_DATASET_SFP_NOMINA}</filename>
+    <filename_field>FILE_INPUT_PATH</filename_field>
     <rownum_field/>
     <include_filename>N</include_filename>
     <separator>,</separator>
@@ -869,8 +879,8 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>368</xloc>
-      <yloc>288</yloc>
+      <xloc>240</xloc>
+      <yloc>256</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -894,8 +904,98 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>736</xloc>
-      <yloc>288</yloc>
+      <xloc>832</xloc>
+      <yloc>256</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Eliminados</name>
+    <type>Dummy</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>624</xloc>
+      <yloc>432</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Filter rows</name>
+    <type>FilterRows</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <send_true_to>Copy rows to result</send_true_to>
+    <send_false_to>Eliminados</send_false_to>
+    <compare>
+      <condition>
+        <negated>Y</negated>
+        <conditions>
+          <condition>
+            <negated>N</negated>
+            <leftvalue>presupuestado</leftvalue>
+            <function>=</function>
+            <rightvalue/>
+            <value>
+              <name>constant</name>
+              <type>Integer</type>
+              <text>0</text>
+              <length>-1</length>
+              <precision>0</precision>
+              <isnull>N</isnull>
+              <mask>####0;-####0</mask>
+            </value>
+          </condition>
+          <condition>
+            <negated>N</negated>
+            <operator>AND</operator>
+            <leftvalue>devengado</leftvalue>
+            <function>=</function>
+            <rightvalue/>
+            <value>
+              <name>constant</name>
+              <type>Integer</type>
+              <text>0</text>
+              <length>-1</length>
+              <precision>0</precision>
+              <isnull>N</isnull>
+              <mask>####0;-####0</mask>
+            </value>
+          </condition>
+        </conditions>
+      </condition>
+    </compare>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>624</xloc>
+      <yloc>256</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -913,95 +1013,72 @@
     <fields>
       <field>
         <name>anho</name>
-        <rename>periodo_anho</rename>
       </field>
       <field>
         <name>mes</name>
-        <rename>periodo_mes</rename>
       </field>
       <field>
         <name>nivel</name>
-        <rename>nivel_codigo</rename>
       </field>
       <field>
         <name>descripcion_nivel</name>
-        <rename>nivel_descripcion</rename>
       </field>
       <field>
         <name>entidad</name>
-        <rename>entidad_codigo</rename>
       </field>
       <field>
         <name>descripcion_entidad</name>
-        <rename>entidad_descripcion</rename>
       </field>
       <field>
         <name>oee</name>
-        <rename>oee_codigo</rename>
       </field>
       <field>
         <name>descripcion_oee</name>
-        <rename>oee_descripcion</rename>
       </field>
       <field>
         <name>documento</name>
-        <rename>funcionario_cedula</rename>
       </field>
       <field>
         <name>nombres</name>
-        <rename>funcionario_nombres</rename>
       </field>
       <field>
         <name>apellidos</name>
-        <rename>funcionario_apellidos</rename>
       </field>
       <field>
         <name>sexo</name>
-        <rename>funcionario_sexo</rename>
       </field>
       <field>
         <name>fecha_nacimiento</name>
-        <rename>funcionario_fecha_nacimiento</rename>
       </field>
       <field>
         <name>discapacidad</name>
-        <rename>funcionario_discapacidad</rename>
       </field>
       <field>
         <name>tipo_discapacidad</name>
-        <rename>funcionario_discapacidad_tipo</rename>
       </field>
       <field>
         <name>estado</name>
-        <rename>funcionario_estado</rename>
       </field>
       <field>
         <name>anho_ingreso</name>
-        <rename>funcionario_anho_ingreso</rename>
       </field>
       <field>
         <name>linea</name>
-        <rename>rubro_linea_codigo</rename>
       </field>
       <field>
         <name>categoria</name>
-        <rename>rubro_categoria_codigo</rename>
       </field>
       <field>
         <name>objeto_gasto</name>
-        <rename>rubro_objeto_gasto_codigo</rename>
       </field>
       <field>
         <name>concepto</name>
-        <rename>rubro_objeto_gasto_concepto</rename>
       </field>
       <field>
         <name>presupuestado</name>
-        <rename>monto_presupuestado</rename>
       </field>
       <field>
         <name>devengado</name>
-        <rename>monto_devengado</rename>
       </field>
       <select_unspecified>N</select_unspecified>
     </fields>
@@ -1014,8 +1091,8 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>560</xloc>
-      <yloc>288</yloc>
+      <xloc>432</xloc>
+      <yloc>256</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

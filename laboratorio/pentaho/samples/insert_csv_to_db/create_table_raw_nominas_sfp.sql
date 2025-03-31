@@ -1,7 +1,12 @@
 
-DROP TABLE IF EXISTS bigdata.sample.sfp_nominas;
+SET search_path TO sample;
 
-CREATE TABLE bigdata.sample.sfp_nominas
+
+DROP TABLE IF EXISTS raw_nomina_sfp;
+
+
+--tabla con los datos crudo
+CREATE TABLE raw_nomina_sfp
 (
     anho TEXT,
     mes TEXT,

@@ -507,7 +507,7 @@
     </partitioning>
     <connection>PostgreSQL-LAB_BIGDATA</connection>
     <schema>${LAB_BIGDATA_SCHEMA_SAMPLE}</schema>
-    <table>sfp_nominas</table>
+    <table>raw_nomina_sfp</table>
     <commit>0</commit>
     <truncate>Y</truncate>
     <ignore_errors>N</ignore_errors>

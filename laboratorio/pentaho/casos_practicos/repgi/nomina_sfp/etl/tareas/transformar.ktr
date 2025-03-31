@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <transformation>
   <info>
-    <name>carga_datos</name>
+    <name>transformar</name>
     <description/>
     <extended_description/>
     <trans_version/>
     <trans_type>Normal</trans_type>
-    <trans_status>0</trans_status>
     <directory>/</directory>
     <parameters>
     </parameters>
@@ -428,72 +427,135 @@
     <clusterschemas>
     </clusterschemas>
     <created_user>-</created_user>
-    <created_date>2025/03/23 21:28:53.949</created_date>
+    <created_date>2025/03/28 16:33:00.724</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2025/03/23 21:28:53.949</modified_date>
-    <key_for_session_key/>
+    <modified_date>2025/03/28 16:33:00.724</modified_date>
+    <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
   <notepads>
   </notepads>
-  <connection>
-    <name>PostgreSQL-LAB_BIGDATA</name>
-    <server>${LAB_BIGDATA_HOSTNAME}</server>
-    <type>POSTGRESQL</type>
-    <access>Native</access>
-    <database>${LAB_BIGDATA_DATABASE}</database>
-    <port>${LAB_BIGDATA_PORTNUMBER}</port>
-    <username>${LAB_BIGDATA_USERNAME}</username>
-    <password>${LAB_BIGDATA_PASSWORD}</password>
-    <servername/>
-    <data_tablespace/>
-    <index_tablespace/>
-    <attributes>
-      <attribute>
-        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>IS_CLUSTERED</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>PORT_NUMBER</code>
-        <attribute>${LAB_BIGDATA_PORTNUMBER}</attribute>
-      </attribute>
-      <attribute>
-        <code>PRESERVE_RESERVED_WORD_CASE</code>
-        <attribute>Y</attribute>
-      </attribute>
-      <attribute>
-        <code>QUOTE_ALL_FIELDS</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
-        <attribute>Y</attribute>
-      </attribute>
-      <attribute>
-        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
-        <attribute>Y</attribute>
-      </attribute>
-      <attribute>
-        <code>USE_POOLING</code>
-        <attribute>N</attribute>
-      </attribute>
-    </attributes>
-  </connection>
   <order>
     <hop>
       <from>Get rows from result</from>
-      <to>Table output</to>
+      <to>Strings cut</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Strings cut</from>
+      <to>Filter rows</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Filter rows</from>
+      <to>Select values</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Filter rows</from>
+      <to>VACANTES</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Select values</from>
+      <to>Copy rows to result</to>
       <enabled>Y</enabled>
     </hop>
   </order>
+  <step>
+    <name>Copy rows to result</name>
+    <type>RowsToResult</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>800</xloc>
+      <yloc>224</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>VACANTES</name>
+    <type>Dummy</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>496</xloc>
+      <yloc>368</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Filter rows</name>
+    <type>FilterRows</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <send_true_to>Select values</send_true_to>
+    <send_false_to>VACANTES</send_false_to>
+    <compare>
+      <condition>
+        <negated>Y</negated>
+        <leftvalue>dato_control</leftvalue>
+        <function>=</function>
+        <rightvalue/>
+        <value>
+          <name>constant</name>
+          <type>String</type>
+          <text>V</text>
+          <length>-1</length>
+          <precision>-1</precision>
+          <isnull>N</isnull>
+          <mask/>
+        </value>
+      </condition>
+    </compare>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>496</xloc>
+      <yloc>224</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
   <step>
     <name>Get rows from result</name>
     <type>RowsFromResult</type>
@@ -634,13 +696,13 @@
       </field>
       <field>
         <name>presupuestado</name>
-        <type>String</type>
+        <type>Integer</type>
         <length>-1</length>
         <precision>-1</precision>
       </field>
       <field>
         <name>devengado</name>
-        <type>String</type>
+        <type>Integer</type>
         <length>-1</length>
         <precision>-1</precision>
       </field>
@@ -654,14 +716,14 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>320</xloc>
-      <yloc>304</yloc>
+      <xloc>208</xloc>
+      <yloc>224</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Table output</name>
-    <type>TableOutput</type>
+    <name>Select values</name>
+    <type>SelectValues</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
@@ -670,115 +732,132 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <connection>PostgreSQL-LAB_BIGDATA</connection>
-    <schema>poc</schema>
-    <table>reportes_funcionarios</table>
-    <commit>500</commit>
-    <truncate>Y</truncate>
-    <ignore_errors>N</ignore_errors>
-    <use_batch>Y</use_batch>
-    <specify_fields>Y</specify_fields>
-    <partitioning_enabled>N</partitioning_enabled>
-    <partitioning_field/>
-    <partitioning_daily>N</partitioning_daily>
-    <partitioning_monthly>Y</partitioning_monthly>
-    <tablename_in_field>N</tablename_in_field>
-    <tablename_field/>
-    <tablename_in_table>Y</tablename_in_table>
-    <return_keys>N</return_keys>
-    <return_field/>
     <fields>
       <field>
-        <column_name>anho</column_name>
-        <stream_name>anho</stream_name>
+        <name>anho</name>
+        <rename>periodo_anho</rename>
       </field>
       <field>
-        <column_name>mes</column_name>
-        <stream_name>mes</stream_name>
+        <name>mes</name>
+        <rename>periodo_mes</rename>
       </field>
       <field>
-        <column_name>nivel</column_name>
-        <stream_name>nivel</stream_name>
+        <name>nivel</name>
+        <rename>nivel_codigo</rename>
       </field>
       <field>
-        <column_name>descripcion_nivel</column_name>
-        <stream_name>descripcion_nivel</stream_name>
+        <name>descripcion_nivel</name>
+        <rename>nivel_descripcion</rename>
       </field>
       <field>
-        <column_name>entidad</column_name>
-        <stream_name>entidad</stream_name>
+        <name>entidad</name>
+        <rename>entidad_codigo</rename>
       </field>
       <field>
-        <column_name>descripcion_entidad</column_name>
-        <stream_name>descripcion_entidad</stream_name>
+        <name>descripcion_entidad</name>
+        <rename>entidad_descripcion</rename>
       </field>
       <field>
-        <column_name>oee</column_name>
-        <stream_name>oee</stream_name>
+        <name>oee</name>
+        <rename>oee_codigo</rename>
       </field>
       <field>
-        <column_name>descripcion_oee</column_name>
-        <stream_name>descripcion_oee</stream_name>
+        <name>descripcion_oee</name>
+        <rename>oee_descripcion</rename>
       </field>
       <field>
-        <column_name>documento</column_name>
-        <stream_name>documento</stream_name>
+        <name>documento</name>
+        <rename>funcionario_cedula</rename>
       </field>
       <field>
-        <column_name>nombres</column_name>
-        <stream_name>nombres</stream_name>
+        <name>nombres</name>
+        <rename>funcionario_nombres</rename>
       </field>
       <field>
-        <column_name>apellidos</column_name>
-        <stream_name>apellidos</stream_name>
+        <name>apellidos</name>
+        <rename>funcionario_apellidos</rename>
       </field>
       <field>
-        <column_name>sexo</column_name>
-        <stream_name>sexo</stream_name>
+        <name>sexo</name>
+        <rename>funcionario_sexo</rename>
       </field>
       <field>
-        <column_name>fecha_nacimiento</column_name>
-        <stream_name>fecha_nacimiento</stream_name>
+        <name>fecha_nacimiento</name>
+        <rename>funcionario_fecha_nacimiento</rename>
       </field>
       <field>
-        <column_name>discapacidad</column_name>
-        <stream_name>discapacidad</stream_name>
+        <name>discapacidad</name>
+        <rename>funcionario_discapacidad</rename>
       </field>
       <field>
-        <column_name>tipo_discapacidad</column_name>
-        <stream_name>tipo_discapacidad</stream_name>
+        <name>tipo_discapacidad</name>
+        <rename>funcionario_discapacidad_tipo</rename>
       </field>
       <field>
-        <column_name>estado</column_name>
-        <stream_name>estado</stream_name>
+        <name>estado</name>
+        <rename>funcionario_estado</rename>
       </field>
       <field>
-        <column_name>anho_ingreso</column_name>
-        <stream_name>anho_ingreso</stream_name>
+        <name>anho_ingreso</name>
+        <rename>funcionario_anho_ingreso</rename>
       </field>
       <field>
-        <column_name>linea</column_name>
-        <stream_name>linea</stream_name>
+        <name>linea</name>
+        <rename>rubro_linea_codigo</rename>
       </field>
       <field>
-        <column_name>categoria</column_name>
-        <stream_name>categoria</stream_name>
+        <name>categoria</name>
+        <rename>rubro_categoria_codigo</rename>
       </field>
       <field>
-        <column_name>objeto_gasto</column_name>
-        <stream_name>objeto_gasto</stream_name>
+        <name>objeto_gasto</name>
+        <rename>rubro_objeto_gasto_codigo</rename>
       </field>
       <field>
-        <column_name>concepto</column_name>
-        <stream_name>concepto</stream_name>
+        <name>concepto</name>
+        <rename>rubro_objeto_gasto_concepto</rename>
       </field>
       <field>
-        <column_name>presupuestado</column_name>
-        <stream_name>presupuestado</stream_name>
+        <name>presupuestado</name>
+        <rename>monto_presupuestado</rename>
       </field>
       <field>
-        <column_name>devengado</column_name>
-        <stream_name>devengado</stream_name>
+        <name>devengado</name>
+        <rename>monto_devengado</rename>
+      </field>
+      <select_unspecified>N</select_unspecified>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>640</xloc>
+      <yloc>224</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Strings cut</name>
+    <type>StringCut</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <fields>
+      <field>
+        <in_stream_name>documento</in_stream_name>
+        <out_stream_name>dato_control</out_stream_name>
+        <cut_from>1</cut_from>
+        <cut_to>2</cut_to>
       </field>
     </fields>
     <attributes/>
@@ -790,8 +869,8 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>592</xloc>
-      <yloc>304</yloc>
+      <xloc>368</xloc>
+      <yloc>224</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
