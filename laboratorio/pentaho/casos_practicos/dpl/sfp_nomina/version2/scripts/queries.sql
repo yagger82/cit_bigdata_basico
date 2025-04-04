@@ -9,7 +9,7 @@ with mydata as (
 			trim(tipo_discapacidad) as tipo_discapacidad,
 			trim(discapacidad) as discapacidad
 		from
-			ods.ods_sfp_nomina
+			stage.sfp_nomina_temporal
 		where
 			documento is not null
 			and nombres is not null

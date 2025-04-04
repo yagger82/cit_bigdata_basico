@@ -603,6 +603,11 @@
       <date_mask/>
     </mapping>
     <mapping>
+      <stream_name>fecha_acto</stream_name>
+      <field_name>fecha_acto</field_name>
+      <date_mask/>
+    </mapping>
+    <mapping>
       <stream_name>linea</stream_name>
       <field_name>linea</field_name>
       <date_mask/>
@@ -1248,6 +1253,10 @@
       </field>
       <field>
         <name>anho_ingreso</name>
+        <rename/>
+      </field>
+      <field>
+        <name>fecha_acto</name>
         <rename/>
       </field>
       <field>

@@ -1,11 +1,15 @@
 SET search_path TO repgi;
 
 
-DROP TABLE IF EXISTS rp_nomina_sfp;
+DROP TABLE IF EXISTS dpl.rp_remuneraciones;
 
+/*
+ * Corresponde a los datos de las remuneraciones presupuestadas y devengadas 
+ * de los Funcionarios Públicos por cada entidad.
+*/
 
 -- tabla final para el reporte
-CREATE TABLE rp_nomina_sfp (
+CREATE TABLE dpl.rp_remuneraciones (
 	periodo_anho TEXT,
 	periodo_mes TEXT,
 	nivel_codigo TEXT,
@@ -31,4 +35,4 @@ CREATE TABLE rp_nomina_sfp (
 	monto_devengado BIGINT
 );
 
-select * from rp_nomina_sfp;
+select * from dpl.rp_remuneraciones;

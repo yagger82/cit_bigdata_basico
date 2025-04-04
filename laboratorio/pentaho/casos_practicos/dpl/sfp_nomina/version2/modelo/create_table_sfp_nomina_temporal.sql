@@ -19,6 +19,7 @@ CREATE TABLE stage.sfp_nomina_temporal (
 	tipo_discapacidad TEXT,
 	estado TEXT,
 	anho_ingreso TEXT,
+	fecha_acto TEXT,
 	linea TEXT,
 	categoria TEXT,
 	objeto_gasto_codigo TEXT ,
@@ -29,6 +30,6 @@ CREATE TABLE stage.sfp_nomina_temporal (
 -- consultas para verificar los datos
 SELECT * FROM stage.sfp_nomina_temporal;
 
-SELECT count(*) FROM stage.sfp_nomina_temporal;
+SELECT count(*) FROM stage.sfp_nomina_temporal; --2.785.413
 
 SELECT anho, mes, count(*) FROM stage.sfp_nomina_temporal GROUP BY anho, mes;

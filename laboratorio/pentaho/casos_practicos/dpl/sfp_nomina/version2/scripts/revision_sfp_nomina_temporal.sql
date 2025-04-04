@@ -77,10 +77,101 @@ select * from stage.sfp_nomina_temporal where fecha_nacimiento::date = '2011-08-
 
 select * from stage.sfp_nomina_temporal where fecha_nacimiento::date < '1930-01-01'::date;
 
-select distinct extract(year from fecha_nacimiento::date) as anho 
+select distinct extract(year from fecha_nacimiento::date) as anho, 2025 - extract(year from fecha_nacimiento::date) edad  
 from stage.sfp_nomina_temporal
-order by anho asc;
+order by anho desc;
+
 
 select count(*) from stage.sfp_nomina_temporal where extract(year from fecha_nacimiento::date) is null;
 select count(*) from stage.sfp_nomina_temporal where fecha_nacimiento::date is null; --21.822
 select * from stage.sfp_nomina_temporal where fecha_nacimiento::date is null;
+
+
+-- revision: ANHO_INGRESO
+select min(anho_ingreso), max(anho_ingreso) from stage.sfp_nomina_temporal; --0 y 9999
+
+select distinct anho_ingreso from stage.sfp_nomina_temporal order by anho_ingreso asc;
+
+select * from stage.sfp_nomina_temporal where anho_ingreso = '204';
+select * from stage.sfp_nomina_temporal where anho_ingreso is null;
+select * from stage.sfp_nomina_temporal where anho_ingreso = '';
+
+
+
+-- revision: DISCAPACIDAD y TIPO_DISCAPACIDAD
+
+with mydata as (
+	select
+		documento,
+		array_agg(tipo_discapacidad) as tipo_discapacidad,
+		array_agg(discapacidad) as discapacidad 
+	from (
+		select distinct
+			documento,
+			trim(tipo_discapacidad) as tipo_discapacidad,
+			trim(discapacidad) as discapacidad
+		from
+			stage.sfp_nomina_temporal
+		--where
+			--documento is not null
+			--and nombres is not null
+			--and apellidos is not null
+			--and sexo is not null
+			--and substring(documento, 1, 1) not in('A', 'V') -- no persona
+		order by documento
+	) pd
+	--where discapacidad = 'SI' and array_length(tipo_discapacidad) > 1
+	group by documento
+)
+select * from mydata where cardinality(tipo_discapacidad) > 1;
+
+
+SELECT array_length(ARRAY[1, 2, 3, 4], 1); -- Resultado: 4
+
+
+select
+	documento, count(*) cantidad
+from (
+	select distinct
+		documento,
+		trim(tipo_discapacidad) as tipo_discapacidad,
+		trim(discapacidad) as discapacidad
+	from
+		stage.sfp_nomina_temporal
+) t
+group by documento
+having count(*) > 2
+;
+
+
+--dejar el mas actual si aplica
+--tomar el añor de ingreso
+select * from stage.sfp_nomina_temporal where documento = '3801917';
+
+
+-- revision: ESTADO
+select distinct estado from stage.sfp_nomina_temporal;
+
+
+-- revision: OBJETO_GASTO_CODIGO
+select distinct objeto_gasto_codigo from stage.sfp_nomina_temporal;
+select distinct objeto_gasto_codigo from stage.sfp_nomina_temporal where objeto_gasto_codigo is null;
+select distinct objeto_gasto_codigo from stage.sfp_nomina_temporal where objeto_gasto_codigo = '';
+
+-- revision: LINEA y CATEGORIA
+select distinct linea from stage.sfp_nomina_temporal;
+select linea from stage.sfp_nomina_temporal where linea is null;
+select linea from stage.sfp_nomina_temporal where linea = '';
+
+
+select distinct categoria from stage.sfp_nomina_temporal;
+select distinct categoria from stage.sfp_nomina_temporal where categoria like 'Z%';
+select categoria from stage.sfp_nomina_temporal where categoria is null;
+select categoria from stage.sfp_nomina_temporal where categoria = '';
+
+
+
+
+
+
+
