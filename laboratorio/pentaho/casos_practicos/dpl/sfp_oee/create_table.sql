@@ -13,5 +13,7 @@ CREATE TABLE ods.sfp_oee (
 	descripcion_corta TEXT
 );
 
+CREATE INDEX idx_ods_sfp_oee_nivel_entidad_oee_codigo ON ods.sfp_oee (nivel_codigo, entidad_codigo, oee_codigo);
+
 -- consultar tabla
 SELECT * FROM ods.sfp_oee;

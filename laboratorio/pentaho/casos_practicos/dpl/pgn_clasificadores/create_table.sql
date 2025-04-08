@@ -16,6 +16,7 @@ CREATE TABLE ods.pgn_gastos_clasificador (
 	clasificacion_gasto_descripcion TEXT
 );
 
+CREATE INDEX idx_ods_pgn_gastos_clasificador_objeto_gasto_codigo ON ods.pgn_gastos_clasificador (objeto_gasto_codigo);
 
 -- consultar tabla
 SELECT * FROM ods.pgn_gastos_clasificador;
