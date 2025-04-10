@@ -4,7 +4,7 @@ SET search_path TO stage;
 DROP TABLE IF EXISTS stage.sfp_nomina_temporal;
 
 -- comando para crear tabla para guardar temporalmente
-CREATE TABLE stage.sfp_nomina_temporal (
+CREATE UNLOGGED TABLE stage.sfp_nomina_temporal (
 	anho TEXT,
 	mes TEXT,
 	nivel_codigo TEXT,

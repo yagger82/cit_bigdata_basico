@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <transformation>
   <info>
-    <name>extraer</name>
-    <description/>
-    <extended_description/>
-    <trans_version/>
+    <name>extraer_datos</name>
+    <description>Proceso de extraccion de datos</description>
+    <extended_description>Autor: Prof. Richard Jimenez</extended_description>
+    <trans_version>1</trans_version>
     <trans_type>Normal</trans_type>
+    <trans_status>2</trans_status>
     <directory>/</directory>
     <parameters>
     </parameters>
@@ -410,7 +411,7 @@
     <size_rowset>10000</size_rowset>
     <sleep_time_empty>50</sleep_time_empty>
     <sleep_time_full>50</sleep_time_full>
-    <unique_connections>N</unique_connections>
+    <unique_connections>Y</unique_connections>
     <feedback_shown>Y</feedback_shown>
     <feedback_size>50000</feedback_size>
     <using_thread_priorities>Y</using_thread_priorities>
@@ -1201,11 +1202,9 @@
     <fields>
       <field>
         <name>anho</name>
-        <rename/>
       </field>
       <field>
         <name>mes</name>
-        <rename/>
       </field>
       <field>
         <name>nivel</name>
@@ -1221,51 +1220,39 @@
       </field>
       <field>
         <name>documento</name>
-        <rename/>
       </field>
       <field>
         <name>nombres</name>
-        <rename/>
       </field>
       <field>
         <name>apellidos</name>
-        <rename/>
       </field>
       <field>
         <name>sexo</name>
-        <rename/>
       </field>
       <field>
         <name>fecha_nacimiento</name>
-        <rename/>
       </field>
       <field>
         <name>discapacidad</name>
-        <rename/>
       </field>
       <field>
         <name>tipo_discapacidad</name>
-        <rename/>
       </field>
       <field>
         <name>estado</name>
-        <rename/>
       </field>
       <field>
         <name>anho_ingreso</name>
-        <rename/>
       </field>
       <field>
         <name>fecha_acto</name>
-        <rename/>
       </field>
       <field>
         <name>linea</name>
-        <rename/>
       </field>
       <field>
         <name>categoria</name>
-        <rename/>
       </field>
       <field>
         <name>objeto_gasto</name>
@@ -1273,11 +1260,9 @@
       </field>
       <field>
         <name>presupuestado</name>
-        <rename/>
       </field>
       <field>
         <name>devengado</name>
-        <rename/>
       </field>
       <select_unspecified>N</select_unspecified>
     </fields>
