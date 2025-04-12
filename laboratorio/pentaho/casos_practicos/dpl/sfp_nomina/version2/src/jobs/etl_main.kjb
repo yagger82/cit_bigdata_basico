@@ -368,7 +368,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>608</xloc>
-      <yloc>416</yloc>
+      <yloc>544</yloc>
       <attributes_kjc/>
     </entry>
     <entry>
@@ -392,26 +392,26 @@
       <description/>
       <type>MAIL</type>
       <attributes/>
-      <server/>
-      <port/>
-      <destination/>
-      <destinationCc/>
-      <destinationBCc/>
-      <replyto/>
-      <replytoname/>
-      <subject/>
+      <server>${BIGDATA_LAB_MAIL_SMTP_SERVER}</server>
+      <port>${BIGDATA_LAB_MAIL_SMTP_PORT_SSL}</port>
+      <destination>${BIGDATA_LAB_MAIL_DESTINATION_ADDRESS}</destination>
+      <destinationCc>${BIGDATA_LAB_MAIL_DESTINATION_CC}</destinationCc>
+      <destinationBCc>${BIGDATA_LAB_MAIL_DESTINATION_BCc}</destinationBCc>
+      <replyto>${BIGDATA_LAB_MAIL_SENDER_ADDRESS}</replyto>
+      <replytoname>${BIGDATA_LAB_MAIL_SENDER_NAME}</replytoname>
+      <subject>[JOB-SUCCESS] ETL-SFP-REMUNERACIONES</subject>
       <include_date>N</include_date>
       <contact_person/>
       <contact_phone/>
-      <comment/>
+      <comment>La ejecución del proceso etl fue EXITOSO.</comment>
       <include_files>N</include_files>
       <zip_files>N</zip_files>
       <zip_name/>
-      <use_auth>N</use_auth>
-      <use_secure_auth>N</use_secure_auth>
-      <auth_user/>
-      <auth_password>Encrypted </auth_password>
-      <only_comment>N</only_comment>
+      <use_auth>Y</use_auth>
+      <use_secure_auth>Y</use_secure_auth>
+      <auth_user>${BIGDATA_LAB_MAIL_AUTH_USER}</auth_user>
+      <auth_password>${BIGDATA_LAB_MAIL_AUTH_PASS}</auth_password>
+      <only_comment>Y</only_comment>
       <use_HTML>N</use_HTML>
       <use_Priority>N</use_Priority>
       <encoding>UTF-8</encoding>
@@ -426,7 +426,7 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>784</xloc>
+      <xloc>768</xloc>
       <yloc>240</yloc>
       <attributes_kjc/>
     </entry>
@@ -435,26 +435,26 @@
       <description/>
       <type>MAIL</type>
       <attributes/>
-      <server/>
-      <port/>
-      <destination/>
-      <destinationCc/>
-      <destinationBCc/>
-      <replyto/>
-      <replytoname/>
-      <subject/>
+      <server>${BIGDATA_LAB_MAIL_SMTP_SERVER}</server>
+      <port>${BIGDATA_LAB_MAIL_SMTP_PORT_SSL}</port>
+      <destination>${BIGDATA_LAB_MAIL_DESTINATION_ADDRESS}</destination>
+      <destinationCc>${BIGDATA_LAB_MAIL_DESTINATION_CC}</destinationCc>
+      <destinationBCc>${BIGDATA_LAB_MAIL_DESTINATION_BCc}</destinationBCc>
+      <replyto>${BIGDATA_LAB_MAIL_SENDER_ADDRESS}</replyto>
+      <replytoname>${BIGDATA_LAB_MAIL_SENDER_NAME}</replytoname>
+      <subject>[JOB-ERROR] ETL-SFP-REMUNERACIONES</subject>
       <include_date>N</include_date>
       <contact_person/>
       <contact_phone/>
-      <comment/>
+      <comment>La ejecución del proceso etl fue ERROR.</comment>
       <include_files>N</include_files>
       <zip_files>N</zip_files>
       <zip_name/>
-      <use_auth>N</use_auth>
-      <use_secure_auth>N</use_secure_auth>
-      <auth_user/>
-      <auth_password>Encrypted </auth_password>
-      <only_comment>N</only_comment>
+      <use_auth>Y</use_auth>
+      <use_secure_auth>Y</use_secure_auth>
+      <auth_user>${BIGDATA_LAB_MAIL_AUTH_USER}</auth_user>
+      <auth_password>${BIGDATA_LAB_MAIL_AUTH_PASS}</auth_password>
+      <only_comment>Y</only_comment>
       <use_HTML>N</use_HTML>
       <use_Priority>N</use_Priority>
       <encoding>UTF-8</encoding>
@@ -470,20 +470,11 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>608</xloc>
-      <yloc>592</yloc>
+      <yloc>416</yloc>
       <attributes_kjc/>
     </entry>
   </entries>
   <hops>
-    <hop>
-      <from>Job etl_sfp_remuneraciones</from>
-      <to>Abort job main</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>N</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
     <hop>
       <from>Start</from>
       <to>Folder is empty</to>
@@ -500,15 +491,6 @@
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
       <evaluation>N</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>Folder is empty</from>
-      <to>Abort job main</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
       <unconditional>N</unconditional>
     </hop>
     <hop>
@@ -530,7 +512,7 @@
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>Abort job main</from>
+      <from>Folder is empty</from>
       <to>Mail error</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
@@ -538,12 +520,30 @@
       <evaluation>Y</evaluation>
       <unconditional>N</unconditional>
     </hop>
+    <hop>
+      <from>Job etl_sfp_remuneraciones</from>
+      <to>Mail error</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Mail error</from>
+      <to>Abort job main</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
   </hops>
   <notepads>
     <notepad>
       <note>Este es el proceso principal que se encarga de verificar si el directorio ..\Procesar contiene los archivos csv para su procesamiento.
 Luego, se invoca al Job que procesa la Extraccion de datos, Transformacipon y Limpieza de datos y Carga de datos en el modelo final.</note>
-      <xloc>208</xloc>
+      <xloc>192</xloc>
       <yloc>144</yloc>
       <width>897</width>
       <heigth>50</heigth>
