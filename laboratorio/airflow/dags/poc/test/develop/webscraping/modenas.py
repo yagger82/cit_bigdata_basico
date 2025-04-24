@@ -1,13 +1,19 @@
 from __future__ import annotations
 
-from datetime import datetime
-
 import pandas as pd
 import requests
 from airflow.models import Variable
-from airflow.providers.postgres.hooks.postgres import PostgresHook
 from bs4 import BeautifulSoup
+from datetime import datetime
+
 from sqlalchemy import create_engine
+
+#
+ANHO_DESDE=2010
+ANHO_HASTA=datetime.now().year
+
+# MONEDAS=['USD', 'GBP', 'BRL', 'ARS', 'CLP', 'EUR', 'UYU', 'BOB', 'PEN', 'MXN', 'COP']
+MONEDAS=['USD', 'BRL', 'ARS', 'EUR']
 
 # URL de conexión a PostgreSQL
 POSTGRES_CONN_URL=Variable.get('POSTGRES_CONN_URL_DWH')
@@ -41,8 +47,7 @@ def __get_html(anho, mes):
         print(f"Error al obtener el HTML: {e}")
         return None
 
-# --
-def __do_webscraping(anho, mes, monedas):
+def __get_divisas(anho, mes, monedas):
 
     columns_name = ['anho', 'mes', 'moneda', 'abreviatura', 'me_usd', 'gs_me']
 
@@ -68,50 +73,35 @@ def __do_webscraping(anho, mes, monedas):
     # Convertimos los datos a un DataFrame de pandas
     df = pd.DataFrame(rows, columns=columns_name)
 
-    # Filtramos las momendas a seleccionar
     divisas = df[df['abreviatura'].isin(monedas)]
 
     return divisas
 
-# --
-def __get_data(anho_desde, anho_hasta, monedas):
-
-    hook = PostgresHook(postgres_conn_id='postgres_dwh')
-    sql = 'SELECT MAX(periodo_sk)::VARCHAR(6) FROM datamart.fact_cotizacion_mensual_bcp;'
-    connection = hook.get_conn()
-    cursor = connection.cursor()
-    cursor.execute(sql)
-    result = cursor.fetchall()
-    cursor.close()
-
-    if  result[0][0] is not None:
-        anho_desde = int(result[0][0][0:4])
+def extract_all_data():
 
     df = pd.DataFrame()
-    for anho in range(anho_desde, anho_hasta + 1):
-        if anho == anho_hasta:
+    for anho in range(ANHO_DESDE, ANHO_HASTA + 1):
+        if anho == ANHO_HASTA:
             meses = datetime.now().month
         else:
             meses = 13
 
         for mes in range(1, meses):
-            data = __do_webscraping(anho, mes, monedas)
+            data = __get_divisas(anho, mes, MONEDAS)
             if df.empty:
                 df = data
             else:
                 df = pd.concat([df, data])
     return df
 
-def extract_data_to_raw(anho_desde, anho_hasta, monedas):
+def extract_data():
+    pass
 
-    table_name = 'raw_cotizacion_referencial_bcp'
-    schema = 'raw'
-
-    # Extraer la cotizacion mensual de la págin a del BCP
-    data = __get_data(anho_desde, anho_hasta, monedas)
+if __name__ == '__main__':
+    df = extract_all_data()
 
     # Crear la conexión a la base de datos PostgreSQL
     engine = create_engine(POSTGRES_CONN_URL)
 
     # Cargar los datos en la tabla
-    data.to_sql(name=table_name, con=engine, schema=schema, if_exists='replace', index=False)
+    df.to_sql(name='raw_cotizacion_referencial_bcp', con=engine, schema='raw', if_exists='replace', index=False)
