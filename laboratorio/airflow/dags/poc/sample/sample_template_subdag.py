@@ -1,7 +1,13 @@
+"""
+Ejemplo definición básica de un DAG padre y uso de SubDAGs.
+"""
+
+from __future__ import annotations
+
 from airflow import DAG
 from airflow.operators.subdag import SubDagOperator
 from airflow.operators.empty import EmptyOperator
-from airflow.providers.postgres.operators.postgres import PostgresOperator
+from airflow.providers.common.sql.operators.sql import SQLExecuteQueryOperator
 from airflow.utils.dates import days_ago
 
 # [START subdag]
@@ -10,15 +16,14 @@ def subdag(parent_dag_name, child_dag_name, args):
     subdag = DAG(
         dag_id=f'{parent_dag_name}.{child_dag_name}',
         default_args=args,
-        schedule="@daily",
-        tags=["sample"]
+        schedule=None
     )
 
     with subdag:
 
-        task_1 = PostgresOperator(
+        task_1 = SQLExecuteQueryOperator(
             task_id='create_table',
-            postgres_conn_id='your_postgres_conn_id',
+            conn_id='your_postgres_conn_id',
             sql='''
                 CREATE TABLE IF NOT EXISTS your_table (
                     id SERIAL PRIMARY KEY,
@@ -28,9 +33,9 @@ def subdag(parent_dag_name, child_dag_name, args):
             '''
         )
 
-        task_2 = PostgresOperator(
+        task_2 = SQLExecuteQueryOperator(
             task_id='insert_data',
-            postgres_conn_id='your_postgres_conn_id',
+            conn_id='your_postgres_conn_id',
             sql='''
                 INSERT INTO your_table (name, age) VALUES ('John Doe', 30);
             '''
@@ -44,32 +49,34 @@ def subdag(parent_dag_name, child_dag_name, args):
 # [START sample_subdag]
 # Define los argumentos del DAG
 default_args = {
-    'owner': 'airflow',
+    'owner': 'sample',
     'start_date': days_ago(0),
-    'retries': 0,
+    'retries': 0
 }
 
 # Crea el DAG padre
 parent_dag = DAG(
     dag_id='parent_dag',
+    dag_display_name="sample_template_subdag",
+    description="Ejemplo definición básica de un DAG padre y uso de SubDAGs.",
     default_args=default_args,
-    description='Un ejemplo sencillo de SubDAG con PostgresOperators',
     schedule=None,
     start_date=days_ago(0),
+    tags = ['poc', 'sample']
 )
 
 with parent_dag:
 
-    start = EmptyOperator(task_id='START', dag=parent_dag)
+    start = EmptyOperator(task_id='start', dag=parent_dag)
 
     # Crea el SubDAG
     subdag_task = SubDagOperator(
-        task_id='SUBDAG_TASK',
-        subdag=subdag('PARENT_DAG', 'SUBDAG_TASK', default_args),
+        task_id='subdag_task',
+        subdag=subdag('parent_dag', 'subdag_task', default_args),
         dag=parent_dag,
     )
 
-    end = EmptyOperator(task_id='END', dag=parent_dag)
+    end = EmptyOperator(task_id='end', dag=parent_dag)
 
 start >> subdag_task >> end
 # [END sample_subdag]

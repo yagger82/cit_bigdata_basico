@@ -1,17 +1,29 @@
+"""
+Ejemplo que demuestra el uso de un constructor para declarar un DAG.
+"""
 
-import datetime
+from __future__ import annotations
 
 from airflow import DAG
 from airflow.operators.empty import EmptyOperator
 
+# Definir el DAG
+default_args = {
+    'owner': 'sample',
+    'depends_on_past': False,
+    'retries': 0,
+}
+
+# version 2
 my_dag = DAG(
     dag_id="example_dag_constructor_id",
-    dag_display_name= "example_dag_constructor",
-    description='Ejemplo que demuestra el uso de un constructor para declarar un DAG.',
-    start_date=datetime.datetime(2024, 12, 1),
-    schedule="@daily",
+    dag_display_name="example_dag_constructor",
+    description="Ejemplo que demuestra el uso de un constructor para declarar un DAG.",
+    default_args=default_args,
+    start_date=None,
+    schedule=None,
     catchup=False,
-    tags= ['example']
+    tags= ['poc', 'example']
 )
 
 start = EmptyOperator(task_id="start", dag=my_dag)

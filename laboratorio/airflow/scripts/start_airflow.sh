@@ -1,23 +1,23 @@
-
 #!/bin/bash
 
-#Dale permisos de ejecución usando el siguiente comando: chmod +x 
-#Luego, puedes ejecutar el script simplemente con: ./start_airflow.sh
-# sed -i -e 's/\r$//' start_airflow.sh
-
-# Ir al directorio del proyecto
-cd /home/richard/analytics/airflow_project/
-
-# Activar Entorno Virtual
+# Activar Entorno Virtual:
 source venv/bin/activate
 
-# Inicia el servidor web de Airflow
+echo "Iniciando servicios de Apache Airflow..."
+
 airflow webserver -D
+echo "Webserver iniciado."
 
-# Inicia el scheduler de Airflow
 airflow scheduler -D
+sleep 2
+pkill -9 -f "airflow scheduler"
+sleep 2
+airflow scheduler -D
+echo "Scheduler iniciado."
 
-# Inicia el trigger de Airflow
 airflow triggerer -D
+pkill -9 -f 'triggerer'
+airflow triggerer -D
+echo "Triggerer iniciado."
 
-echo "Todos los servicios de Airflow han sido iniciados."
+echo "Todos los servicios se han iniciado."

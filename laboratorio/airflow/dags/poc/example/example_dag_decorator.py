@@ -1,5 +1,6 @@
-
-"""Ejemplo DAG que demuestra el uso de DAG decorator."""
+"""
+Ejemplo DAG que demuestra el uso de DAG decorator.
+"""
 
 from __future__ import annotations
 
@@ -26,13 +27,16 @@ class GetRequestOperator(BaseOperator):
     def execute(self, context: Context):
         return httpx.get(self.url).json()
 
-
+# version 3
 # [START dag_decorator_usage]
 @dag(
+    dag_id="example_dag_decorator_id",
+    dag_display_name="example_dag_decorator",
+    description="Ejemplo DAG que demuestra el uso de DAG decorator.",
+    start_date=pendulum.datetime(2025, 12, 31, tz="UTC"),
     schedule=None,
-    start_date=pendulum.datetime(2024, 12, 1, tz="UTC"),
     catchup=False,
-    tags=["example"],
+    tags=['poc', 'example']
 )
 def example_dag_decorator(email: str = "example@example.com"):
     """

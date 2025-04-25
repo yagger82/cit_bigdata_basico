@@ -1,3 +1,7 @@
+"""
+DAG para cargar un CSV a PostgreSQL generando un archivo sql con inserts.
+"""
+
 from airflow import DAG
 from airflow.models import Variable
 from airflow.operators.empty import EmptyOperator
@@ -20,13 +24,14 @@ default_args = {
 }
 
 dag = DAG(
-    dag_id='csv_to_postgres_v2',
+    dag_id='sample_load_csv_to_postgres_op2_id',
+    dag_display_name="sample_load_csv_to_postgres_op2",
     description='DAG para cargar un CSV a PostgreSQL generando un archivo sql con inserts.',
     default_args=default_args,
+    template_searchpath=Variable.get("dags_folder") + 'sample/sql',
     schedule_interval=None,  # DAG no programado automáticamente
-    template_searchpath=Variable.get("DAG_FOLDER") + 'sample/sql',
     catchup=False,
-    tags=['sample']
+    tags=['poc', 'sample']
 )
 # Definir funciones en python
 def read_csv_to_sql_inserts():
@@ -34,7 +39,7 @@ def read_csv_to_sql_inserts():
     csv_file_path = '/home/richard/analytics/dataset/input/sample.csv'
     df = pd.read_csv(csv_file_path)
 
-    sql_file_path = Variable.get('DAG_FOLDER') + 'sample/sql/postgres_sql_inserts.sql'
+    sql_file_path = Variable.get('dags_folder') + 'sample/sql/postgres_sql_inserts.sql'
     with open(sql_file_path,'w') as f:
         for index, row in df.iterrows():
             values=f"('{row[0]}','{row[1]}','{row[2]}')"

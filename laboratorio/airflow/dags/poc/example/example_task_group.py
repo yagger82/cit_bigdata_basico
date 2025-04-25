@@ -1,5 +1,6 @@
-
-"""Ejemplo DAG que demuestra el uso de TaskGroup."""
+"""
+Ejemplo DAG que demuestra el uso de TaskGroup.
+"""
 
 from __future__ import annotations
 
@@ -13,11 +14,15 @@ from airflow.utils.edgemodifier import Label
 
 # [START howto_task_group]
 with DAG(
-    dag_id="example_task_group",
-    start_date=pendulum.datetime(2024, 12, 1, tz="UTC"),
+    dag_id="example_task_group_id",
+    dag_display_name="example_task_group",
+    description="Ejemplo DAG que demuestra el uso de TaskGroup.",
+    start_date=pendulum.datetime(2025, 12, 31, tz="UTC"),
+    schedule=None,
     catchup=False,
-    tags=["example"],
+    tags=['poc', 'example'],
 ) as dag:
+
     start = EmptyOperator(task_id="start")
 
     # [START howto_task_group_section_1]

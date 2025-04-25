@@ -8,6 +8,7 @@ Descripción:
 
 Autor: Prof. Richar D. Jiménez-R. <rjimenez@pol.una.py>
 Fecha_creación: Octubre, 2024
+Fecha_ultima_modificacion: Abril, 2025
 Version: 1.0
 """
 
@@ -18,29 +19,29 @@ from airflow import DAG
 from airflow.models import Variable
 from airflow.operators.empty import EmptyOperator
 from airflow.operators.python import PythonOperator
-from airflow.providers.postgres.operators.postgres import PostgresOperator
+#from airflow.providers.postgres.operators.postgres import PostgresOperator
+from airflow.providers.common.sql.operators.sql import SQLExecuteQueryOperator
 from jinja2 import Environment, FileSystemLoader
 from sqlalchemy import create_engine
 
 # Parámetros de configuración inicial
-DAG_ID='csv_to_postgres_with_panda'
-TABLE_SCHEMA='raw'
-TABLE_TARGET_1='raw_sfp_nomina'
-TABLE_TARGET_2='raw_sfp_nomina_eliminado'
+table_schema = 'poc'
+table_target_1 = 'raw_sfp_nomina'
+table_target_2 = 'raw_sfp_nomina_eliminado'
 
 # ID de conexión a PostgreSQL
-POSTGRES_CONN_ID='postgres_dwh'
+postgres_conn_id = 'postgres_bigdata_lab'
 
 # URL de conexión a PostgreSQL
-POSTGRES_CONN_URL=Variable.get('POSTGRES_CONN_URL_DWH')
+postgres_conn_url = Variable.get('BIGDATA_LAB_POSTGRES_CONN_URL')
 
 # Ubicación de archivos SQL
-SQL_FILE_PATH=Variable.get("DAG_FOLDER") + 'test/copiador/sql'
+sql_file_path = Variable.get('BIGDATA_LAB_DAGS_FOLDER') + '/poc/copiador/sql'
 
 # Ubicación del archivo CSV
-CSV_FILE_PATH=Variable.get('DATASET_PATH_INPUT') + Variable.get('DATASET_SFP_NOMINA')
+csv_file_path = Variable.get('BIGDATA_LAB_DATASET_SFP_NOMINA')
 
-CSV_COLUMNS_NAME=[
+csv_columns_name = [
     'anho',
     'mes',
     'nivel',
@@ -70,7 +71,7 @@ CSV_COLUMNS_NAME=[
     'devengado'
 ]
 
-CSV_COLUMNS_TYPE={
+csv_columns_type={
     'anho':'int16',
     'mes':'int16',
     'nivel':'int16',
@@ -102,7 +103,7 @@ CSV_COLUMNS_TYPE={
 
 # Definir argumentos por defecto para el DAG
 default_args = {
-    'owner': 'airflow',
+    'owner': 'copiador',
     'start_date': None,
     'retries': None,
 }
@@ -111,42 +112,43 @@ default_args = {
 def load_csv_to_postgres():
 
     # Leer el archivo CSV, seleccionando solo las columnas deseadas
-    df = pd.read_csv(CSV_FILE_PATH, encoding='ISO-8859-1', usecols=CSV_COLUMNS_NAME, dtype=CSV_COLUMNS_TYPE)
+    df = pd.read_csv(csv_file_path, encoding='ISO-8859-1', usecols=csv_columns_name, dtype=csv_columns_type)
 
     # Crear la conexión a la base de datos PostgreSQL
-    engine = create_engine(POSTGRES_CONN_URL)
+    engine = create_engine(postgres_conn_url)
 
     # Cargar los datos en la tabla de PostgreSQL
     df1 = df.query('not (presupuestado == 0 and devengado == 0)')
-    df1.to_sql(name=TABLE_TARGET_1, con=engine, schema=TABLE_SCHEMA, if_exists='replace', index=False)
+    df1.to_sql(name=table_target_1, con=engine, schema=table_schema, if_exists='replace', index=False)
 
     # Cargar los datos en la tabla de eliminados
     df2= df.query('presupuestado == 0 and devengado == 0')
-    df2.to_sql(name=TABLE_TARGET_2, con=engine, schema=TABLE_SCHEMA, if_exists='replace', index=False)
+    df2.to_sql(name=table_target_2, con=engine, schema=table_schema, if_exists='replace', index=False)
 
 # Definir el DAG
 with DAG(
-    dag_id=DAG_ID,
+    dag_id="copy_data_with_panda_id",
+    dag_display_name="copy_data_with_panda",
     description='DAG Bulk Data Loading CSV to PostgreSQL with panda to_sql.',
     default_args=default_args,
     schedule_interval=None,
     catchup=False,
-    tags=['csv_bulk_data', 'panda_to_sql', 'test']
+    tags=['poc', 'bulk_data', 'panda']
 ) as dag:
 
     start = EmptyOperator(task_id='start', dag=dag)
 
     # Configurar Jinja2
-    env = Environment(loader=FileSystemLoader(SQL_FILE_PATH))
+    env = Environment(loader=FileSystemLoader(sql_file_path))
     template = env.get_template('task_truncate_table_nomina.sql')
 
     # Renderizar el archivo SQL con los parámetros
-    rendered_sql = template.render(schema=TABLE_SCHEMA, target_1=TABLE_TARGET_1, target_2=TABLE_TARGET_2)
+    rendered_sql = template.render(schema=table_schema, target_1=table_target_1, target_2=table_target_2)
 
     # Tarea 1: Truncar datos de la tabla Target en PostgreSQL
-    truncate_data = PostgresOperator(
+    truncate_data = SQLExecuteQueryOperator(
         task_id='truncate_table_data',
-        postgres_conn_id=POSTGRES_CONN_ID,
+        conn_id=postgres_conn_id,
         sql=rendered_sql
     )
 

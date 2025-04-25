@@ -1,8 +1,12 @@
+"""
+Cargar datos de un archivo CSV a una tabla en PostgreSQL utilizando PostgresHook.
+"""
+
 from airflow import DAG
 from airflow.models import Variable
 from airflow.operators.empty import EmptyOperator
 from airflow.operators.python import PythonOperator
-from airflow.providers.postgres.operators.postgres import PostgresOperator
+from airflow.providers.common.sql.operators.sql import SQLExecuteQueryOperator
 from airflow.providers.postgres.hooks.postgres import PostgresHook
 from airflow.utils.dates import days_ago
 
@@ -10,20 +14,21 @@ import pandas as pd
 
 # Definir los argumentos por defecto del DAG
 default_args = {
-    'owner': 'airflow',
+    'owner': 'sample',
     'start_date': days_ago(0),
     'retries': 0,
 }
 
 # Configurar DAG de Airflow
 with DAG(
-    dag_id='csv_to_postgres_v1',
+    dag_id='sample_load_csv_to_postgres_op1_id',
+    dag_display_name="sample_load_csv_to_postgres_op1",
     description='Cargar datos de un archivo CSV a una tabla en PostgreSQL utilizando PostgresHook.',
     default_args=default_args,
+    template_searchpath=Variable.get('dags_folder') + 'sample/sql',
     schedule_interval=None,  # DAG no programado automáticamente
-    template_searchpath=Variable.get('DAG_FOLDER') + 'sample/sql',
     catchup=False,
-    tags=['sample']
+    tags=['poc','sample']
 ) as dag:
 
     def read_csv_and_insert_into_postgres(**kwargs):
@@ -54,9 +59,9 @@ with DAG(
     start = EmptyOperator(task_id='start', dag=dag)
 
     # Tarea para crear la tabla (si no existe)
-    create_table = PostgresOperator(
+    create_table = SQLExecuteQueryOperator(
         task_id='CREATE_TABLE',
-        postgres_conn_id='postgres_default',  # Cambia a tu ID de conexión en Airflow
+        conn_id='postgres_default',  # Cambia a tu ID de conexión en Airflow
         sql="""
             DO $$
             BEGIN

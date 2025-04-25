@@ -8,6 +8,7 @@ Descripción:
 
 Autor: Prof. Richar D. Jiménez-R. <rjimenez@pol.una.py>
 Fecha_creación: Octubre, 2024
+Fecha_ultima_modificacion: Abril, 2025
 Version: 1.0
 """
 
@@ -19,27 +20,27 @@ from airflow.models import Variable
 from airflow.operators.empty import EmptyOperator
 from airflow.operators.python import PythonOperator
 from airflow.providers.postgres.hooks.postgres import PostgresHook
-from airflow.providers.postgres.operators.postgres import PostgresOperator
+# from airflow.providers.postgres.operators.postgres import PostgresOperator
+from airflow.providers.common.sql.operators.sql import SQLExecuteQueryOperator
 from jinja2 import Environment, FileSystemLoader
 
 # Parámetros de configuración inicial
-DAG_ID='csv_to_postgres_with_copy'
-TABLE_SCHEMA='raw'
-TABLE_TARGET_1='raw_sfp_nomina'
-TABLE_TARGET_2='raw_sfp_nomina_eliminado'
-TABLE_TEMP='temp_sfp_nomina'
+table_schema = 'poc'
+table_target_1 = 'raw_sfp_nomina'
+table_target_2 = 'raw_sfp_nomina_eliminado'
+table_temp = 'temp_sfp_nomina'
 
 # ID de conexión a PostgreSQL
-POSTGRES_CONN_ID='postgres_dwh'
+POSTGRES_CONN_ID = 'postgres_bigdata_lab'
 
 # Ubicación de archivos SQL
-SQL_FILE_PATH=Variable.get("DAG_FOLDER") + 'test/copiador/sql'
+sql_file_path = Variable.get('BIGDATA_LAB_DAGS_FOLDER') + '/poc/copiador/sql'
 
 # Ubicación del archivo CSV
-CSV_FILE_PATH=Variable.get('DATASET_PATH_INPUT') + Variable.get('DATASET_SFP_NOMINA')
+csv_file_path = Variable.get('BIGDATA_LAB_DATASET_SFP_NOMINA')
 
-SQL_CREATE_TEMP_TABLE=f"""
-    CREATE TEMP TABLE {TABLE_TEMP} (
+sql_create_temp_table = f"""
+    CREATE TEMP TABLE {table_temp} (
         anho int2,
         mes int2,
         nivel int2,
@@ -78,8 +79,8 @@ SQL_CREATE_TEMP_TABLE=f"""
     );        
 """
 
-SQL_LOAD_TABLE= f"""
-    INSERT INTO {TABLE_SCHEMA}.{TABLE_TARGET_1}
+sql_load_table = f"""
+    INSERT INTO {table_schema}.{table_target_1}
     SELECT
         anho,
         mes,
@@ -108,12 +109,12 @@ SQL_LOAD_TABLE= f"""
         categoria,
         presupuestado,
         devengado
-    FROM {TABLE_TEMP}
+    FROM {table_temp}
     WHERE NOT (presupuestado = 0 AND devengado = 0);
 """
 
-SQL_LOAD_TABLE_ELIMINADO= f"""
-    INSERT INTO {TABLE_SCHEMA}.{TABLE_TARGET_2}
+sql_load_table_eliminado = f"""
+    INSERT INTO {table_schema}.{table_target_2}
     SELECT
         anho,
         mes,
@@ -142,13 +143,13 @@ SQL_LOAD_TABLE_ELIMINADO= f"""
         categoria,
         presupuestado,
         devengado
-    FROM {TABLE_TEMP}
+    FROM {table_temp}
     WHERE presupuestado = 0 AND devengado = 0;
 """
 
 # Definir argumentos por defecto para el DAG
 default_args = {
-    'owner': 'rjimenez',
+    'owner': 'copiador',
     'start_date': None,
     'retries': None,
 }
@@ -161,19 +162,19 @@ def load_csv_to_postgres():
 
     # Crear la consulta de carga masiva usando el comando COPY de PostgreSQL
     copy_sql = f"""
-        COPY {TABLE_TEMP} FROM stdin WITH(FORMAT csv, HEADER true, DELIMITER ',');
+        COPY {table_temp} FROM stdin WITH(FORMAT csv, HEADER true, DELIMITER ',');
     """
 
     # Abrir archivo CSV y cargarlo a PostgreSQL
-    if os.path.exists(CSV_FILE_PATH):
-        with open(CSV_FILE_PATH, 'r', encoding='ISO-8859-1') as f:
+    if os.path.exists(csv_file_path):
+        with open(csv_file_path, 'r', encoding='ISO-8859-1') as f:
             conn = hook.get_conn()
             cursor = conn.cursor()
             try:
-                cursor.execute(SQL_CREATE_TEMP_TABLE)
+                cursor.execute(sql_create_temp_table)
                 cursor.copy_expert(sql=copy_sql, file=f)
-                cursor.execute(SQL_LOAD_TABLE)
-                cursor.execute(SQL_LOAD_TABLE_ELIMINADO)
+                cursor.execute(sql_load_table)
+                cursor.execute(sql_load_table_eliminado)
                 conn.commit()
             except Exception as e:
                 conn.rollback()
@@ -181,31 +182,33 @@ def load_csv_to_postgres():
                 cursor.close()
                 conn.close()
     else:
-        print(f"El archivo {CSV_FILE_PATH} no existe.")
+        print(f"El archivo {csv_file_path} no existe.")
 
 # Definir el DAG
 with DAG(
-    dag_id=DAG_ID,
-    description='DAG Bulk Data Loading CSV to PostgreSQL with COPY.',
+    dag_id="copy_data_with_postgres_id",
+    dag_display_name="copy_data_with_postgres",
+    description="DAG Bulk Data Loading CSV to PostgreSQL with COPY.",
     default_args=default_args,
+    template_searchpath=sql_file_path,
     schedule_interval=None,
     catchup=False,
-    tags=['csv_bulk_data', 'postgres_copy', 'test']
+    tags=['poc', 'bulk_data', 'postgres_copy']
 ) as dag:
 
     start = EmptyOperator(task_id='start', dag=dag)
 
     # Configurar Jinja2
-    env = Environment(loader=FileSystemLoader(SQL_FILE_PATH))
+    env = Environment(loader=FileSystemLoader(sql_file_path))
     template = env.get_template('task_truncate_table_nomina.sql')
 
     # Renderizar el archivo SQL con los parámetros
-    rendered_sql = template.render(schema=TABLE_SCHEMA, target_1=TABLE_TARGET_1, target_2=TABLE_TARGET_2)
+    rendered_sql = template.render(schema=table_schema, target_1=table_target_1, target_2=table_target_2)
 
     # Tarea 1: Truncar datos de la tabla Target en PostgreSQL
-    truncate_data = PostgresOperator(
+    truncate_data = SQLExecuteQueryOperator(
         task_id='truncate_table_data',
-        postgres_conn_id=POSTGRES_CONN_ID,
+        conn_id=POSTGRES_CONN_ID,
         sql=rendered_sql
     )
 

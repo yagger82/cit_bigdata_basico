@@ -1,3 +1,9 @@
+"""
+DAG para cargar un CSV a PostgreSQL generando un archivo sql con inserts.
+"""
+
+from __future__ import annotations
+
 from airflow import DAG
 from airflow.models import Variable
 from airflow.operators.empty import EmptyOperator
@@ -76,27 +82,28 @@ def get_values(row):
 
 # Definir los argumentos por defecto del DAG
 default_args = {
-    'owner': 'airflow',
-    'start_date': days_ago(0),
-    'retries': 0,
+    'owner': 'copiador',
+    'start_date': None,
+    'retries': None,
 }
 
 dag = DAG(
-    dag_id='csv_inserts_data_raw_sfp_nomina',
-    description='DAG para cargar un CSV a PostgreSQL generando un archivo sql con inserts.',
+    dag_id="copy_data_with_sql_inserts_id",
+    dag_display_name="copy_data_with_sql_inserts",
+    description="DAG para cargar un CSV a PostgreSQL generando un archivo sql con inserts.",
     default_args=default_args,
+    template_searchpath=Variable.get('BIGDATA_LAB_DAGS_FOLDER') + '/poc/copiador/sql',
     schedule_interval=None,  # DAG no programado automáticamente
-    template_searchpath=Variable.get("DAG_FOLDER") + 'copiador/sql',
     catchup=False,
-    tags=['csv_bulk_data']
+    tags=['poc', 'bulk_data', 'sql_inserts']
 )
 # Definir funciones en python
 def read_csv_to_sql_inserts():
     #Leer el archivo CSV
-    csv_file_path = Variable.get('DATASET_INPUT_PATH') + Variable.get('DATASET_SFP_NOMINA')
+    csv_file_path = Variable.get('BIGDATA_LAB_DATASET_SFP_NOMINA')
     df = pd.read_csv(csv_file_path, encoding='ISO-8859-1')
 
-    sql_file_path = Variable.get('DAG_FOLDER') + 'copiador/sql/sql_inserts.sql'
+    sql_file_path = Variable.get('BIGDATA_LAB_DAGS_FOLDER') + '/poc/copiador/sql/sql_inserts.sql'
     with open(sql_file_path,'w') as f:
         for index, row in df.iterrows():
             # values=f"('{row[0]}','{row[1]}','{row[2]}')"
